@@ -1,15 +1,15 @@
 require('dotenv').config();
 
-const Validator = require('./lib/validator').getInstance();
-const Messager = require('./util/messager');
-const QrCodeGenerator = require('./services/qrCodeGenerator');
-const Peer = require('./lib/p2p/peer');
+const Validator = require('./src/lib/validator').getInstance();
+const Messager = require('./src/util/messager');
+const QrCodeGenerator = require('./src/services/qrCodeGenerator');
+const Peer = require('./src/lib/p2p/peer');
 //const opn = require('opn');
 const express = require('express');
 const http = require('http');
-const Security = require('./lib/security/security').getInstance();
-const KeyStorage = require('./lib/util/keyStorage');
-const TransactionBuilder = require('./lib//util/transactionBuilder').getInstance();
+const Security = require('./src/lib/security/security').getInstance();
+const KeyStorage = require('./src/lib/util/keyStorage');
+const TransactionBuilder = require('./src/lib/util/transactionBuilder').getInstance();
 const qrCodeGenerator = new QrCodeGenerator();
 let io = require('socket.io');
 
