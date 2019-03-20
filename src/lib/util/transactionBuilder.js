@@ -1,5 +1,5 @@
 const Models = require('bluckur-models');
-const TransactionSecurity = require('./../security/transactionSecurity').getInstance();
+const TransactionSecurity = require('../security/transactionSecurity').getInstance();
 const KeyStorage = require('./keyStorage');
 
 // Singleton support
