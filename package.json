@@ -4,6 +4,7 @@
   "description": "blockchain-validator",
   "main": "src/server.js",
   "dependencies": {
+    "@sentry/browser": "^4.6.4",
     "async": "^2.6.1",
     "bip39": "^2.5.0",
     "bluckur-database": "git+https://github.com/TimoF97/blox-database.git",
@@ -32,6 +33,7 @@
     "eslint-plugin-import": "^2.12.0"
   },
   "scripts": {
+    "start": "node src/server",
     "test": "echo \"Error: no test specified\" && exit 1",
     "create-executables": "pkg ./server.js --out-path ./executables"
   },
