@@ -9,7 +9,7 @@ const express = require('express');
 const http = require('http');
 const Security = require('./lib/security/security').getInstance();
 const KeyStorage = require('./lib/util/keyStorage');
-const TransactionBuilder = require('./lib//util/transactionBuilder').getInstance();
+const TransactionBuilder = require('./lib/util/transactionBuilder').getInstance();
 const qrCodeGenerator = new QrCodeGenerator();
 let io = require('socket.io');
 
