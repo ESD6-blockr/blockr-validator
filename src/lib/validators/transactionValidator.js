@@ -1,6 +1,6 @@
 const Models = require('bluckur-models');
-const TemporaryStorage = require('./../util/temporaryStorage').getInstance();
-const TransactionSecurity = require('./../security/transactionSecurity').getInstance();
+const TemporaryStorage = require('../util/temporaryStorage').getInstance();
+const TransactionSecurity = require('../security/transactionSecurity').getInstance();
 
 // Singleton support
 let instance = null;
@@ -83,7 +83,7 @@ class TransactionValidator {
           }
         }).catch((err) => {
           reject(new Error('Amount is invalid'))
-        }); 
+        });
       } else {
         resolve();
       }

@@ -1,5 +1,5 @@
 const Models = require('bluckur-models');
-const BlockSecurity = require('./../security/blockSecurity').getInstance();
+const BlockSecurity = require('../security/blockSecurity').getInstance();
 const TransactionValidator = require('./transactionValidator');
 
 // Singleton support

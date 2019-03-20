@@ -14,7 +14,7 @@ module.exports = class InitialConnector {
 
   constructor(firstTimeout) {
     if (!instance) {
-      this.ip = 'http://p2p:8082';
+      this.ip = 'http://' + process.env.P2P_SERVER_IP + ':8082';
       this.myIp = undefined;
       this.peerIp = undefined;
       this.timeout = firstTimeout;
