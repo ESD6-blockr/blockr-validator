@@ -1,6 +1,4 @@
-import * as Sentry from '@sentry/browser';
-
- require('dotenv').config();
+require('dotenv').config();
 
 const Validator = require('./lib/validator').getInstance();
 const Messager = require('./util/messager');
@@ -14,6 +12,7 @@ const KeyStorage = require('./lib/util/keyStorage');
 const TransactionBuilder = require('./lib/util/transactionBuilder').getInstance();
 const qrCodeGenerator = new QrCodeGenerator();
 let io = require('socket.io');
+const Sentry = require('@sentry/node');
 
 let sender;
 let node;
