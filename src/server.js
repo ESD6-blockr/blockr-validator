@@ -1,4 +1,6 @@
-require('dotenv').config();
+import * as Sentry from '@sentry/browser';
+
+ require('dotenv').config();
 
 const Validator = require('./lib/validator').getInstance();
 const Messager = require('./util/messager');
@@ -21,6 +23,9 @@ const connected = false;
 // Initialize app with Express
 const app = express();
 app.use(express.static(`${__dirname}/public`));
+
+// Setup exception logging
+Sentry.init({ dsn: 'https://8ae89827146d49309d5a8e5699a605b6@sentry.io/1419602' });
 
 // Redirect default '/' call to main.htm page
 app.get('/', (req, res) => {
