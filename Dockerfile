@@ -6,7 +6,7 @@ RUN npm i
 
 COPY src/lib ./lib
 COPY src/logic ./logic
-COPY src/public ./public
+COPY public ./public
 COPY src/services ./services
 COPY src/tasks ./tasks
 COPY src/util ./util
