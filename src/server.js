@@ -11,7 +11,7 @@ const Security = require('./lib/security/security').getInstance();
 const KeyStorage = require('./lib/util/keyStorage');
 const TransactionBuilder = require('./lib/util/transactionBuilder').getInstance();
 const qrCodeGenerator = new QrCodeGenerator();
-const sleep = require('sleep');
+const Sleep = require('sleep');
 let io = require('socket.io');
 const Sentry = require('@sentry/node');
 
@@ -40,9 +40,9 @@ app.get('/', (req, res) => {
 
 console.log("Start waiting....");
 if (process.env.IS_BACKUP === "true") {
-    sleep.sleep(10);
+    Sleep.sleep(10);
 } else {
-    sleep.sleep(15);
+    Sleep.sleep(15);
 }
 console.log("Stop waiting....");
 
