@@ -25,7 +25,13 @@ const app = express();
 app.use(express.static(`${__dirname}/public`));
 
 // Setup exception logging
-Sentry.init({ dsn: 'https://8ae89827146d49309d5a8e5699a605b6@sentry.io/1419602' });
+const applicationMode = process.env.ENVIRONMENT;
+if (applicationMode === 'production' || applicationMode === 'staging') {
+    Sentry.init({
+        dsn: 'https://8ae89827146d49309d5a8e5699a605b6@sentry.io/1419602',
+        environment: applicationMode
+    });
+}
 
 // Redirect default '/' call to main.htm page
 app.get('/', (req, res) => {
