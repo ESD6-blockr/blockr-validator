@@ -39,11 +39,7 @@ app.get('/', (req, res) => {
 });
 
 console.log("Start waiting....");
-if (process.env.IS_BACKUP === "true") {
-    Sleep.sleep(10);
-} else {
-    Sleep.sleep(15);
-}
+Sleep.sleep(process.env.IS_BACKUP === "true" ? 10 : 15);
 console.log("Stop waiting....");
 
 // Start listening with HTTP (picks random available port)
