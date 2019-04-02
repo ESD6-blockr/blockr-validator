@@ -22,6 +22,8 @@
   "dependencies": {
     "@blockr/blockr-models": "^1.0.0-4",
     "@types/dotenv": "^6.1.0",
+    "@sentry/node": "^4.6.4",
+    "async": "^2.6.1",
     "bip39": "^2.5.0",
     "bluckur-database": "git+https://github.com/TimoF97/blox-database.git",
     "core-js": "^2.5.7",
@@ -37,6 +39,7 @@
     "readline-sync": "^1.4.9",
     "request": "^2.87.0",
     "seedrandom": "^2.4.3",
+    "sleep": "^6.0.0",
     "smokesignal": "^0.2.2",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",

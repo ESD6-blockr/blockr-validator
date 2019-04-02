@@ -71,6 +71,7 @@ class Validator {
   executeBlockJob() {
     Cron.schedule('*/1 * * * *', () => {
       this.keyStorage.getKeypairAsync().then((resultKeyPair) => {
+        console.log("==================STARTING CRON JOB=====================");
         Database.getBlockchainAsync().then((resultBlock) => {
           const lastBlock = resultBlock[resultBlock.length - 1];
           let lasthash = lastBlock.blockHeader.blockHash;

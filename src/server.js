@@ -11,7 +11,9 @@ const Security = require('./lib/security/security').getInstance();
 const KeyStorage = require('./lib/util/keyStorage');
 const TransactionBuilder = require('./lib/util/transactionBuilder').getInstance();
 const qrCodeGenerator = new QrCodeGenerator();
+const Sleep = require('sleep');
 let io = require('socket.io');
+const Sentry = require('@sentry/node');
 
 let sender;
 let node;
@@ -22,10 +24,23 @@ const connected = false;
 const app = express();
 app.use(express.static(`${__dirname}/public`));
 
+// Setup exception logging
+const applicationMode = process.env.ENVIRONMENT;
+if (applicationMode === 'production' || applicationMode === 'staging') {
+    Sentry.init({
+        dsn: 'https://8ae89827146d49309d5a8e5699a605b6@sentry.io/1419602',
+        environment: applicationMode
+    });
+}
+
 // Redirect default '/' call to main.htm page
 app.get('/', (req, res) => {
     res.redirect('/index.html');
 });
+
+console.log("Start waiting....");
+Sleep.sleep(process.env.IS_BACKUP === "true" ? 10 : 15);
+console.log("Stop waiting....");
 
 // Start listening with HTTP (picks random available port)
 const server = http.createServer(app).listen(8000);
