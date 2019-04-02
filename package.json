@@ -1,13 +1,29 @@
 {
-  "name": "validator",
+  "name": "@blockr/blockr-validator",
   "version": "1.0.0",
-  "description": "blockchain-validator",
-  "main": "src/server.js",
+  "description": "Blockr validator package",
+  "main": "dist/server.js",
+  "types": "dist/server.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build-watch": "tsc -w -p tsconfig.json",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "tslint --project tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ESD6-blockr/blockr-validator.git"
+  },
+  "author": "Blockr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OrdinaBlockchain/blockchain-validator/issues"
+  },
   "dependencies": {
-    "async": "^2.6.1",
+    "@blockr/blockr-models": "^1.0.0-4",
+    "@types/dotenv": "^6.1.0",
     "bip39": "^2.5.0",
     "bluckur-database": "git+https://github.com/TimoF97/blox-database.git",
-    "bluckur-models": "git+https://github.com/Bluckur/bluckur-models.git",
     "core-js": "^2.5.7",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
@@ -27,26 +43,9 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.12.0"
+    "tslint": "^5.14.0",
+    "tsutils": "^3.9.1",
+    "typescript": "^3.3.4000"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "create-executables": "pkg ./server.js --out-path ./executables"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/OrdinaBlockchain/blockchain-validator.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/OrdinaBlockchain/blockchain-validator/issues"
-  },
-  "pkg": {
-    "scripts": "./**/*.js",
-    "assets": "./**/*"
-  },
-  "homepage": "https://github.com/OrdinaBlockchain/blockchain-validator#readme"
+  "homepage": "https://github.com/ESD6-blockr/blockr-validator#readme"
 }
