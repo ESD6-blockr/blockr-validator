@@ -1,7 +1,7 @@
 const Cron = require('node-cron');
 const models = require('bluckur-models');
 const temporaryStorage = require('../lib/util/temporaryStorage');
-const lottery = require('../util/lottery');
+const lottery = require('../utils/lottery');
 const HashMap = require('hashmap');
 const Peer = require('../lib/p2p/peer');
 

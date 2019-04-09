@@ -1,16 +1,15 @@
 require('dotenv').config();
 
 const Validator = require('./lib/validator').getInstance();
-const Messager = require('./util/messager');
-const QrCodeGenerator = require('./services/qrCodeGenerator');
+const Messager = require('./utils/messager');
 const Peer = require('./lib/p2p/peer');
+const logger = require('../dist/logger').default;
 //const opn = require('opn');
 const express = require('express');
 const http = require('http');
 const Security = require('./lib/security/security').getInstance();
 const KeyStorage = require('./lib/util/keyStorage');
 const TransactionBuilder = require('./lib/util/transactionBuilder').getInstance();
-const qrCodeGenerator = new QrCodeGenerator();
 const Sleep = require('sleep');
 let io = require('socket.io');
 const Sentry = require('@sentry/node');
@@ -19,6 +18,8 @@ let sender;
 let node;
 let messager;
 const connected = false;
+
+logger.info('Started app');
 
 // Initialize app with Express
 const app = express();
