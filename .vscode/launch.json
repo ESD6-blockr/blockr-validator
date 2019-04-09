@@ -2,17 +2,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-        "type": "node",
-        "request": "launch",
-        "name": "Launch Program",
-        "program": "${workspaceFolder}/src/server.ts",
-        "sourceMaps": true,
-        "runtimeArgs": [
-            "--nolazy",
-        ],
-        "outputCapture": "std",
-        "outFiles": [
-            "${workspaceFolder}/dist/**/*.js"
-        ]
-    }]
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/src/main.ts",
+            "sourceMaps": true,
+            "runtimeArgs": [
+                "--nolazy",
+            ],
+            "outputCapture": "std",
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ],
+            "env": {
+                "KEY": "#KvdJd7ZgS@8CA4Jrr9DEv&mn9p$BoTb",
+                "IV": "N$KdL&WYBcjfIK*6"
+            }
+        }
+    ]
 }

@@ -1,8 +1,6 @@
+import { DataAccessLayer, DataSource } from "@blockr/blockr-data-access";
 import { Container } from "inversify";
-import * as Mongo from "mongodb";
-import { IClient, LevelDB, MongoDB } from "../clients";
-import { IClientConfiguraton, MongoDBConfiguration } from "../configurations";
-import { loadApplicationSettings } from "../utils/configLoader";
+import { ObjectHasher } from "../utils/objectHasher";
 
 /**
  * Composition root
@@ -11,18 +9,13 @@ import { loadApplicationSettings } from "../utils/configLoader";
 /**
  * Dependency container
  */
-const DIContainer = new Container();
-/**
- * Appsettings file that holds application configurations
- */
-const appsettings = loadApplicationSettings();
+const DIContainer = new Container({skipBaseClassChecks: true});
 
-// Bind configurations
-DIContainer.bind<IClientConfiguraton>(MongoDBConfiguration)
-.toConstantValue(new MongoDBConfiguration(appsettings.mongodb.connectionString, appsettings.mongodb.database));
+// Bind data access layer
+// DIContainer.bind<DataAccessLayer>(DataAccessLayer).toSelf().inTransientScope();
 
-// Bind clients
-DIContainer.bind<IClient<Mongo.Db>>(MongoDB).toSelf().inTransientScope();
-DIContainer.bind<IClient<void>>(LevelDB).toSelf().inTransientScope();
+// Bind singletons
+DIContainer.bind<ObjectHasher>(ObjectHasher).toConstantValue(new ObjectHasher());
+DIContainer.bind<DataAccessLayer>(DataAccessLayer).toConstantValue(new DataAccessLayer(DataSource.MONGO_DB));
 
 export default DIContainer;
