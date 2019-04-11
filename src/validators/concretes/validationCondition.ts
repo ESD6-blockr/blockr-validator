@@ -1,11 +1,14 @@
 import { ValidationException } from "../../exceptions";
 
 export class ValidationCondition<T> {
+    public static isNotNullNorUndefined<K>(object: K): boolean {
+        return object ? true : false;
+    }
 
-    private condition: (object: T) => boolean;
+    private condition: (object: T) => boolean | Promise<boolean>;
     private errorMessage: string;
 
-    constructor(condition: (object: T) => boolean, errorMessage: string) {
+    constructor(condition: (object: T) => boolean | Promise<boolean>, errorMessage: string) {
         this.condition = condition;
         this.errorMessage = errorMessage;
     }
