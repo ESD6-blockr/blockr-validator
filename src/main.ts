@@ -16,8 +16,7 @@ export class Main {
     }
 
     public async validateBlock(block: Block): Promise<boolean> {
-        // TODO implement
-        throw new Error("implement me");
+        return await this.validatorBus.validateAsync(block);
     }
 
     private initSentry() {
