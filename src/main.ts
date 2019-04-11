@@ -4,20 +4,20 @@ import { Block, BlockHeader, Transaction } from "@blockr/blockr-models";
 import * as Sentry from "@sentry/node";
 import DIContainer from "./injection/container";
 import logger from "./utils/logger";
-import { BlockValidator } from "./validators/concretes/blockValidator";
-import { IValidator } from "./validators/interfaces/validator";
+import { ValidatorBus } from "./validators";
 
 export class Main {
-    private blockValidator: IValidator<Block>;
+    private validatorBus: ValidatorBus;
 
     constructor() {
-        this.blockValidator = DIContainer.resolve<IValidator<Block>>(BlockValidator);
+        this.validatorBus = DIContainer.resolve<ValidatorBus>(ValidatorBus);
         
         this.initSentry();
     }
 
     public async validateBlock(block: Block): Promise<boolean> {
-        return this.blockValidator.validateObjectAsync(block);
+        // TODO implement
+        throw new Error("implement me");
     }
 
     private initSentry() {
