@@ -19,7 +19,7 @@
         ]
     },
     "include": [
-        "src/**/*", "deprecated/server.js"
+        "src/**/*"
     ],
     "exclude": ["node_modules/**/*"]
 }
