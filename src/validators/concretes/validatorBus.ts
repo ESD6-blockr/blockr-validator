@@ -1,19 +1,16 @@
-import { BlockHeader, Transaction } from "@blockr/blockr-models";
-import { inject, injectable } from "inversify";
+import { injectable, multiInject } from "inversify";
 import { IValidator } from "../interfaces/validator";
-import { BlockHeaderValidator } from "./blockHeaderValidator";
-import { TransactionValidator } from "./transactionValidator";
 
 @injectable()
 export class ValidatorBus {
+    private validators: Array<IValidator<object>>;
 
-    constructor(@inject(BlockHeaderValidator) blockHeaderValidator: IValidator<BlockHeader>,
-                @inject(TransactionValidator) transactionValidator: IValidator<Transaction>) {
-        // TODO assign validators
+    constructor(@multiInject("Validators") validators: Array<IValidator<object>>) {
+        this.validators = validators;
     }
 
-    public validateAsync(): Promise<boolean> {
-        // TODO execute validators
+    public validateAsync(object: object): Promise<boolean> {
+        
         throw new Error("implement me");
     }
  }

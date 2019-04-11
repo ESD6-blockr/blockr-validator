@@ -15,8 +15,8 @@ const DIContainer = new Container({skipBaseClassChecks: true});
 
 // Bind transients
 DIContainer.bind<DataAccessLayer>(DataAccessLayer).toSelf().inTransientScope();
-DIContainer.bind<IValidator<BlockHeader>>(BlockHeaderValidator).toSelf().inTransientScope();
-DIContainer.bind<IValidator<Transaction>>(TransactionValidator).toSelf().inTransientScope();
+DIContainer.bind<IValidator<BlockHeader>>("Validators").toSelf().inTransientScope();
+DIContainer.bind<IValidator<Transaction>>("Validators").toSelf().inTransientScope();
 
 // Bind singletons
 DIContainer.bind<DataSource>("DataSource").toConstantValue(DataSource.MONGO_DB);
