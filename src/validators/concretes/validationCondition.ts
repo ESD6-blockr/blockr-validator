@@ -1,3 +1,5 @@
+import { ValidationException } from "../../exceptions";
+
 export class ValidationCondition<T> {
 
     private condition: (object: T) => boolean;
@@ -13,6 +15,6 @@ export class ValidationCondition<T> {
             return true;
         }
 
-        throw new Error(this.errorMessage);
+        throw new ValidationException(this.errorMessage);
     }
 }
