@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
 import { Block, BlockHeader, Transaction } from "@blockr/blockr-models";
+import * as Sentry from "@sentry/node";
 import DIContainer from "./injection/container";
 import logger from "./utils/logger";
 import { BlockValidator } from "./validators/concretes/blockValidator";
@@ -11,10 +12,18 @@ export class Main {
 
     constructor() {
         this.blockValidator = DIContainer.resolve<IValidator<Block>>(BlockValidator);
+        
+        this.initSentry();
     }
 
     public async validateBlock(block: Block): Promise<boolean> {
         return this.blockValidator.validateObjectAsync(block);
+    }
+
+    private initSentry() {
+        Sentry.init({
+            dsn: process.env.SENTRY_DSN,
+        });
     }
 }
 
