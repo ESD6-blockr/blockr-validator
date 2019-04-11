@@ -11,11 +11,13 @@ import { ObjectHasher } from "../utils/objectHasher";
  */
 const DIContainer = new Container({skipBaseClassChecks: true});
 
+// Bind datasource
+DIContainer.bind<DataSource>("DataSource").toConstantValue(DataSource.MONGO_DB);
+
 // Bind data access layer
-// DIContainer.bind<DataAccessLayer>(DataAccessLayer).toSelf().inTransientScope();
+DIContainer.bind<DataAccessLayer>(DataAccessLayer).toSelf().inTransientScope();
 
 // Bind singletons
 DIContainer.bind<ObjectHasher>(ObjectHasher).toConstantValue(new ObjectHasher());
-DIContainer.bind<DataAccessLayer>(DataAccessLayer).toConstantValue(new DataAccessLayer(DataSource.MONGO_DB));
 
 export default DIContainer;
