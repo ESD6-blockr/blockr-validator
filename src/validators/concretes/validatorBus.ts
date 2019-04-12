@@ -11,12 +11,12 @@ export class ValidatorBus {
     }
 
     public async validateAsync(...objects: IModel[]): Promise<void> {
-        objects.forEach(async (object: IModel) => {
+        for (const object of objects) {
             for (const validator of this.validators) {
                 if (validator.constructor.name.includes(object.constructor.name)) {
                     await validator.validateObjectAsync(object);
                 }
             }
-        });
+        }
     }
  }
