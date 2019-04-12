@@ -1,12 +1,12 @@
+import { IModel } from "@blockr/blockr-models/dist/model";
 import { injectable, multiInject } from "inversify";
-import logger from "../../utils/logger";
 import { IValidator } from "../interfaces/validator";
 
 @injectable()
 export class ValidatorBus {
-    private validators: Array<IValidator<any>>;
+    private validators: Array<IValidator<IModel>>;
 
-    constructor(@multiInject("Validators") validators: Array<IValidator<any>>) {
+    constructor(@multiInject("Validators") validators: Array<IValidator<IModel>>) {
         this.validators = validators;
     }
 
