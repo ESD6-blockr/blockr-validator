@@ -16,7 +16,7 @@ export class Main {
     }
 
     public async TESTvalidateBlock(block: Block): Promise<void> {
-        await this.validatorBus.validateAsync(block.blockHeader);
+        await this.validatorBus.validateAsync(block.blockHeader, block.transactions);
     }
 
     private initSentry() {
