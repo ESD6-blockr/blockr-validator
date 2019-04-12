@@ -10,10 +10,11 @@ export class ValidatorBus {
         this.validators = validators;
     }
 
-    public validateAsync<T>(object: T): Promise<boolean> {
-        this.validators.forEach(async (validator: IValidator<any>) => {
-            await validator.validateObjectAsync(object);
-        });
-        throw new Error("asdas");
+    public async validateAsync<T>(object: T): Promise<void> {
+        for (const validator of this.validators) {
+            if (validator.constructor.name.includes(object.constructor.name)) {
+                await validator.validateObjectAsync(object);
+            }
+        }
     }
  }

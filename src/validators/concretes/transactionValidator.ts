@@ -14,9 +14,7 @@ export class TransactionValidator extends BaseValidator<Transaction> {
     }
 
     protected initConditions(): void {
-        this.validationConditions.concat(
-            this.getModelConditions(),
-        );
+        this.validationConditions.push.apply(this.validationConditions, this.getModelConditions());
     }
 
     private getModelConditions(): Array<ValidationCondition<Transaction>> {

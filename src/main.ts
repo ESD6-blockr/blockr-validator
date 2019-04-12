@@ -15,20 +15,21 @@ export class Main {
         this.initSentry();
     }
 
-    public async validateBlock(block: Block): Promise<boolean> {
-        return await this.validatorBus.validateAsync(block);
+    public async TESTvalidateBlock(block: Block): Promise<void> {
+        await this.validatorBus.validateAsync(block.blockHeader);
     }
 
     private initSentry() {
         Sentry.init({
             dsn: process.env.SENTRY_DSN,
+            environment: process.env.SENTRY_ENVIRONMENT,
         });
     }
 }
 
 async function main() {
     const main2 = new Main();
-    const value = await main2.validateBlock(new Block(new BlockHeader("", 1, "", 12, 12, "", ""),
+    const value = await main2.TESTvalidateBlock(new Block(new BlockHeader("", 1, "", 12, 12, "", ""),
     [new Transaction("", 12, 12, "", "", "", "")]));
     logger.info(`${value}`);
 }

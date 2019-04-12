@@ -14,10 +14,8 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
     }
 
     protected initConditions(): void {
-        this.validationConditions.concat(
-            this.getModelValidations(),
-            this.getHashValidations(),
-        );
+        this.validationConditions.push.apply(this.validationConditions, this.getModelValidations());
+        this.validationConditions.push.apply(this.validationConditions, this.getHashValidations());
     }
 
     private getModelValidations(): Array<ValidationCondition<BlockHeader>> {
