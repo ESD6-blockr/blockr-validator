@@ -2,7 +2,7 @@ import { ValidationException } from "../../exceptions";
 
 export class ValidationCondition<T> {
     public static isNotNullNorUndefined<K>(object: K): boolean {
-        return object ? true : false;
+        return object !== null && object !== undefined ? true : false;
     }
 
     private condition: (object: T) => boolean | Promise<boolean>;
