@@ -1,6 +1,8 @@
 import * as Crypto from "crypto";
+import { injectable } from "inversify";
 import Logger from "./logger";
 
+@injectable()
 export class ObjectHasher {
 
     public hash<T>(object: T | undefined): string {

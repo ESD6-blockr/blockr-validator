@@ -3,6 +3,9 @@ import DIContainer from "./injection/container";
 import logger from "./utils/logger";
 import { ValidatorBus } from "./validators";
 
+/**
+ * THIS IS MAIN IS USED FOR DEBUGGING ONLY AND SHOULD BE REMOVED
+ */
 async function main() {
     const validatorBus = DIContainer.resolve<ValidatorBus>(ValidatorBus);
 
@@ -12,10 +15,8 @@ async function main() {
         new BlockHeader("1", 3, "", 1, 1, "", ""),
     ];
 
-    const result1 = await validatorBus.validateAsync([blockheaders[0], blockheaders[1], blockheaders[2]]);
-    logger.info(JSON.stringify(result1));
-  //  const result2 = await validatorBus.validateAsync(blockheaders[0], blockheaders[1]);
-    //logger.info(JSON.stringify(result2));
+    const result = await validatorBus.validateAsync([blockheaders[0], blockheaders[1], blockheaders[2]]);
+    logger.info(JSON.stringify(result));
 }
 
 main();

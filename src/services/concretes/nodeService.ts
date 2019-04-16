@@ -2,18 +2,21 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Block } from "@blockr/blockr-models";
 import { inject } from "inversify";
 import { NodeStartupException } from "../../exceptions/nodeStartupException";
+import { GenesisBlockGenerator } from "../../generators/concretes/genesisBlockGenerator";
 import logger from "../../utils/logger";
 import { ValidatorBus } from "../../validators";
-import { GenesisBlockGenerator } from "../../generators/concretes/genesisBlockGenerator";
 
 export class NodeService {
     private validatorBus: ValidatorBus;
     private dataAccessLayer: DataAccessLayer;
+    private genesisBlockGenerator: GenesisBlockGenerator;
 
     constructor(@inject(ValidatorBus) validatorBus: ValidatorBus,
-                @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer) {
+                @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
+                @inject(GenesisBlockGenerator) genesisBlockGenerator: GenesisBlockGenerator) {
         this.validatorBus = validatorBus;
         this.dataAccessLayer = dataAccessLayer;
+        this.genesisBlockGenerator = genesisBlockGenerator;
     }
 
     public async start() {
@@ -21,10 +24,10 @@ export class NodeService {
 
         // TODO init P2P client?
 
-        await this.checkBlockchainAsync();
+        await this.checkIfTheBlockchainExistsAsync();
     }
 
-    private async checkBlockchainAsync() {
+    private async checkIfTheBlockchainExistsAsync() {
         try {
             logger.info("Checking the state of the blockchain");
 
@@ -41,8 +44,24 @@ export class NodeService {
         }
     }
 
-    private async initiateBlockchainAsync() {
-        logger.info("Initiating blockchain");
-        GenesisBlockGenerator.buildGenesisBlock();
+    private async initiateBlockchainAsync(): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                logger.info("Initiating blockchain");
+
+                const genesisBlock = await this.genesisBlockGenerator.buildGenesisBlockAsync();
+                
+                await this.dataAccessLayer.setBlocksAsync([genesisBlock]);
+                        
+                // TODO: Why should we do this?
+                await this.dataAccessLayer.updateStatesAsync(genesisBlock.transactions);
+
+                resolve();
+            } catch (error) {
+                logger.error(error.message);
+
+                reject(error);
+            }
+        });
     }
 }
