@@ -1,6 +1,6 @@
 {
   "name": "@blockr/blockr-validator",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Blockr validator package",
   "main": "dist/server.js",
   "types": "dist/server.d.ts",
@@ -21,8 +21,8 @@
     "url": "https://github.com/OrdinaBlockchain/blockchain-validator/issues"
   },
   "dependencies": {
-    "@blockr/blockr-data-access": "^1.1.0-6",
-    "@blockr/blockr-models": "^1.1.1-10",
+    "@blockr/blockr-data-access": "^1.1.0-10",
+    "@blockr/blockr-models": "^1.2.0-9",
     "@sentry/node": "^4.6.6",
     "inversify": "^5.0.1",
     "winston": "^3.2.1"

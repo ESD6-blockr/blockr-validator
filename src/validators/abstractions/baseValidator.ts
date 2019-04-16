@@ -4,10 +4,10 @@ import { ObjectHasher } from "../../utils/objectHasher";
 import { ValidationCondition } from "../concretes/validationCondition";
 import { IValidator } from "../interfaces/validator";
 
-export abstract class BaseValidator<T> implements IValidator<T> {
+export abstract class BaseValidator<IModel> implements IValidator<IModel> {
     protected dataAccessLayer: DataAccessLayer;
     protected objectHasher: ObjectHasher;
-    protected validationConditions: Array<ValidationCondition<T>> = [];
+    protected validationConditions: Array<ValidationCondition<IModel>> = [];
 
     constructor(dataAccessLayer: DataAccessLayer, objectHasher: ObjectHasher) {
         this.dataAccessLayer = dataAccessLayer;
@@ -16,15 +16,15 @@ export abstract class BaseValidator<T> implements IValidator<T> {
         this.initConditions();
     }
 
-    public async validateObjectAsync(object: T): Promise<boolean> {
+    public async validateObjectAsync(object: IModel): Promise<[IModel, boolean]> {
         return new Promise(async (resolve, reject) => {
             try {
                 Logger.info(`Validating ${object.constructor.name}`);
                 
                 const isValid = this.validationConditions
-                                    .every((condition: ValidationCondition<T>) => condition.validate(object));
+                                    .every((condition: ValidationCondition<IModel>) => condition.validate(object));
     
-                resolve(isValid);
+                resolve([object, isValid]);
             } catch (error) {
                 Logger.error(error);
 
