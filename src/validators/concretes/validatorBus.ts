@@ -1,4 +1,4 @@
-import { IModel } from "@blockr/blockr-models/dist/model";
+import { IModel } from "@blockr/blockr-models";
 import { injectable, multiInject } from "inversify";
 import { IValidator } from "../interfaces/validator";
 
@@ -10,13 +10,17 @@ export class ValidatorBus {
         this.validators = validators;
     }
 
-    public async validateAsync(...objects: IModel[]): Promise<void> {
-        for (const object of objects) {
+    public async validateAsync(...models: IModel[]): Promise<void> {
+        for (const model of models) {
             for (const validator of this.validators) {
-                if (validator.constructor.name.includes(object.constructor.name)) {
-                    await validator.validateObjectAsync(object);
+                if (this.validatorForModel(validator, model)) {
+                    await validator.validateObjectAsync(model);
                 }
             }
         }
+    }
+
+    private validatorForModel(validator: IValidator<IModel>, model: IModel): boolean {
+        return validator.constructor.name === `${model.constructor.name}Validator`;
     }
  }

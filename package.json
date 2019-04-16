@@ -21,7 +21,7 @@
     "url": "https://github.com/OrdinaBlockchain/blockchain-validator/issues"
   },
   "dependencies": {
-    "@blockr/blockr-data-access": "^1.1.0-4",
+    "@blockr/blockr-data-access": "^1.1.0-6",
     "@blockr/blockr-models": "^1.1.1-10",
     "@sentry/node": "^4.6.6",
     "inversify": "^5.0.1",
