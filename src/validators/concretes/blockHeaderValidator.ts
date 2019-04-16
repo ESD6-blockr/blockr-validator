@@ -9,7 +9,7 @@ import { ValidationCondition } from "./validationCondition";
 export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ObjectHasher) objectHasher: ObjectHasher) {
-            
+                        
         super(dataAccessLayer, objectHasher);
     }
 
