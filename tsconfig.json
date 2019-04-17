@@ -1,11 +1,12 @@
 {
     "compilerOptions": {
+       // "allowJs": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "outDir": "./dist/",
         "sourceMap": true,
         "strictNullChecks": true,
-        "declaration": true,
+        //TODO: This has to be uncommented "declaration": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitReturns": true,
         "noImplicitAny": true,
@@ -19,10 +20,11 @@
         ]
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        //"deprecated/lib/p2p/**/*.js"
     ],
     "exclude": [
         "node_modules/**/*",
-        "src/__tests__/*"
+        "src/__tests__/*",
     ]
 }

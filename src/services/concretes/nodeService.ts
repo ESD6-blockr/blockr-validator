@@ -20,16 +20,16 @@ export class NodeService {
     }
 
     public async start() {
-        logger.info(`${this.constructor.name} is starting`);
+        logger.info(`${this.constructor.name} is starting.`);
 
         // TODO init P2P client?
 
-        await this.checkIfTheBlockchainExistsAsync();
+        await this.initiateBlockchainIfInexistent();
     }
 
-    private async checkIfTheBlockchainExistsAsync() {
+    private async initiateBlockchainIfInexistent() {
         try {
-            logger.info("Checking the state of the blockchain");
+            logger.info("Checking the state of the blockchain.");
 
             const blockchain: Block[] = await this.dataAccessLayer.getBlockchainAsync();
 
@@ -38,7 +38,7 @@ export class NodeService {
                 return;
             }
 
-            logger.info("Blockhain received");
+            logger.info("Blockchain received.");
         } catch (error) {
             throw new NodeStartupException(error.message);
         }
@@ -47,13 +47,11 @@ export class NodeService {
     private async initiateBlockchainAsync(): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
-                logger.info("Initiating blockchain");
+                logger.info("Initiating blockchain.");
 
-                const genesisBlock = await this.genesisBlockGenerator.buildGenesisBlockAsync();
+                const genesisBlock = await this.genesisBlockGenerator.generateGenesisBlockAsync();
                 
-                await this.dataAccessLayer.setBlocksAsync([genesisBlock]);
-                        
-                // TODO: Why should we do this?
+                await this.dataAccessLayer.addBlockAsync(genesisBlock);
                 await this.dataAccessLayer.updateStatesAsync(genesisBlock.transactions);
 
                 resolve();

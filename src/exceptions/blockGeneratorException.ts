@@ -1,4 +1,4 @@
-export class GenesisGeneratorException extends Error {
+export class BlockGeneratorException extends Error {
     constructor(message: string) {
         super(message);
     }

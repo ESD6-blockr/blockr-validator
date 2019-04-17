@@ -38,8 +38,8 @@ export class TransactionValidator extends BaseValidator<Transaction> {
                 return ValidationCondition.isNotNullNorUndefined(transaction.signature);
             }, "The transaction signature is null or undefined."),
             new ValidationCondition((transaction: Transaction): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(transaction.timestamp);
-            }, "The transaction timestamp is null or undefined."),
+                return ValidationCondition.isNotNullNorUndefined(transaction);
+            }, "The transaction date is null or undefined."),
             new ValidationCondition((transaction: Transaction): boolean => {
                 return ValidationCondition.isNotNullNorUndefined(transaction.type);
             }, "The transaction type is null or undefined."),
