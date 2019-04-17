@@ -1,5 +1,7 @@
 import { IModel } from "@blockr/blockr-models";
 import { injectable, multiInject } from "inversify";
+import { ValidatorBusException } from "../../exceptions/validatorBusException";
+import logger from "../../utils/logger";
 import { IValidator } from "../interfaces/validator";
 
 @injectable()
@@ -10,17 +12,32 @@ export class ValidatorBus {
         this.validators = validators;
     }
 
-    public async validateAsync(...models: IModel[]): Promise<void> {
+    public async validateAsync(models: IModel[]): Promise<Array<[IModel, boolean]>> {
+        const promises: Array<Promise<[IModel, boolean]>> = [];
+
         for (const model of models) {
-            for (const validator of this.validators) {
-                if (this.validatorForModel(validator, model)) {
-                    await validator.validateObjectAsync(model);
-                }
+            let validator: IValidator<IModel>;
+
+            try {
+                validator = this.validatorForModel(model);
+            } catch (error) {
+                logger.warn(error.message);
+                continue;
             }
+
+            promises.push(validator.validateObjectAsync(model));
         }
+
+        return Promise.all(promises);
     }
 
-    private validatorForModel(validator: IValidator<IModel>, model: IModel): boolean {
-        return validator.constructor.name === `${model.constructor.name}Validator`;
+    private validatorForModel(model: IModel): IValidator<IModel> {
+        for (const validator of this.validators) {
+            if (validator.constructor.name === `${model.constructor.name}Validator`) {
+                return validator;
+            }
+        }
+
+        throw new ValidatorBusException(`${model.constructor.name} does not have a validator`);
     }
  }
