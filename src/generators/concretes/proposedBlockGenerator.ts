@@ -1,7 +1,7 @@
 import { Block, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { ObjectHasher } from "../../utils/objectHasher";
-import { ObjectSigner } from "../../utils/objectSigner";
+import { ObjectHasher } from "../../utils";
+import { ObjectSigner } from "../../utils";
 import { BlockGenerator } from "../abstractions/blockGenerator";
 
 /* Proposed block reward amount */

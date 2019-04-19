@@ -1,5 +1,5 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
-import Logger from "../../utils/logger";
+import { logger } from "../../utils";
 import { ObjectHasher } from "../../utils/objectHasher";
 import { ValidationCondition } from "../concretes/validationCondition";
 import { IValidator } from "../interfaces/validator";
@@ -19,14 +19,14 @@ export abstract class BaseValidator<IModel> implements IValidator<IModel> {
     public async validateObjectAsync(object: IModel): Promise<[IModel, boolean]> {
         return new Promise(async (resolve, reject) => {
             try {
-                Logger.info(`Validating ${object.constructor.name}`);
+                logger.info(`Validating ${object.constructor.name}`);
                 
                 const isValid = this.validationConditions
                                     .every((condition: ValidationCondition<IModel>) => condition.validate(object));
     
                 resolve([object, isValid]);
             } catch (error) {
-                Logger.error(error);
+                logger.error(error);
 
                 reject(error);
             }

@@ -19,7 +19,7 @@ const alignedWithColorsAndTime = Winston.format.combine(
     }),
 );
 
-const logger = Winston.createLogger({
+export const logger = Winston.createLogger({
     format: alignedWithColorsAndTime,
     transports: [
         new Winston.transports.Console({}),
@@ -33,5 +33,3 @@ const logger = Winston.createLogger({
         }),
     ],
 });
-
-export default logger;

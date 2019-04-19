@@ -3,7 +3,7 @@
        // "allowJs": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "outDir": "./dist/",
+        "outDir": "dist",
         "sourceMap": true,
         "strictNullChecks": true,
         //TODO: This has to be uncommented "declaration": true,
@@ -24,7 +24,6 @@
         //"deprecated/lib/p2p/**/*.js"
     ],
     "exclude": [
-        "node_modules/**/*",
         "src/__tests__/*",
     ]
 }

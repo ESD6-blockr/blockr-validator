@@ -1,7 +1,7 @@
 import { Block, Transaction, TransactionType } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { BlockGeneratorException } from "../../exceptions/blockGeneratorException";
-import { ObjectSigner } from "../../utils/objectSigner";
+import { ObjectSigner } from "../../utils";
 import { BlockGenerator } from "../abstractions/blockGenerator";
 
 /* The maximum amount of coins within the blockchain */

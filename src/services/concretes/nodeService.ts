@@ -3,7 +3,7 @@ import { Block } from "@blockr/blockr-models";
 import { inject } from "inversify";
 import { NodeStartupException } from "../../exceptions/nodeStartupException";
 import { GenesisBlockGenerator } from "../../generators/concretes/genesisBlockGenerator";
-import logger from "../../utils/logger";
+import { logger } from "../../utils";
 import { ValidatorBus } from "../../validators";
 
 export class NodeService {

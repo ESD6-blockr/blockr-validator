@@ -1,6 +1,6 @@
 import { Block, BlockHeader, Transaction, TransactionType } from "@blockr/blockr-models";
 import { BlockGeneratorException } from "../../exceptions/blockGeneratorException";
-import { ObjectSigner } from "../../utils/objectSigner";
+import { ObjectSigner } from "../../utils";
 
 export abstract class BlockGenerator {
     private objectSigner: ObjectSigner;
