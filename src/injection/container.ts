@@ -1,10 +1,10 @@
 import { DataAccessLayer, DataSource } from "@blockr/blockr-data-access";
 import { BlockHeader, Transaction } from "@blockr/blockr-models";
+import { GenesisBlockGenerator } from "app/generators";
+import { ObjectHasher } from "app/utils";
+import { ObjectSigner } from "app/utils";
+import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "app/validators";
 import { Container } from "inversify";
-import { GenesisBlockGenerator } from "../generators/concretes/genesisBlockGenerator";
-import { ObjectHasher } from "../utils";
-import { ObjectSigner } from "../utils";
-import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "../validators";
 
 /**
  * Composition root

@@ -1,5 +1,5 @@
+import { logger } from "app/utils";
 import * as Crypto from "crypto";
-import { logger } from "./logger";
 
 const PRIVATE_KEY: string = process.env.PRIVATE_KEY ? process.env.PRIVATE_KEY : "";
 
