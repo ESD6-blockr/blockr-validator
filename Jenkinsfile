@@ -2,9 +2,12 @@
 
 @Library('blockr-jenkins-lib') _
 
-Map sonarSettings = [
-    key: "blockr-validator",
-    source: "src/",
+String repo = 'blockr-validator'
+
+Map settings = [
+    sonar_key: 'blockr-validator',
+    source_folder: 'src/',
+    archive_folders: ['dist/']
 ]
 
-tsBuildAndPublish(sonarSettings)
+tsBuildAndPublish(repo, settings)
