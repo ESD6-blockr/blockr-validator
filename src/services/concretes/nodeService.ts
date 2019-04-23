@@ -19,29 +19,35 @@ export class NodeService {
         this.genesisBlockGenerator = genesisBlockGenerator;
     }
 
-    public async start() {
-        logger.info(`${this.constructor.name} is starting.`);
+    public async start(): Promise<void> {
+        return new Promise(async (resolve) => {
+            logger.info(`${this.constructor.name} is starting.`);
 
-        // TODO init P2P client?
-
-        await this.initiateBlockchainIfInexistent();
+            // TODO init P2P client?
+    
+            await this.initiateBlockchainIfInexistentAsync();
+            resolve();
+        });
     }
 
-    private async initiateBlockchainIfInexistent() {
-        try {
-            logger.info("Checking the state of the blockchain.");
-
-            const blockchain: Block[] = await this.dataAccessLayer.getBlockchainAsync();
-
-            if (blockchain.length === 0) {
-                await this.initiateBlockchainAsync();
-                return;
+    private async initiateBlockchainIfInexistentAsync(): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                logger.info("Checking the state of the blockchain.");
+    
+                const blockchain: Block[] = await this.dataAccessLayer.getBlockchainAsync();
+    
+                if (blockchain.length === 0) {
+                    await this.initiateBlockchainAsync();
+                    return;
+                }
+    
+                logger.info("Blockchain received.");
+                resolve();
+            } catch (error) {
+                reject(new NodeStartupException(error.message));
             }
-
-            logger.info("Blockchain received.");
-        } catch (error) {
-            throw new NodeStartupException(error.message);
-        }
+        });
     }
 
     private async initiateBlockchainAsync(): Promise<void> {

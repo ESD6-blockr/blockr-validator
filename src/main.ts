@@ -9,7 +9,7 @@ async function main() {
     initSentry();
 
     const service = DIContainer.resolve<NodeService>(NodeService);
-    service.start();
+    await service.start();
 }
 
 function initSentry() {
