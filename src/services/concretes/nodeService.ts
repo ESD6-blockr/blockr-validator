@@ -2,6 +2,7 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Block } from "@blockr/blockr-models";
 import { NodeStartupException } from "app/exceptions";
 import { GenesisBlockGenerator } from "app/generators";
+import { BlockJob } from "app/jobs/concretes/blockJob";
 import { logger } from "app/utils";
 import { ValidatorBus } from "app/validators";
 import { inject } from "inversify";
@@ -23,11 +24,21 @@ export class NodeService {
         return new Promise(async (resolve) => {
             logger.info(`${this.constructor.name} is starting.`);
 
-            // TODO init P2P client?
+            // TODO: init P2P client?
+            // TODO: CreateBlockTask#p2p broadcast
+            // TODO: validator#start#initiateHandleRequests --> peer message bindings inits
     
             await this.initiateBlockchainIfInexistentAsync();
+            this.scheduleBlockJob();
+
             resolve();
         });
+    }
+
+    private scheduleBlockJob() {
+        logger.info("Scheduling Block Job.");
+        
+        new BlockJob().schedule(1);
     }
 
     private async initiateBlockchainIfInexistentAsync(): Promise<void> {

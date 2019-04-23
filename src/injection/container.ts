@@ -1,4 +1,4 @@
-import { DataAccessLayer, DataSource } from "@blockr/blockr-data-access";
+import { DataAccessLayer, DataSource, IClientConfiguraton, MongoDBConfiguration } from "@blockr/blockr-data-access";
 import { BlockHeader, Transaction } from "@blockr/blockr-models";
 import { GenesisBlockGenerator } from "app/generators";
 import { ObjectHasher } from "app/utils";
@@ -26,6 +26,10 @@ DIContainer.bind<GenesisBlockGenerator>(GenesisBlockGenerator).toSelf().inTransi
 
 DIContainer.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
 DIContainer.bind<ObjectSigner>(ObjectSigner).toSelf().inRequestScope();
+
+// Bind constants
+DIContainer.bind<IClientConfiguraton>("MongoDBConfiguration")
+                    .toConstantValue(new MongoDBConfiguration("conn string", "database"));
 
 // Bind singletons
 DIContainer.bind<DataSource>("DataSource").toConstantValue(DataSource.MONGO_DB);
