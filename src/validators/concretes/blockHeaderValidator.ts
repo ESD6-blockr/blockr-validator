@@ -1,7 +1,7 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { BlockHeader } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { ObjectHasher } from "../../utils/objectHasher";
+import { ObjectHasher } from "../../utils/security/objectHasher";
 import { BaseValidator } from "../abstractions/baseValidator";
 import { ValidationCondition } from "./validationCondition";
 

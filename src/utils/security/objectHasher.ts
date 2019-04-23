@@ -4,7 +4,6 @@ import { injectable } from "inversify";
 
 @injectable()
 export class ObjectHasher {
-
     public hash<T>(object: T | undefined): string {
         try {
             logger.info(`Hashing object: ${object}`);

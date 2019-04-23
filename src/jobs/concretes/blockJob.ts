@@ -1,7 +1,6 @@
 import { ScheduledJob } from "app/jobs/abstractions/scheduledJob";
 
 export class BlockJob extends ScheduledJob {
-
     constructor() {
         super(() => {
             // this.keyStorage.getKeypairAsync().then((resultKeyPair) => {

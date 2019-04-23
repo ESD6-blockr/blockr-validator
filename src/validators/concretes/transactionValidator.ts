@@ -2,7 +2,7 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { BaseValidator } from "..";
-import { ObjectHasher } from "../../utils/objectHasher";
+import { ObjectHasher } from "../../utils/security/objectHasher";
 import { ValidationCondition } from "./validationCondition";
 
 @injectable()
