@@ -11,13 +11,16 @@ export class NodeService {
     private validatorBus: ValidatorBus;
     private dataAccessLayer: DataAccessLayer;
     private genesisBlockGenerator: GenesisBlockGenerator;
+    private blockJob: BlockJob;
 
     constructor(@inject(ValidatorBus) validatorBus: ValidatorBus,
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
-                @inject(GenesisBlockGenerator) genesisBlockGenerator: GenesisBlockGenerator) {
+                @inject(GenesisBlockGenerator) genesisBlockGenerator: GenesisBlockGenerator,
+                @inject(BlockJob) blockJob: BlockJob) {
         this.validatorBus = validatorBus;
         this.dataAccessLayer = dataAccessLayer;
         this.genesisBlockGenerator = genesisBlockGenerator;
+        this.blockJob = blockJob;
     }
 
     public async start(): Promise<void> {
@@ -38,7 +41,7 @@ export class NodeService {
     private scheduleBlockJob() {
         logger.info("Scheduling Block Job.");
         
-        new BlockJob().schedule(1);
+        this.blockJob.schedule(1);
     }
 
     private async initiateBlockchainIfInexistentAsync(): Promise<void> {

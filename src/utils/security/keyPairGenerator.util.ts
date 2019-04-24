@@ -1,10 +1,11 @@
 import { KeyPairGenerationException } from "app/exceptions";
 import { logger } from "app/utils";
 import { generateMnemonic, mnemonicToEntropy } from "bip39";
+import { injectable } from "inversify";
 import { instantiate } from "js-nacl";
 
+@injectable()
 export class KeyPairGenerator {
-
     public generateKeyPairAsync(): Promise<{ publicKey: string, privateKey: string }> {
         return new Promise((resolve, reject) => {
             logger.info("Generating KeyPair.");

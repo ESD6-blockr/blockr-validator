@@ -1,8 +1,10 @@
 import { DataAccessLayer, DataSource, IClientConfiguraton, MongoDBConfiguration } from "@blockr/blockr-data-access";
 import { BlockHeader, Transaction } from "@blockr/blockr-models";
 import { GenesisBlockGenerator } from "app/generators";
-import { ObjectHasher } from "app/utils";
+import { BlockJob } from "app/jobs";
+import { KeyPairGenerator, ObjectHasher } from "app/utils";
 import { ObjectSigner } from "app/utils";
+import { FileUtils } from "app/utils/file.util";
 import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "app/validators";
 import { Container } from "inversify";
 
@@ -23,9 +25,12 @@ DIContainer.bind<IValidator<Transaction>>("Validators").to(TransactionValidator)
 DIContainer.bind<ValidatorBus>(ValidatorBus).toSelf().inTransientScope();
 
 DIContainer.bind<GenesisBlockGenerator>(GenesisBlockGenerator).toSelf().inTransientScope();
+DIContainer.bind<BlockJob>(BlockJob).toSelf().inTransientScope();
 
 DIContainer.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
 DIContainer.bind<ObjectSigner>(ObjectSigner).toSelf().inRequestScope();
+DIContainer.bind<KeyPairGenerator>(KeyPairGenerator).toSelf().inRequestScope();
+DIContainer.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
 
 // Bind constants
 DIContainer.bind<IClientConfiguraton>("MongoDBConfiguration")

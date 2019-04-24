@@ -1,8 +1,10 @@
 import { logger } from "app/utils";
 import * as Crypto from "crypto";
+import { injectable } from "inversify";
 
 const PRIVATE_KEY: string = process.env.PRIVATE_KEY ? process.env.PRIVATE_KEY : "";
 
+@injectable()
 export class ObjectSigner {
     public async signAsync<T>(object: T): Promise<string> {
         return new Promise((resolve, reject) => {
