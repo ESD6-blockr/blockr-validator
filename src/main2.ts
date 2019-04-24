@@ -1,5 +1,5 @@
 import { BlockHeader } from "@blockr/blockr-models";
-import DIContainer from "./injection/container";
+import DIContainer from "./injection/container.injection";
 import { logger } from "./utils";
 import { ValidatorBus } from "./validators";
 

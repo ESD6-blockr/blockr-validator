@@ -35,7 +35,7 @@ export class KeyPairGenerator {
         const arrayBuffer = new ArrayBuffer(stringToConvert.length * 1);
         const newUintArray = new Uint8Array(arrayBuffer);
 
-        newUintArray.forEach((_, i) => {
+        newUintArray.forEach((i) => {
             newUintArray[i] = stringToConvert.charCodeAt(i);
         });
         return newUintArray;

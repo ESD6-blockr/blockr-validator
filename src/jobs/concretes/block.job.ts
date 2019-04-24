@@ -1,4 +1,4 @@
-import { SchedulableJob } from "app/jobs/abstractions/schedulableJob";
+import { SchedulableJob } from "app/jobs/abstractions/schedulable.job";
 
 export class BlockJob extends SchedulableJob {
     private keyPair?: string;

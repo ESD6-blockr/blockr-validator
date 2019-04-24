@@ -1,1 +1,1 @@
-export { BlockJob } from "app/jobs/concretes/blockJob";
+export { BlockJob } from "app/jobs/concretes/block.job";

@@ -1,6 +1,6 @@
 import { IModel } from "@blockr/blockr-models";
 import { injectable, multiInject } from "inversify";
-import { ValidatorBusException } from "../../exceptions/validatorBusException";
+import { ValidatorBusException } from "../../exceptions/validatorBus.exception";
 import { logger } from "../../utils";
 import { IValidator } from "../interfaces/validator";
 

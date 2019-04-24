@@ -1,1 +1,1 @@
-export { NodeService } from "./concretes/nodeService";
+export { NodeService } from "./concretes/node.service";

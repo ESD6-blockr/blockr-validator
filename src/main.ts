@@ -2,7 +2,7 @@ import "module-alias/register";
 import "reflect-metadata";
 
 import * as Sentry from "@sentry/node";
-import DIContainer from "app/injection/container";
+import DIContainer from "app/injection/container.injection";
 import { NodeService } from "app/services";
 
 async function main() {

@@ -2,7 +2,7 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Block } from "@blockr/blockr-models";
 import { NodeStartupException } from "app/exceptions";
 import { GenesisBlockGenerator } from "app/generators";
-import { BlockJob } from "app/jobs/concretes/blockJob";
+import { BlockJob } from "app/jobs/concretes/block.job";
 import { logger } from "app/utils";
 import { ValidatorBus } from "app/validators";
 import { inject } from "inversify";

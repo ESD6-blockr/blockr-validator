@@ -1,3 +1,3 @@
-export { GenesisBlockGenerator } from "./concretes/genesisBlockGenerator";
-export { ProposedBlockGenerator } from "./concretes/proposedBlockGenerator";
-export { BlockGenerator } from "./abstractions/blockGenerator";
+export { GenesisBlockGenerator } from "./concretes/genesisBlock.generator";
+export { ProposedBlockGenerator } from "./concretes/proposedBlock.generator";
+export { BlockGenerator } from "./abstractions/block.generator";

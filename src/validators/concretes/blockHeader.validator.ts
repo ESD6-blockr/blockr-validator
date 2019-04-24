@@ -1,9 +1,9 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { BlockHeader } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { ObjectHasher } from "../../utils/security/objectHasher";
-import { BaseValidator } from "../abstractions/baseValidator";
-import { ValidationCondition } from "./validationCondition";
+import { ObjectHasher } from "../../utils/security/objectHasher.util";
+import { BaseValidator } from "../abstractions/base.validator";
+import { ValidationCondition } from "./validation.condition";
 
 @injectable()
 export class BlockHeaderValidator extends BaseValidator<BlockHeader> {

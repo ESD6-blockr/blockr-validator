@@ -1,5 +1,5 @@
-export { ValidatorBus } from "./concretes/validatorBus";
+export { ValidatorBus } from "./concretes/validator.bus";
 export { IValidator } from "./interfaces/validator";
-export { BaseValidator } from "./abstractions/baseValidator";
-export { BlockHeaderValidator } from "./concretes/blockHeaderValidator";
-export { TransactionValidator } from "./concretes/transactionValidator";
+export { BaseValidator } from "./abstractions/base.validator";
+export { BlockHeaderValidator } from "./concretes/blockHeader.validator";
+export { TransactionValidator } from "./concretes/transaction.validator";
