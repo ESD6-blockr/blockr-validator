@@ -1,11 +1,11 @@
+import { DataAccessLayer } from "@blockr/blockr-data-access";
+import { Block } from "@blockr/blockr-models";
+import { ProposedBlockGenerator } from "app/generators";
 import { SchedulableJob } from "app/jobs/abstractions/schedulable.job";
 import { KeyPairGenerator } from "app/utils";
 import { FileUtils } from "app/utils/file.util";
 import { inject, injectable } from "inversify";
 import { join } from "path";
-import { DataAccessLayer } from "@blockr/blockr-data-access";
-import { Block } from "@blockr/blockr-models";
-import { ProposedBlockGenerator } from "app/generators";
 
 const KEYS_FILE_PATH = `${join(__dirname, "../../../")}.keys`;
 
@@ -24,7 +24,7 @@ export class BlockJob extends SchedulableJob {
         super(async () => {
             const blockChain: Block[] = await this.dataAccessLayer.getBlockchainAsync();
 
-            if (blockChain.length == 0) {
+            if (blockChain.length === 0) {
                 return;
             }
 
