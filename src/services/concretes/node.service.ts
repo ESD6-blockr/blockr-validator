@@ -30,6 +30,7 @@ export class NodeService {
             // TODO: init P2P client?
             // TODO: CreateBlockTask#p2p broadcast
             // TODO: validator#start#initiateHandleRequests --> peer message bindings inits
+            // TODO: Where do we use the validatorBus?
     
             await this.initiateBlockchainIfInexistentAsync();
             this.scheduleBlockJob();

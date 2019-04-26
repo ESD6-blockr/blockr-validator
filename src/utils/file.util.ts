@@ -5,10 +5,10 @@ const ENCODING = "utf8";
 
 @injectable()
 export class FileUtils {
-    public fileExists(filePath: string): Promise<boolean> {
+    public fileExistsAsync(filePath: string): Promise<boolean> {
         return new Promise((resolve) => {
             access(filePath, constants.F_OK, (error) => {
-                resolve(!!error);
+                resolve(!error);
             });
         });
     }
@@ -19,7 +19,7 @@ export class FileUtils {
      * @param filePath The path of the file that should be appended.
      * @param appendance The string that should be appended to the file.
      */
-    public appendStringFile(filePath: string, appendance: string): Promise<void> {
+    public appendStringInFileAsync(filePath: string, appendance: string): Promise<void> {
         return new Promise((resolve, reject) => {
             appendFile(filePath, appendance, (error) => {
                 if (error) {
@@ -35,7 +35,7 @@ export class FileUtils {
      * Reads a file and returns its content in the form of the given type T.
      * @param filePath The path of the file whose content should be read.
      */
-    public readFile<T>(filePath: string): Promise<T> {
+    public readFileAsync<T>(filePath: string): Promise<T> {
         return new Promise((resolve, reject) => {
             readFile(filePath, ENCODING, (error, fileContents) => {
                 if (error) {

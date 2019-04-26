@@ -1,6 +1,6 @@
 import { DataAccessLayer, DataSource, IClientConfiguraton, MongoDBConfiguration } from "@blockr/blockr-data-access";
 import { BlockHeader, Transaction } from "@blockr/blockr-models";
-import { GenesisBlockGenerator } from "app/generators";
+import { GenesisBlockGenerator, ProposedBlockGenerator } from "app/generators";
 import { BlockJob } from "app/jobs";
 import { KeyPairGenerator, ObjectHasher } from "app/utils";
 import { ObjectSigner } from "app/utils";
@@ -25,8 +25,10 @@ DIContainer.bind<IValidator<Transaction>>("Validators").to(TransactionValidator)
 DIContainer.bind<ValidatorBus>(ValidatorBus).toSelf().inTransientScope();
 
 DIContainer.bind<GenesisBlockGenerator>(GenesisBlockGenerator).toSelf().inTransientScope();
+DIContainer.bind<ProposedBlockGenerator>(ProposedBlockGenerator).toSelf().inTransientScope();
 DIContainer.bind<BlockJob>(BlockJob).toSelf().inTransientScope();
 
+// Bind request scopes
 DIContainer.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
 DIContainer.bind<ObjectSigner>(ObjectSigner).toSelf().inRequestScope();
 DIContainer.bind<KeyPairGenerator>(KeyPairGenerator).toSelf().inRequestScope();
