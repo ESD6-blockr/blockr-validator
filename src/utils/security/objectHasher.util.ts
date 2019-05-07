@@ -4,15 +4,17 @@ import { injectable } from "inversify";
 
 @injectable()
 export class ObjectHasher {
-    public hash<T>(object: T | undefined): string {
-        try {
-            logger.info(`Hashing object: ${object}`);
+    public hashAsync<T>(object: T | undefined): Promise<string> {
+        return new Promise((resolve, reject) => {
+            try {
+                logger.info(`Hashing object: ${object}`);
 
-            return Crypto.createHash("md5").update(JSON.stringify(object)).digest("hex");
-        } catch (error) {
-            logger.error(error);
+                resolve(Crypto.createHash("md5").update(JSON.stringify(object)).digest("hex"));
+            } catch (error) {
+                logger.error(error.message);
 
-            throw error;
-        }
+                reject(error);
+            }
+        });
     }
 }

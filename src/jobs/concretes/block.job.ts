@@ -2,7 +2,7 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Block } from "@blockr/blockr-models";
 import { ProposedBlockGenerator } from "app/generators";
 import { SchedulableJob } from "app/jobs/abstractions/schedulable.job";
-import { KeyPairGenerator } from "app/utils";
+import { KeyPairGenerator, ObjectHasher } from "app/utils";
 import { FileUtils } from "app/utils/file.util";
 import { inject, injectable } from "inversify";
 import { join } from "path";
@@ -15,12 +15,14 @@ export class BlockJob extends SchedulableJob {
     private keyPairGenerator: KeyPairGenerator;
     private dataAccessLayer: DataAccessLayer;
     private proposedBlockGenerator: ProposedBlockGenerator;
+    private objectHasher: ObjectHasher;
     private keyPair?: { publicKey: string; privateKey: string; };
 
     constructor(@inject(FileUtils) fileUtils: FileUtils,
                 @inject(KeyPairGenerator) keyPairGenerator: KeyPairGenerator,
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
-                @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator) {
+                @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator,
+                @inject(ObjectHasher) objectHasher: ObjectHasher) {
         super(async () => {
             const blockChain: Block[] = await this.dataAccessLayer.getBlockchainAsync();
 
@@ -29,10 +31,10 @@ export class BlockJob extends SchedulableJob {
             }
 
             const lastBlock: Block = blockChain[blockChain.length - 1];
-            // TODO: I added the empty string value because the previous implementation used this, 
-            // do we actually need this and if so, why?
+            // Whenever the previous block is the genesis block, the blockHash is undefined 
+            // and should thus be replaced with an empty string
             const lastBlockHash: string = lastBlock.blockHeader.blockHash ? lastBlock.blockHeader.blockHash : "";
-        
+            // TODO: lastBlockHash should be the hash of the lastBlock object
             // TODO: const proposedBlock: Block = proposedBlockGenerator.generateProposedBlockAsync()
             // TODO: Broadcast proposedBlock in P2P network
             // TODO: Database.getGlobalStateAsync() --> lotteryTask.scheduleTask(lastBlockHash, globalState)
@@ -42,6 +44,7 @@ export class BlockJob extends SchedulableJob {
         this.keyPairGenerator = keyPairGenerator;
         this.dataAccessLayer = dataAccessLayer;
         this.proposedBlockGenerator = proposedBlockGenerator;
+        this.objectHasher = objectHasher;
 
         this.setOnInit(async () => {
             this.keyPair = await this.getOrGenerateKeyPairAsync();

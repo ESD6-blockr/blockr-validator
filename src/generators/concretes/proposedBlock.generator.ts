@@ -24,7 +24,7 @@ export class ProposedBlockGenerator extends BlockGenerator {
         return new Promise(async (resolve) => {
             const block = await this.generateBlockAsync(pendingTransactions, validatorVersion, blockNumber,
                 new Date(), REWARD_AMOUNT, lastBlockHash);
-            block.blockHeader.blockHash = this.objectHasher.hash<Block>(block);
+            block.blockHeader.blockHash = await this.objectHasher.hashAsync<Block>(block);
 
             resolve(block);
         });

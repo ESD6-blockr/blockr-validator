@@ -2,7 +2,7 @@ import { schedule } from "node-cron";
 
 export abstract class SchedulableJob {
     private function: () => void;
-    private onInit?: (() => void);
+    private onInit?: () => void;
 
     constructor(func: () => void) {
         this.function = func;
