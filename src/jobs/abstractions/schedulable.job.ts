@@ -1,11 +1,11 @@
 import { schedule } from "node-cron";
 
 export abstract class SchedulableJob {
-    private function: () => void;
+    private onCycle: () => void;
     private onInit?: () => void;
 
-    constructor(func: () => void) {
-        this.function = func;
+    constructor(onCycleFunction: () => void) {
+        this.onCycle = onCycleFunction;
     }
 
     /**
@@ -17,7 +17,7 @@ export abstract class SchedulableJob {
             this.onInit();
         }
 
-        schedule(`*/${thresholdInMinutes} * * * *`, this.function);
+        schedule(`*/${thresholdInMinutes} * * * *`, this.onCycle);
     }
 
     protected setOnInit(func: () => void): SchedulableJob {
