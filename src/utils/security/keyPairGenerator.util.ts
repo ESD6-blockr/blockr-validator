@@ -17,9 +17,9 @@ export class KeyPairGenerator {
                 reject(new KeyPairGenerationException("The generated seed is invalid."));
             }
 
-            instantiate((nacl) => {
+            instantiate(async (nacl) => {
                 const { signPk, signSk } = nacl.crypto_sign_seed_keypair(
-                                           this.getUint8ArrayFromString(mnemonicToEntropy(seed)));
+                                           await this.getUint8ArrayFromStringAsync(mnemonicToEntropy(seed)));
                 const publicKey = nacl.to_hex(signPk);
                 const privateKey = nacl.to_hex(signSk);
 
@@ -32,13 +32,21 @@ export class KeyPairGenerator {
         });
     }
 
-    private getUint8ArrayFromString(stringToConvert: string) {
-        const arrayBuffer = new ArrayBuffer(stringToConvert.length * 1);
-        const newUintArray = new Uint8Array(arrayBuffer);
+    private getUint8ArrayFromStringAsync(stringToConvert: string): Promise<Uint8Array> {
+        return new Promise((resolve, reject) => {
+            try {
+                const arrayBuffer = new ArrayBuffer(stringToConvert.length * 1);
+                const newUintArray = new Uint8Array(arrayBuffer);
 
-        newUintArray.forEach((i) => {
-            newUintArray[i] = stringToConvert.charCodeAt(i);
+                newUintArray.forEach((i) => {
+                    newUintArray[i] = stringToConvert.charCodeAt(i);
+                });
+                resolve(newUintArray);
+            } catch (error) {
+                logger.error(error.message);
+
+                reject(error);
+            }
         });
-        return newUintArray;
     }
 }
