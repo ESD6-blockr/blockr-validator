@@ -24,26 +24,23 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
                 return ValidationCondition.isNotNullNorUndefined(blockHeader);
             }, "The blockHeader is null or undefined."),
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(blockHeader.parentHash);
-            }, "The blockHeader parentHash is null or undefined."),
+                return ValidationCondition.isNotNullNorUndefined(blockHeader.validatorVersion);
+            }, "The blockHeader validator version is null or undefined."),
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
                 return ValidationCondition.isNotNullNorUndefined(blockHeader.blockNumber);
             }, "The blockHeader blocknumber is null or undefined."),
+            new ValidationCondition((blockHeader: BlockHeader): boolean => {
+                return ValidationCondition.isNotNullNorUndefined(blockHeader.validator);
+            }, "The blockHeader validator is null or undefined."),
+            new ValidationCondition((blockHeader: BlockHeader): boolean => {
+                return ValidationCondition.isNotNullNorUndefined(blockHeader.date);
+            }, "The blockHeader date is null or undefined."),
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
                 return ValidationCondition.isNotNullNorUndefined(blockHeader.blockReward);
             }, "The blockHeader blockreward is null or undefined."),
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
                 return ValidationCondition.isNotNullNorUndefined(blockHeader.parentHash);
             }, "The blockHeader parenthash is null or undefined."),
-            new ValidationCondition((blockHeader: BlockHeader): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(blockHeader);
-            }, "The blockHeader date is null or undefined."),
-            new ValidationCondition((blockHeader: BlockHeader): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(blockHeader.validator);
-            }, "The blockHeader validator is null or undefined."),
-            new ValidationCondition((blockHeader: BlockHeader): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(blockHeader);
-            }, "The blockHeader version is null or undefined."),
         ];
     }
 
