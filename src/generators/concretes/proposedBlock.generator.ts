@@ -1,7 +1,7 @@
 import { Block, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { BlockGenerator } from "../../generators";
 import { ObjectHasher, ObjectSigner } from "../../utils";
+import { BlockGenerator } from "../abstractions/block.generator";
 
 /* Proposed block reward amount */
 const REWARD_AMOUNT: number = 1;
