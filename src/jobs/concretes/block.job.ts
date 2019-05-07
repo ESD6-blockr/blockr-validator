@@ -4,6 +4,7 @@ import { inject, injectable } from "inversify";
 import { join } from "path";
 import { ProposedBlockGenerator } from "../../generators";
 import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
+import { QueueStore } from "../../stores/queue.stores";
 import { KeyPairGenerator } from "../../utils";
 import { FileUtils } from "../../utils/file.util";
 
@@ -19,6 +20,7 @@ export class BlockJob extends SchedulableJob {
     private keyPairGenerator: KeyPairGenerator;
     private dataAccessLayer: DataAccessLayer;
     private proposedBlockGenerator: ProposedBlockGenerator;
+    private queueStore: QueueStore;
     private keyPair?: { publicKey: string; privateKey: string; };
 
     constructor(@inject(FileUtils) fileUtils: FileUtils,
@@ -33,10 +35,13 @@ export class BlockJob extends SchedulableJob {
             }
             
             const lastBlock: Block = blockChain[blockChain.length - 1];
-            // TODO: Make [] temporaryStorage pending transactions
             // TODO: Where should the keyPair be used?
             const proposedBlock: Block = await this.proposedBlockGenerator
-                                            .generateProposedBlockAsync(lastBlock, [], VALIDATOR_VERSION);
+                                            .generateProposedBlockAsync(
+                                                lastBlock,
+                                                this.queueStore.pendingTransactionQueue,
+                                                VALIDATOR_VERSION,
+                                            );
             
             // TODO: Broadcast proposedBlock in P2P network
             // TODO: Database.getGlobalStateAsync() --> lotteryTask.scheduleTask(lastBlockHash, globalState)
@@ -46,6 +51,7 @@ export class BlockJob extends SchedulableJob {
         this.keyPairGenerator = keyPairGenerator;
         this.dataAccessLayer = dataAccessLayer;
         this.proposedBlockGenerator = proposedBlockGenerator;
+        this.queueStore = QueueStore.getInstance();
 
         this.setOnInit(async () => {
             this.keyPair = await this.getOrGenerateKeyPairAsync();
