@@ -35,7 +35,7 @@ DIContainer.bind<KeyPairGenerator>(KeyPairGenerator).toSelf().inRequestScope();
 DIContainer.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
 
 // Bind constants
-DIContainer.bind<IClientConfiguration>("MongoDBConfiguration")
+DIContainer.bind<IClientConfiguration>("Configuration")
                     .toConstantValue(new MongoDBConfiguration("conn string", "database"));
 
 // Bind singletons
