@@ -19,7 +19,7 @@ export class ProposedBlockGenerator extends BlockGenerator {
 
     public async generateProposedBlockAsync(parentBlock: Block,
                                             pendingTransactions: Set<Transaction>,
-                                            validatorVersion: string): Promise<Block> {
+                                            validatorVersion: string, validatorPublicKey: string): Promise<Block> {
 
         return new Promise(async (resolve) => {
             // Whenever the parentBlock is the genesis block, its parentHash is an empty string 
@@ -28,7 +28,7 @@ export class ProposedBlockGenerator extends BlockGenerator {
                                             || await this.objectHasher.hashAsync<Block>(parentBlock);
             const blockNumber: number = parentBlock.blockHeader.blockNumber++;
             const block = await this.generateBlockAsync(pendingTransactions, validatorVersion, blockNumber,
-                new Date(), REWARD_AMOUNT, parentHash);
+                new Date(), REWARD_AMOUNT, parentHash, validatorPublicKey);
             
             resolve(block);
         });

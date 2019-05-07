@@ -7,6 +7,7 @@ import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
 import { QueueStore } from "../../stores/queue.stores";
 import { KeyPairGenerator } from "../../utils";
 import { FileUtils } from "../../utils/file.util";
+import { logger } from "../../utils/logger.util";
 
 /* The file path of the .keys file */
 const KEYS_FILE_PATH = `${join(__dirname, "../../../")}.keys`;
@@ -31,16 +32,22 @@ export class BlockJob extends SchedulableJob {
             const blockChain: Block[] = await this.dataAccessLayer.getBlockchainAsync();
 
             if (blockChain.length === 0) {
+                logger.info("[BlockJob] Skipped cycle because of empty blockchain.");
+                return;
+            }
+
+            if (!this.keyPair) {
+                logger.error("[BlockJob] Skipped cycle because the keypair is undefined.");
                 return;
             }
             
             const lastBlock: Block = blockChain[blockChain.length - 1];
-            // TODO: Where should the keyPair be used?
             const proposedBlock: Block = await this.proposedBlockGenerator
                                             .generateProposedBlockAsync(
                                                 lastBlock,
                                                 this.queueStore.pendingTransactionQueue,
                                                 VALIDATOR_VERSION,
+                                                this.keyPair.publicKey,
                                             );
             
             // TODO: Broadcast proposedBlock in P2P network

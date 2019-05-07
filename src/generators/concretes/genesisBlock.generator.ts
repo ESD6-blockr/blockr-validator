@@ -29,7 +29,8 @@ export class GenesisBlockGenerator extends BlockGenerator {
             }
     
             resolve(await this.generateBlockAsync(
-                await this.generateTransactionsAsync(), "", BLOCK_NUMBER, new Date(), BLOCK_REWARD, ""));
+                await this.generateTransactionsAsync(), "",
+                BLOCK_NUMBER, new Date(), BLOCK_REWARD, "", RECIPIENT_PUBLIC_KEY));
         });
     }
 

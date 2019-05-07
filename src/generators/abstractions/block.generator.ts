@@ -11,11 +11,11 @@ export abstract class BlockGenerator {
 
     protected async generateBlockAsync(transactions: Set<Transaction>, version: string, blockNumber: number,
                                        date: Date, blockReward: number,
-                                       parentHash: string): Promise<Block> {
+                                       parentHash: string, validator: string): Promise<Block> {
         return new Promise(async (resolve, reject) => {
             try {
                 const blockheader = await this.generateBlockHeaderAsync(version, blockNumber,
-                                                                        date, blockReward);
+                                                                        date, blockReward, validator);
                 blockheader.parentHash = parentHash;
                 
                 await this.signTransactionsAsync(transactions);
@@ -48,9 +48,12 @@ export abstract class BlockGenerator {
     }
 
     private async generateBlockHeaderAsync(version: string, blockNumber: number, date: Date,
-                                           blockReward: number): Promise<BlockHeader> {
+                                           blockReward: number, validator: string): Promise<BlockHeader> {
         return new Promise((resolve) => {
-            resolve(new BlockHeader(version, blockNumber, date, blockReward));
+            const blockHeader = new BlockHeader(version, blockNumber, date, blockReward);
+            blockHeader.validator = validator;
+            
+            resolve(blockHeader);
         });
     }
 }
