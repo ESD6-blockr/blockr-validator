@@ -1,5 +1,5 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
-import { Block } from "@blockr/blockr-models";
+import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { join } from "path";
 import { ProposedBlockGenerator } from "../../generators";
@@ -53,7 +53,9 @@ export class BlockJob extends SchedulableJob {
                                             );
             
             // TODO: Broadcast proposedBlock in P2P network
-            // TODO: Database.getGlobalStateAsync() --> lotteryTask.scheduleTask(lastBlockHash, globalState)
+
+            const states: State[] = await this.dataAccessLayer.getStatesAsync();
+            // TODO: lotteryTask.scheduleTask(lastBlockHash, states)
         });
 
         this.fileUtils = fileUtils;
