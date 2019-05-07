@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "build-watch": "tsc -w -p tsconfig.json",
-    "test": "jest",
+    "test": "jest --coverage",
     "lint": "tslint --project tsconfig.json",
     "dev": "npm run build && npm run lint"
   },
