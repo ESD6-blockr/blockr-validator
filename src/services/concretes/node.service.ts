@@ -73,7 +73,7 @@ export class NodeService {
                 const genesisBlock = await this.genesisBlockGenerator.generateGenesisBlockAsync();
                 
                 await this.dataAccessLayer.addBlockAsync(genesisBlock);
-                await this.dataAccessLayer.updateStatesAsync(genesisBlock.transactions);
+                await this.dataAccessLayer.updateStatesAsync(Array.from(genesisBlock.transactions));
 
                 resolve();
             } catch (error) {

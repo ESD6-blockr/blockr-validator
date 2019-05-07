@@ -33,15 +33,19 @@ export class GenesisBlockGenerator extends BlockGenerator {
         });
     }
 
-    private generateTransactionsAsync(): Promise<Transaction[]> {
+    private generateTransactionsAsync(): Promise<Set<Transaction>> {
         return new Promise((resolve) => {
             const currentDate = new Date();
 
             resolve(
-                [
-                    new Transaction(TransactionType.COIN, "", RECIPIENT_PUBLIC_KEY, GENESIS_COIN_AMOUNT, currentDate),
-                    new Transaction(TransactionType.STAKE, "", RECIPIENT_PUBLIC_KEY, GENESIS_STAKE_AMOUNT, currentDate),
-                ],
+                new Set(
+                    [
+                        new Transaction(TransactionType.COIN, "",
+                                            RECIPIENT_PUBLIC_KEY, GENESIS_COIN_AMOUNT, currentDate),
+                        new Transaction(TransactionType.STAKE, "",
+                                            RECIPIENT_PUBLIC_KEY, GENESIS_STAKE_AMOUNT, currentDate),
+                    ],
+                ),
             );
         });
     }

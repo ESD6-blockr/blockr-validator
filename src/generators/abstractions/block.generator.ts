@@ -9,7 +9,7 @@ export abstract class BlockGenerator {
         this.objectSigner = objectSigner;
     }
 
-    protected async generateBlockAsync(transactions: Transaction[], version: string, blockNumber: number,
+    protected async generateBlockAsync(transactions: Set<Transaction>, version: string, blockNumber: number,
                                        date: Date, blockReward: number,
                                        parentHash: string): Promise<Block> {
         return new Promise(async (resolve, reject) => {
@@ -27,20 +27,18 @@ export abstract class BlockGenerator {
         });
     }
 
-    private async signTransactionsAsync(transactions: Transaction[]): Promise<void> {
+    private async signTransactionsAsync(transactions: Set<Transaction>): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
                 const promises: Array<Promise<string>> = [];
 
-                for (const transaction of transactions) {
-                    promises.push(this.objectSigner.signAsync(transaction));
+                for (const transaction of transactions.values()) {
+                    promises.push(new Promise(async (resolvePromise) => {
+                        return resolvePromise(transaction.signature
+                            = await this.objectSigner.signAsync(transaction));
+                    }));
                 }
-
-                const signatures = await Promise.all(promises);
-
-                for (let i = 0; i < transactions.length; i++) {
-                    transactions[i].signature = signatures[i];
-                }
+                await Promise.all(promises);
 
                 resolve();
             } catch (error) {
