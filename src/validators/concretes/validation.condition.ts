@@ -2,7 +2,7 @@ import { ValidationException } from "../../exceptions";
 
 export class ValidationCondition<IModel> {
     public static isNotNullNorUndefined<K>(object: K): boolean {
-        const result = (object !== null && object !== undefined)
+        const result = (object !== null && object !== undefined);
         return result;
     }
 
