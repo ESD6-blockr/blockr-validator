@@ -29,15 +29,17 @@ export class BlockJob extends SchedulableJob {
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator) {
         super(async () => {
+            logger.info("[BlockJob] Starting cycle.");
+
             const blockChain: Block[] = await this.dataAccessLayer.getBlockchainAsync();
 
             if (blockChain.length === 0) {
-                logger.info("[BlockJob] Skipped cycle because of empty blockchain.");
+                logger.info("[BlockJob] Skipped current cycle because of empty blockchain.");
                 return;
             }
 
             if (!this.keyPair) {
-                logger.error("[BlockJob] Skipped cycle because the keypair is undefined.");
+                logger.error("[BlockJob] Skipped current cycle because the keypair is undefined.");
                 return;
             }
             
@@ -67,6 +69,8 @@ export class BlockJob extends SchedulableJob {
 
     private async getOrGenerateKeyPairAsync(): Promise<{ publicKey: string; privateKey: string; }> {
         return new Promise(async (resolve) => {
+            logger.info("[BlockJob] Grabbing and/or generating keypair.");
+
             if (await this.fileUtils.fileExistsAsync(KEYS_FILE_PATH)) {
                 resolve(await this.fileUtils.readFileAsync(KEYS_FILE_PATH));
             }
