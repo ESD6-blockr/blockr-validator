@@ -53,7 +53,7 @@ export abstract class BlockGenerator {
                                            blockReward: number): Promise<BlockHeader> {
         return new Promise((resolve) => {
             resolve(new BlockHeader(
-                version, blockNumber, date, blockReward, ""),
+                version, blockNumber, date, blockReward),
             );
         });
     }

@@ -26,9 +26,6 @@ export class TransactionValidator extends BaseValidator<Transaction> {
                 return ValidationCondition.isNotNullNorUndefined(transaction.amount);
             }, "The transaction amount is null or undefined."),
             new ValidationCondition((transaction: Transaction): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(transaction.blockHash);
-            }, "The transaction blockhash is null or undefined."),
-            new ValidationCondition((transaction: Transaction): boolean => {
                 return ValidationCondition.isNotNullNorUndefined(transaction.recipientKey);
             }, "The transaction recipientKey is null or undefined."),
             new ValidationCondition((transaction: Transaction): boolean => {

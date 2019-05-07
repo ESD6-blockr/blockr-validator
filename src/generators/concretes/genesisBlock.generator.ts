@@ -9,7 +9,7 @@ const GENESIS_COIN_AMOUNT: number = 900_000_000;
 /* The maximum amount of coins within the blockchain */
 const GENESIS_STAKE_AMOUNT: number = 1;
 /* The public key of the admin wallet */
-const RECIPIENT_PUBLIC_KEY: string = process.env.PUBLIC_KEY ? process.env.PUBLIC_KEY : "";
+const RECIPIENT_PUBLIC_KEY: string = process.env.ADMIN_PUBLIC_KEY || "";
 /* Genesis block reward */
 const BLOCK_REWARD: number = 10;
 /* Gensis block number */

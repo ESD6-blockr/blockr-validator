@@ -24,8 +24,8 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
                 return ValidationCondition.isNotNullNorUndefined(blockHeader);
             }, "The blockHeader is null or undefined."),
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(blockHeader.blockHash);
-            }, "The blockHeader blockhash is null or undefined."),
+                return ValidationCondition.isNotNullNorUndefined(blockHeader.parentHash);
+            }, "The blockHeader parentHash is null or undefined."),
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
                 return ValidationCondition.isNotNullNorUndefined(blockHeader.blockNumber);
             }, "The blockHeader blocknumber is null or undefined."),
@@ -51,7 +51,7 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         return [
             new ValidationCondition(async (blockHeader: BlockHeader): Promise<boolean> => {
                 const previousBlock = await this.dataAccessLayer.getBlockAsync(blockHeader.blockNumber - 1);
-                return blockHeader.parentHash === previousBlock.blockHeader.blockHash;
+                return blockHeader.parentHash === previousBlock.blockHeader.parentHash;
             }, "The parenthash of the block is invalid."),
         ];
     }

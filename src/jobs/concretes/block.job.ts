@@ -2,12 +2,16 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Block } from "@blockr/blockr-models";
 import { ProposedBlockGenerator } from "app/generators";
 import { SchedulableJob } from "app/jobs/abstractions/schedulable.job";
-import { KeyPairGenerator, ObjectHasher } from "app/utils";
+import { KeyPairGenerator } from "app/utils";
 import { FileUtils } from "app/utils/file.util";
 import { inject, injectable } from "inversify";
 import { join } from "path";
 
+/* The file path of the .keys file */
 const KEYS_FILE_PATH = `${join(__dirname, "../../../")}.keys`;
+
+/* The current version of the validator */
+const VALIDATOR_VERSION: string = process.env.VALIDATOR_VERSION || "";
 
 @injectable()
 export class BlockJob extends SchedulableJob {
@@ -15,27 +19,25 @@ export class BlockJob extends SchedulableJob {
     private keyPairGenerator: KeyPairGenerator;
     private dataAccessLayer: DataAccessLayer;
     private proposedBlockGenerator: ProposedBlockGenerator;
-    private objectHasher: ObjectHasher;
     private keyPair?: { publicKey: string; privateKey: string; };
 
     constructor(@inject(FileUtils) fileUtils: FileUtils,
                 @inject(KeyPairGenerator) keyPairGenerator: KeyPairGenerator,
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
-                @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator,
-                @inject(ObjectHasher) objectHasher: ObjectHasher) {
+                @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator) {
         super(async () => {
             const blockChain: Block[] = await this.dataAccessLayer.getBlockchainAsync();
 
             if (blockChain.length === 0) {
                 return;
             }
-
+            
             const lastBlock: Block = blockChain[blockChain.length - 1];
-            // Whenever the previous block is the genesis block, the blockHash is undefined 
-            // and should thus be replaced with an empty string
-            const lastBlockHash: string = lastBlock.blockHeader.blockHash ? lastBlock.blockHeader.blockHash : "";
-            // TODO: lastBlockHash should be the hash of the lastBlock object
-            // TODO: const proposedBlock: Block = proposedBlockGenerator.generateProposedBlockAsync()
+            // TODO: Make [] temporaryStorage pending transactions
+            // TODO: Where should the keyPair be used?
+            const proposedBlock: Block = await this.proposedBlockGenerator
+                                            .generateProposedBlockAsync(lastBlock, [], VALIDATOR_VERSION);
+            
             // TODO: Broadcast proposedBlock in P2P network
             // TODO: Database.getGlobalStateAsync() --> lotteryTask.scheduleTask(lastBlockHash, globalState)
         });
@@ -44,7 +46,6 @@ export class BlockJob extends SchedulableJob {
         this.keyPairGenerator = keyPairGenerator;
         this.dataAccessLayer = dataAccessLayer;
         this.proposedBlockGenerator = proposedBlockGenerator;
-        this.objectHasher = objectHasher;
 
         this.setOnInit(async () => {
             this.keyPair = await this.getOrGenerateKeyPairAsync();

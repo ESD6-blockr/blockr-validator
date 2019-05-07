@@ -1,4 +1,4 @@
-import { DataAccessLayer, DataSource, IClientConfiguraton, MongoDBConfiguration } from "@blockr/blockr-data-access";
+import { DataAccessLayer, DataSource, IClientConfiguration, MongoDBConfiguration } from "@blockr/blockr-data-access";
 import { BlockHeader, Transaction } from "@blockr/blockr-models";
 import { GenesisBlockGenerator, ProposedBlockGenerator } from "app/generators";
 import { BlockJob } from "app/jobs";
@@ -35,7 +35,7 @@ DIContainer.bind<KeyPairGenerator>(KeyPairGenerator).toSelf().inRequestScope();
 DIContainer.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
 
 // Bind constants
-DIContainer.bind<IClientConfiguraton>("MongoDBConfiguration")
+DIContainer.bind<IClientConfiguration>("MongoDBConfiguration")
                     .toConstantValue(new MongoDBConfiguration("conn string", "database"));
 
 // Bind singletons
