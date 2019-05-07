@@ -1,6 +1,6 @@
 import { Block, BlockHeader, Transaction } from "@blockr/blockr-models";
-import { BlockGeneratorException } from "app/exceptions";
-import { ObjectSigner } from "app/utils";
+import { BlockGeneratorException } from "../../exceptions";
+import { ObjectSigner } from "../../utils";
 
 export abstract class BlockGenerator {
     private objectSigner: ObjectSigner;
@@ -52,9 +52,7 @@ export abstract class BlockGenerator {
     private async generateBlockHeaderAsync(version: string, blockNumber: number, date: Date,
                                            blockReward: number): Promise<BlockHeader> {
         return new Promise((resolve) => {
-            resolve(new BlockHeader(
-                version, blockNumber, date, blockReward),
-            );
+            resolve(new BlockHeader(version, blockNumber, date, blockReward));
         });
     }
 }

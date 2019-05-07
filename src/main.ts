@@ -1,9 +1,8 @@
-import "module-alias/register";
 import "reflect-metadata";
 
 import * as Sentry from "@sentry/node";
-import DIContainer from "app/injection/container.injection";
-import { NodeService } from "app/services";
+import DIContainer from "./injection/container.injection";
+import { NodeService } from "./services";
 
 async function main() {
     initSentry();

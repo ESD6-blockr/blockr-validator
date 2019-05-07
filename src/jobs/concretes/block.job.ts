@@ -1,11 +1,11 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Block } from "@blockr/blockr-models";
-import { ProposedBlockGenerator } from "app/generators";
-import { SchedulableJob } from "app/jobs/abstractions/schedulable.job";
-import { KeyPairGenerator } from "app/utils";
-import { FileUtils } from "app/utils/file.util";
 import { inject, injectable } from "inversify";
 import { join } from "path";
+import { ProposedBlockGenerator } from "../../generators";
+import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
+import { KeyPairGenerator } from "../../utils";
+import { FileUtils } from "../../utils/file.util";
 
 /* The file path of the .keys file */
 const KEYS_FILE_PATH = `${join(__dirname, "../../../")}.keys`;

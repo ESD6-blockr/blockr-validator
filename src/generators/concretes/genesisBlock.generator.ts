@@ -1,8 +1,8 @@
 import { Block, Transaction, TransactionType } from "@blockr/blockr-models";
-import { BlockGeneratorException } from "app/exceptions";
-import { BlockGenerator } from "app/generators";
-import { ObjectSigner } from "app/utils";
 import { inject, injectable } from "inversify";
+import { BlockGeneratorException } from "../../exceptions";
+import { BlockGenerator } from "../../generators";
+import { ObjectSigner } from "../../utils";
 
 /* The maximum amount of coins within the blockchain */
 const GENESIS_COIN_AMOUNT: number = 900_000_000;

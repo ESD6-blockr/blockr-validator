@@ -1,11 +1,11 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Block } from "@blockr/blockr-models";
-import { NodeStartupException } from "app/exceptions";
-import { GenesisBlockGenerator } from "app/generators";
-import { BlockJob } from "app/jobs/concretes/block.job";
-import { logger } from "app/utils";
-import { ValidatorBus } from "app/validators";
 import { inject } from "inversify";
+import { NodeStartupException } from "../../exceptions";
+import { GenesisBlockGenerator } from "../../generators";
+import { BlockJob } from "../../jobs/concretes/block.job";
+import { logger } from "../../utils";
+import { ValidatorBus } from "../../validators";
 
 export class NodeService {
     private validatorBus: ValidatorBus;

@@ -1,2 +1,2 @@
-export { BlockJob } from "app/jobs/concretes/block.job";
-export { SchedulableJob } from "app/jobs/abstractions/schedulable.job";
+export { BlockJob } from "./concretes/block.job";
+export { SchedulableJob } from "./abstractions/schedulable.job";

@@ -1,12 +1,12 @@
 import { DataAccessLayer, DataSource, IClientConfiguration, MongoDBConfiguration } from "@blockr/blockr-data-access";
 import { BlockHeader, Transaction } from "@blockr/blockr-models";
-import { GenesisBlockGenerator, ProposedBlockGenerator } from "app/generators";
-import { BlockJob } from "app/jobs";
-import { KeyPairGenerator, ObjectHasher } from "app/utils";
-import { ObjectSigner } from "app/utils";
-import { FileUtils } from "app/utils/file.util";
-import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "app/validators";
 import { Container } from "inversify";
+import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
+import { BlockJob } from "../jobs";
+import { KeyPairGenerator, ObjectHasher } from "../utils";
+import { ObjectSigner } from "../utils";
+import { FileUtils } from "../utils/file.util";
+import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "../validators";
 
 /**
  * Composition root

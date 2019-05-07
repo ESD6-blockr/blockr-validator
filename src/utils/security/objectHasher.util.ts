@@ -1,6 +1,6 @@
-import { logger } from "app/utils";
 import * as Crypto from "crypto";
 import { injectable } from "inversify";
+import { logger } from "../";
 
 @injectable()
 export class ObjectHasher {

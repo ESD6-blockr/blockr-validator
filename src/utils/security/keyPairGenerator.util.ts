@@ -1,8 +1,8 @@
-import { KeyPairGenerationException } from "app/exceptions";
-import { logger } from "app/utils";
 import { generateMnemonic, mnemonicToEntropy } from "bip39";
 import { injectable } from "inversify";
 import { instantiate } from "js-nacl";
+import { KeyPairGenerationException } from "../../exceptions";
+import { logger } from "../../utils";
 
 @injectable()
 export class KeyPairGenerator {
