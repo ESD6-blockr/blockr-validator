@@ -2,7 +2,6 @@ import { Block, Transaction, TransactionType } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { BlockGeneratorException } from "../../exceptions";
 import { ConstantStore } from "../../stores";
-import { ObjectSigner } from "../../utils";
 import { BlockGenerator } from "../abstractions/block.generator";
 
 
@@ -10,9 +9,9 @@ import { BlockGenerator } from "../abstractions/block.generator";
 export class GenesisBlockGenerator extends BlockGenerator {
     private constantStore: ConstantStore;
 
-    constructor(@inject(ObjectSigner) objectSigner: ObjectSigner) {
-        super(objectSigner);
-
+    constructor() {
+        super();
+        
         this.constantStore = ConstantStore.getInstance();
     }
 
@@ -25,7 +24,7 @@ export class GenesisBlockGenerator extends BlockGenerator {
     
             resolve(await this.generateBlockAsync(
                 await this.generateTransactionsAsync(), "",
-                this.constantStore.BLOCK_NUMBER, new Date(), this.constantStore.BLOCK_REWARD,
+                this.constantStore.GENESIS_BLOCK_NUMBER, new Date(), this.constantStore.BLOCK_REWARD,
                 "", this.constantStore.ADMIN_PUBLIC_KEY));
         });
     }

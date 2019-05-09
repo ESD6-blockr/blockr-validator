@@ -6,7 +6,6 @@ import { BlockJob } from "../jobs";
 import { LotteryService } from "../services/concretes/lottery.service";
 import { TransactionService } from "../services/concretes/transaction.service";
 import { ObjectHasher } from "../utils";
-import { ObjectSigner } from "../utils";
 import { FileUtils } from "../utils/file.util";
 import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "../validators";
 
@@ -36,7 +35,6 @@ DIContainer.bind<TransactionService>(TransactionService).toSelf().inTransientSco
 
 // Bind request scopes
 DIContainer.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
-DIContainer.bind<ObjectSigner>(ObjectSigner).toSelf().inRequestScope();
 DIContainer.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
 
 // Bind constants

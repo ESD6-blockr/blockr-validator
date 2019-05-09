@@ -1,6 +1,6 @@
 import { Block, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { ObjectHasher, ObjectSigner } from "../../utils";
+import { ObjectHasher } from "../../utils";
 import { BlockGenerator } from "../abstractions/block.generator";
 
 /* Proposed block reward amount */
@@ -10,9 +10,8 @@ const REWARD_AMOUNT: number = 1;
 export class ProposedBlockGenerator extends BlockGenerator {
     private objectHasher: ObjectHasher;
 
-    constructor(@inject(ObjectSigner) objectSigner: ObjectSigner,
-                @inject(ObjectHasher) objectHasher: ObjectHasher) {
-        super(objectSigner);
+    constructor(@inject(ObjectHasher) objectHasher: ObjectHasher) {
+        super();
 
         this.objectHasher = objectHasher;
     }

@@ -24,7 +24,4 @@
         "src/**/*",
         //"deprecated/lib/p2p/**/*.js"
     ],
-    "exclude": [
-        "src/__tests__/*",
-    ]
 }

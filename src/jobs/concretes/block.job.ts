@@ -2,19 +2,13 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { logger } from "@blockr/blockr-logger";
 import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { join } from "path";
 import { ProposedBlockGenerator } from "../../generators";
 import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
 import { LotteryService } from "../../services/concretes/lottery.service";
 import { TransactionService } from "../../services/concretes/transaction.service";
+import { ConstantStore } from "../../stores";
 import { QueueStore } from "../../stores/queue.stores";
 import { FileUtils } from "../../utils/file.util";
-
-/* The file path of the .keys file */
-const KEYS_FILE_PATH = `${join(__dirname, "../../../")}.keys`;
-
-/* The current version of the validator */
-const VALIDATOR_VERSION: string = process.env.VALIDATOR_VERSION || "";
 
 @injectable()
 export class BlockJob extends SchedulableJob {
@@ -23,6 +17,7 @@ export class BlockJob extends SchedulableJob {
     private proposedBlockGenerator: ProposedBlockGenerator;
     private lotteryService: LotteryService;
     private transactionService: TransactionService;
+    private constantStore: ConstantStore;
     private queueStore: QueueStore;
     private keyPair?: { publicKey: string; privateKey: string; };
 
@@ -51,7 +46,7 @@ export class BlockJob extends SchedulableJob {
                                                         .generateProposedBlockAsync(
                                                             lastBlock,
                                                             this.queueStore.pendingTransactionQueue,
-                                                            VALIDATOR_VERSION,
+                                                            this.constantStore.VALIDATOR_VERSION,
                                                             this.keyPair.publicKey,
                                                         );
             
@@ -78,6 +73,7 @@ export class BlockJob extends SchedulableJob {
         this.proposedBlockGenerator = proposedBlockGenerator;
         this.lotteryService = lotterService;
         this.transactionService = transactionService;
+        this.constantStore = ConstantStore.getInstance();
         this.queueStore = QueueStore.getInstance();
 
         this.setOnInit(async () => {
@@ -89,14 +85,14 @@ export class BlockJob extends SchedulableJob {
         return new Promise(async (resolve) => {
             logger.info("[BlockJob] Grabbing and/or generating keypair.");
 
-            if (await this.fileUtils.fileExistsAsync(KEYS_FILE_PATH)) {
-                resolve(await this.fileUtils.readFileAsync(KEYS_FILE_PATH));
+            if (await this.fileUtils.fileExistsAsync(this.constantStore.KEYS_FILE_PATH)) {
+                resolve(await this.fileUtils.readFileAsync(this.constantStore.KEYS_FILE_PATH));
             }
 
             // TODO: Get keypair -> save key? 
             const keyPair = {publicKey: "", privateKey: ""};
 
-            await this.fileUtils.appendStringInFileAsync(KEYS_FILE_PATH, JSON.stringify(keyPair));
+            await this.fileUtils.appendStringInFileAsync(this.constantStore.KEYS_FILE_PATH, JSON.stringify(keyPair));
 
             resolve(keyPair);
         });

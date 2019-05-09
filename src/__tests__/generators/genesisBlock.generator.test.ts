@@ -2,16 +2,13 @@ import "reflect-metadata";
 
 import { Block, Transaction, TransactionType } from "@blockr/blockr-models";
 import { GenesisBlockGenerator } from "../../generators";
-import { ObjectSigner } from "../../utils";
 
 describe("Genesis block generator", () => {
     it("Should pass with a valid admin public key", async () => {
         const recipientKey = "PUBLIC_KEY_TEST";
         process.env.ADMIN_PUBLIC_KEY = recipientKey;
 
-        const objectSignerMock = {} as ObjectSigner;
-
-        const generator = new GenesisBlockGenerator(objectSignerMock);
+        const generator = new GenesisBlockGenerator();
 
         const genesisBlock: Block = await generator.generateGenesisBlockAsync();
 
@@ -35,9 +32,7 @@ describe("Genesis block generator", () => {
     });
 
     it("Should fail with an invalid admin public key", async () => {
-        const objectSignerMock = {} as ObjectSigner;
-
-        const generator = new GenesisBlockGenerator(objectSignerMock);
+        const generator = new GenesisBlockGenerator();
 
         try {
             await generator.generateGenesisBlockAsync();

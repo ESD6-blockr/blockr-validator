@@ -1,4 +1,4 @@
-import { BlockHeader, Transaction, TransactionType, IModel } from "@blockr/blockr-models";
+import { BlockHeader, Transaction, TransactionType } from "@blockr/blockr-models";
 import { ObjectHasher } from "../../utils";
 
 const createBlockHeader = (version: string, blockNumber: number, reward: number) => {
