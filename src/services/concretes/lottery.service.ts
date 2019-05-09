@@ -30,7 +30,7 @@ export class LotteryService {
         } catch (error) {
           logger.error(error);
           
-          reject();
+          reject(error);
         }
       });
   }

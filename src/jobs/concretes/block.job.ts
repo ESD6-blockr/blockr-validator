@@ -51,18 +51,24 @@ export class BlockJob extends SchedulableJob {
             
             const lastBlock: Block = blockChain[blockChain.length - 1];
             const proposedBlock: Block = await this.proposedBlockGenerator
-                                            .generateProposedBlockAsync(
-                                                lastBlock,
-                                                this.queueStore.pendingTransactionQueue,
-                                                VALIDATOR_VERSION,
-                                                this.keyPair.publicKey,
-                                            );
+                                                        .generateProposedBlockAsync(
+                                                            lastBlock,
+                                                            this.queueStore.pendingTransactionQueue,
+                                                            VALIDATOR_VERSION,
+                                                            this.keyPair.publicKey,
+                                                        );
             
             // TODO: Broadcast proposedBlock in P2P network
 
             const states: State[] = await this.dataAccessLayer.getStatesAsync();
-            const victoriousBlock: Block = await this.lotteryService
-                                                        .drawWinningBlock(proposedBlock.blockHeader.parentHash, states);
+            let victoriousBlock: Block;
+            try {
+                victoriousBlock = await this.lotteryService.drawWinningBlock(proposedBlock.blockHeader.parentHash,
+                                                                             states);
+            } catch (error) {
+                logger.warning("[BlockJob] Canceled current cycle because no victorious block has been drawn.");
+                return;
+            }
 
             await this.transactionService.updatePendingTransactions(victoriousBlock);
             
