@@ -1,7 +1,7 @@
 import { Block, Transaction, TransactionType } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { ConstantStore } from "../../constants";
 import { BlockGeneratorException } from "../../exceptions";
+import { ConstantStore } from "../../stores";
 import { ObjectSigner } from "../../utils";
 import { BlockGenerator } from "../abstractions/block.generator";
 
