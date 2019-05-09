@@ -14,15 +14,15 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
     }
 
     protected initConditions(): void {
-        this.validationConditions.push.apply(this.validationConditions, this.getModelValidations());
-        this.validationConditions.push.apply(this.validationConditions, this.getValidatorVersionValidations());
-        this.validationConditions.push.apply(this.validationConditions, this.getBlockNumberValidations());
-        this.validationConditions.push.apply(this.validationConditions, this.getDateValidations());
-        this.validationConditions.push.apply(this.validationConditions, this.getBlockRewardValidations());
-        this.validationConditions.push.apply(this.validationConditions, this.getHashValidations());
+        this.validationConditions.push.apply(this.validationConditions, this.getModelConditions());
+        this.validationConditions.push.apply(this.validationConditions, this.getValidatorVersionConditions());
+        this.validationConditions.push.apply(this.validationConditions, this.getBlockNumberConditions());
+        this.validationConditions.push.apply(this.validationConditions, this.getDateConditions());
+        this.validationConditions.push.apply(this.validationConditions, this.getBlockRewardConditions());
+        this.validationConditions.push.apply(this.validationConditions, this.getHashConditions());
     }
 
-    private getModelValidations(): Array<ValidationCondition<BlockHeader>> {
+    private getModelConditions(): Array<ValidationCondition<BlockHeader>> {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
                 return ValidationCondition.isNotNullNorUndefined(blockHeader);
@@ -48,7 +48,7 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         ];
     }
 
-    private getValidatorVersionValidations() {
+    private getValidatorVersionConditions() {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
                 return blockHeader.validatorVersion === "" ? false : true;
@@ -62,7 +62,7 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         ];
     }
 
-    private getBlockNumberValidations() {
+    private getBlockNumberConditions() {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
                 return (blockHeader.blockNumber > 0);
@@ -73,7 +73,7 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         ];
     }
 
-    private getDateValidations() {
+    private getDateConditions() {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
                 return new Date(blockHeader.date.toDateString()) < new Date(new Date().toDateString()) ? false : true;
@@ -81,7 +81,7 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         ];
     }
 
-    private getBlockRewardValidations() {
+    private getBlockRewardConditions() {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
                 return (blockHeader.blockReward > 0);
@@ -89,7 +89,7 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         ];
     }
 
-    private getHashValidations() {
+    private getHashConditions() {
         return [
             new ValidationCondition(async (blockHeader: BlockHeader): Promise<boolean> => {
                 const previousBlock = await this.dataAccessLayer.getBlockAsync(blockHeader.blockNumber - 1);
