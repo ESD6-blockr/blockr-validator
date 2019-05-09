@@ -42,7 +42,7 @@ export class NodeService {
     private scheduleBlockJob() {
         logger.info("Scheduling Block Job.");
         
-        this.blockJob.schedule(1);
+        this.blockJob.scheduleAsync(1);
     }
 
     private async initiateBlockchainIfInexistentAsync(): Promise<void> {
