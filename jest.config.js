@@ -9,9 +9,13 @@ module.exports = {
     collectCoverageFrom: [
         "src/**/*.ts"
     ],
+    reporters: [
+        "default",
+        "jest-junit"
+    ],
     coverageReporters: [
         "text",
         "lcov",
         "cobertura"
-    ],
+    ]
 }
