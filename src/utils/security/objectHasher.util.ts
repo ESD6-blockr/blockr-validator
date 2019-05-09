@@ -1,4 +1,4 @@
-import * as Crypto from "crypto";
+import { createHash } from "crypto";
 import { injectable } from "inversify";
 import { logger } from "../";
 
@@ -9,7 +9,7 @@ export class ObjectHasher {
             try {
                 logger.info(`Hashing object: ${object}`);
 
-                resolve(Crypto.createHash("md5").update(JSON.stringify(object)).digest("hex"));
+                resolve(createHash("md5").update(JSON.stringify(object)).digest("hex"));
             } catch (error) {
                 logger.error(error.message);
 
