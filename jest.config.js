@@ -1,8 +1,12 @@
 module.exports = {
-    "roots": [
-        "<rootDir>/src"
-    ],
-    "transform": {
-        "^.+\\.tsx?$": "ts-jest"
+    transform: {
+        "^.+\\.(ts|tsx)$": "ts-jest"
     },
+    testMatch: [
+        "**/__tests__/**/*.test.+(ts|tsx)"
+    ],
+    collectCoverage: true,
+    collectCoverageFrom: [
+        "src/**/*.ts"
+    ],
 }

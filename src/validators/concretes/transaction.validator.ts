@@ -15,6 +15,7 @@ export class TransactionValidator extends BaseValidator<Transaction> {
 
     protected initConditions(): void {
         this.validationConditions.push.apply(this.validationConditions, this.getModelConditions());
+        this.validationConditions.push.apply(this.validationConditions, this.getAmountConditions());
     }
 
     private getModelConditions(): Array<ValidationCondition<Transaction>> {
@@ -40,6 +41,14 @@ export class TransactionValidator extends BaseValidator<Transaction> {
             new ValidationCondition((transaction: Transaction): boolean => {
                 return ValidationCondition.isNotNullNorUndefined(transaction.type);
             }, "The transaction type is null or undefined."),
+        ];
+    }
+
+    private getAmountConditions(): Array<ValidationCondition<Transaction>> {
+        return [
+            new ValidationCondition((transaction: Transaction): boolean => {
+                return (transaction.amount > 0);
+            }, "The transaction amount cannot be a negative value."),
         ];
     }
 }

@@ -1,5 +1,5 @@
 import { logger } from "@blockr/blockr-logger";
-import * as Crypto from "crypto";
+import { createSign } from "crypto";
 import { injectable } from "inversify";
 
 const PRIVATE_KEY: string = process.env.PRIVATE_KEY ? process.env.PRIVATE_KEY : "";
@@ -9,7 +9,7 @@ export class ObjectSigner {
     public async signAsync<T>(object: T): Promise<string> {
         return new Promise((resolve, reject) => {
             try {
-                const signer = Crypto.createSign("sha256");
+                const signer = createSign("sha256");
                 signer.update(JSON.stringify(object));
                 signer.end();
         

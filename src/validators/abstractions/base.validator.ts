@@ -20,7 +20,7 @@ export abstract class BaseValidator<IModel> implements IValidator<IModel> {
         return new Promise(async (resolve, reject) => {
             try {
                 logger.info(`Validating ${object.constructor.name}`);
-                
+
                 const isValid = this.validationConditions
                                     .every((condition: ValidationCondition<IModel>) => condition.validate(object));
     

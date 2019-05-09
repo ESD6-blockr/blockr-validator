@@ -30,16 +30,21 @@ export abstract class BlockGenerator {
     private async signTransactionsAsync(transactions: Set<Transaction>): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
-                const promises: Array<Promise<string>> = [];
+                // TODO: Fix signing of transactions
 
-                for (const transaction of transactions.values()) {
-                    promises.push(new Promise(async (resolvePromise) => {
-                        return resolvePromise(transaction.signature
-                            = await this.objectSigner.signAsync(transaction));
-                    }));
-                }
-                await Promise.all(promises);
+                // const promises: Array<Promise<string>> = [];
 
+                // for (const transaction of transactions.values()) {
+                //     promises.push(new Promise(async (resolvePromise) => {
+                //         return resolvePromise(transaction.signature
+                //             = await this.objectSigner.signAsync(transaction));
+                //     }));
+                // }
+                // await Promise.all(promises);
+
+                // REMOVE THIS WHEN FIXED
+                transactions = transactions;
+                
                 resolve();
             } catch (error) {
                 reject(error);

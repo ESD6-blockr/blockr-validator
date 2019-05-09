@@ -8,7 +8,6 @@ import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
 import { LotteryService } from "../../services/concretes/lottery.service";
 import { TransactionService } from "../../services/concretes/transaction.service";
 import { QueueStore } from "../../stores/queue.stores";
-import { KeyPairGenerator } from "../../utils";
 import { FileUtils } from "../../utils/file.util";
 
 /* The file path of the .keys file */
@@ -20,7 +19,6 @@ const VALIDATOR_VERSION: string = process.env.VALIDATOR_VERSION || "";
 @injectable()
 export class BlockJob extends SchedulableJob {
     private fileUtils: FileUtils;
-    private keyPairGenerator: KeyPairGenerator;
     private dataAccessLayer: DataAccessLayer;
     private proposedBlockGenerator: ProposedBlockGenerator;
     private lotteryService: LotteryService;
@@ -29,7 +27,6 @@ export class BlockJob extends SchedulableJob {
     private keyPair?: { publicKey: string; privateKey: string; };
 
     constructor(@inject(FileUtils) fileUtils: FileUtils,
-                @inject(KeyPairGenerator) keyPairGenerator: KeyPairGenerator,
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator,
                 @inject(LotteryService) lotterService: LotteryService,
@@ -77,7 +74,6 @@ export class BlockJob extends SchedulableJob {
         });
 
         this.fileUtils = fileUtils;
-        this.keyPairGenerator = keyPairGenerator;
         this.dataAccessLayer = dataAccessLayer;
         this.proposedBlockGenerator = proposedBlockGenerator;
         this.lotteryService = lotterService;
@@ -97,7 +93,9 @@ export class BlockJob extends SchedulableJob {
                 resolve(await this.fileUtils.readFileAsync(KEYS_FILE_PATH));
             }
 
-            const keyPair = await this.keyPairGenerator.generateKeyPairAsync();
+            // TODO: Get keypair -> save key? 
+            const keyPair = {publicKey: "", privateKey: ""};
+
             await this.fileUtils.appendStringInFileAsync(KEYS_FILE_PATH, JSON.stringify(keyPair));
 
             resolve(keyPair);
