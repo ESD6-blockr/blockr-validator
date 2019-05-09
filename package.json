@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@blockr/blockr-data-access": "^2.1.0-20",
+    "@blockr/blockr-logger": "^1.1.0-15",
     "@blockr/blockr-models": "^1.3.0-17",
     "@sentry/node": "^4.6.6",
     "bip39": "^3.0.2",

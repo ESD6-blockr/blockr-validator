@@ -1,6 +1,6 @@
+import { logger } from "@blockr/blockr-logger";
 import * as Crypto from "crypto";
 import { injectable } from "inversify";
-import { logger } from "../";
 
 @injectable()
 export class ObjectHasher {

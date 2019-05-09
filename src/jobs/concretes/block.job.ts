@@ -1,4 +1,5 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
+import { logger } from "@blockr/blockr-logger";
 import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { join } from "path";
@@ -9,7 +10,6 @@ import { TransactionService } from "../../services/concretes/transaction.service
 import { QueueStore } from "../../stores/queue.stores";
 import { KeyPairGenerator } from "../../utils";
 import { FileUtils } from "../../utils/file.util";
-import { logger } from "../../utils/logger.util";
 
 /* The file path of the .keys file */
 const KEYS_FILE_PATH = `${join(__dirname, "../../../")}.keys`;

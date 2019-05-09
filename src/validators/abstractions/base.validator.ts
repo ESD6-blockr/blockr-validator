@@ -1,5 +1,5 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
-import { logger } from "../../utils";
+import { logger } from "@blockr/blockr-logger";
 import { ObjectHasher } from "../../utils/security/objectHasher.util";
 import { ValidationCondition } from "../concretes/validation.condition";
 import { IValidator } from "../interfaces/validator";

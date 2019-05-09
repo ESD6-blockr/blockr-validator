@@ -7,6 +7,7 @@ export class QueueStore {
         if (!this.instance) {
             this.instance = new QueueStore();
         }
+        
         return this.instance;
     }
     

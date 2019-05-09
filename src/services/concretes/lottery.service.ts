@@ -1,10 +1,10 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
+import { logger } from "@blockr/blockr-logger";
 import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import * as seedRandom from "seedrandom";
 import { LotteryException } from "../../exceptions/lotteryException.exception";
 import { QueueStore } from "../../stores/queue.stores";
-import { logger } from "../../utils/logger.util";
 
 @injectable()
 export class LotteryService {
