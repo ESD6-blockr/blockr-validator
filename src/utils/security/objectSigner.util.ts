@@ -1,6 +1,6 @@
+import { logger } from "@blockr/blockr-logger";
 import { createSign } from "crypto";
 import { injectable } from "inversify";
-import { logger } from "../";
 
 const PRIVATE_KEY: string = process.env.PRIVATE_KEY ? process.env.PRIVATE_KEY : "";
 

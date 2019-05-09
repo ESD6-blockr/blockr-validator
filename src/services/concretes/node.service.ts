@@ -1,10 +1,10 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
+import { logger } from "@blockr/blockr-logger";
 import { Block } from "@blockr/blockr-models";
 import { inject } from "inversify";
 import { NodeStartupException } from "../../exceptions";
 import { GenesisBlockGenerator } from "../../generators";
 import { BlockJob } from "../../jobs/concretes/block.job";
-import { logger } from "../../utils";
 import { ValidatorBus } from "../../validators";
 
 export class NodeService {
@@ -28,7 +28,7 @@ export class NodeService {
             logger.info(`${this.constructor.name} is starting.`);
 
             // TODO: init P2P client?
-            // TODO: CreateBlockTask#p2p broadcast
+            // TODO: BlockJob P2P implementations
             // TODO: validator#start#initiateHandleRequests --> peer message bindings inits
             // TODO: Where do we use the validatorBus?
     
@@ -73,7 +73,7 @@ export class NodeService {
                 const genesisBlock = await this.genesisBlockGenerator.generateGenesisBlockAsync();
                 
                 await this.dataAccessLayer.addBlockAsync(genesisBlock);
-                await this.dataAccessLayer.updateStatesAsync(genesisBlock.transactions);
+                await this.dataAccessLayer.updateStatesAsync(Array.from(genesisBlock.transactions));
 
                 resolve();
             } catch (error) {

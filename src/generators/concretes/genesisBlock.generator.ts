@@ -24,22 +24,25 @@ export class GenesisBlockGenerator extends BlockGenerator {
             }
     
             resolve(await this.generateBlockAsync(
-                await this.generateTransactionsAsync(), "", this.constantStore.BLOCK_NUMBER,
-                    new Date(), this.constantStore.BLOCK_REWARD, ""));
+                await this.generateTransactionsAsync(), "",
+                this.constantStore.BLOCK_NUMBER, new Date(), this.constantStore.BLOCK_REWARD,
+                "", this.constantStore.ADMIN_PUBLIC_KEY));
         });
     }
 
-    private generateTransactionsAsync(): Promise<Transaction[]> {
+    private generateTransactionsAsync(): Promise<Set<Transaction>> {
         return new Promise((resolve) => {
             const currentDate = new Date();
 
             resolve(
-                [
-                    new Transaction(TransactionType.COIN, "", this.constantStore.ADMIN_PUBLIC_KEY,
-                        this.constantStore.GENESIS_COIN_AMOUNT, currentDate),
-                    new Transaction(TransactionType.STAKE, "", this.constantStore.ADMIN_PUBLIC_KEY,
-                        this.constantStore.GENESIS_STAKE_AMOUNT, currentDate),
-                ],
+                new Set(
+                    [
+                        new Transaction(TransactionType.COIN, "",
+                            this.constantStore.ADMIN_PUBLIC_KEY, this.constantStore.GENESIS_COIN_AMOUNT, currentDate),
+                        new Transaction(TransactionType.STAKE, "",
+                            this.constantStore.ADMIN_PUBLIC_KEY, this.constantStore.GENESIS_STAKE_AMOUNT, currentDate),
+                    ],
+                ),
             );
         });
     }

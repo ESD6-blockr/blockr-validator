@@ -3,6 +3,8 @@ import { BlockHeader, Transaction } from "@blockr/blockr-models";
 import { Container } from "inversify";
 import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
 import { BlockJob } from "../jobs";
+import { LotteryService } from "../services/concretes/lottery.service";
+import { TransactionService } from "../services/concretes/transaction.service";
 import { ObjectHasher } from "../utils";
 import { ObjectSigner } from "../utils";
 import { FileUtils } from "../utils/file.util";
@@ -26,7 +28,11 @@ DIContainer.bind<ValidatorBus>(ValidatorBus).toSelf().inTransientScope();
 
 DIContainer.bind<GenesisBlockGenerator>(GenesisBlockGenerator).toSelf().inTransientScope();
 DIContainer.bind<ProposedBlockGenerator>(ProposedBlockGenerator).toSelf().inTransientScope();
+
 DIContainer.bind<BlockJob>(BlockJob).toSelf().inTransientScope();
+
+DIContainer.bind<LotteryService>(LotteryService).toSelf().inTransientScope();
+DIContainer.bind<TransactionService>(TransactionService).toSelf().inTransientScope();
 
 // Bind request scopes
 DIContainer.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();

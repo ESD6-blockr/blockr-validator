@@ -1,6 +1,6 @@
 /**
  * Generic validator interface
- * @type {T} type of object to be validated
+ * @type {IModel} type of object to be validated
  */
 export interface IValidator<IModel> {
     /**
