@@ -2,13 +2,14 @@ import "reflect-metadata";
 
 import { Block, Transaction, TransactionType } from "@blockr/blockr-models";
 import { GenesisBlockGenerator } from "../../generators";
+import { ConstantStore } from "../../stores";
 
 describe("Genesis block generator", () => {
     it("Should pass with a valid admin public key", async () => {
         const recipientKey = "PUBLIC_KEY_TEST";
         process.env.ADMIN_PUBLIC_KEY = recipientKey;
 
-        const generator = new GenesisBlockGenerator();
+        const generator = new GenesisBlockGenerator(new ConstantStore());
 
         const genesisBlock: Block = await generator.generateGenesisBlockAsync();
 
@@ -32,7 +33,7 @@ describe("Genesis block generator", () => {
     });
 
     it("Should fail with an invalid admin public key", async () => {
-        const generator = new GenesisBlockGenerator();
+        const generator = new GenesisBlockGenerator(new ConstantStore());
 
         try {
             await generator.generateGenesisBlockAsync();

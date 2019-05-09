@@ -1,16 +1,10 @@
+import { injectable } from "inversify";
 import { join } from "path";
 
+/* The store for all constant values within this application.
+   This class should be used as a Singleton. */
+@injectable()
 export class ConstantStore {
-    public static getInstance(): ConstantStore {
-        if (!this.instance) {
-            this.instance = new ConstantStore();
-        }
-        
-        return this.instance;
-    }
-
-    private static instance: ConstantStore;
-
     /* The maximum amount of coins within the blockchain */
     public GENESIS_COIN_AMOUNT: number;
     /* The maximum amount of coins within the blockchain */
@@ -30,7 +24,7 @@ export class ConstantStore {
     /* The Sentry Environment */
     public SENTRY_ENVIRONMENT: string;
     
-    private constructor() {
+    public constructor() {
         this.GENESIS_COIN_AMOUNT = 900_000_000;
         this.GENESIS_STAKE_AMOUNT = 1;
         this.ADMIN_PUBLIC_KEY = process.env.ADMIN_PUBLIC_KEY || "";

@@ -13,8 +13,8 @@ async function main() {
 }
 
 function initSentry() {
-    const constantStore = ConstantStore.getInstance();
-
+    const constantStore = DIContainer.resolve<ConstantStore>(ConstantStore);
+    
     Sentry.init({
         dsn: constantStore.SENTRY_DSN,
         environment: constantStore.SENTRY_ENVIRONMENT,

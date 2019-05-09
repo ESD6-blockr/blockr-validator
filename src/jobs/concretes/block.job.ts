@@ -24,8 +24,10 @@ export class BlockJob extends SchedulableJob {
     constructor(@inject(FileUtils) fileUtils: FileUtils,
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator,
-                @inject(LotteryService) lotterService: LotteryService,
-                @inject(TransactionService) transactionService: TransactionService) {
+                @inject(LotteryService) lotteryService: LotteryService,
+                @inject(TransactionService) transactionService: TransactionService,
+                @inject(ConstantStore) constantStore: ConstantStore,
+                @inject(QueueStore) queueStore: QueueStore) {
         super(async () => {
             logger.info("[BlockJob] Starting cycle.");
 
@@ -71,11 +73,11 @@ export class BlockJob extends SchedulableJob {
         this.fileUtils = fileUtils;
         this.dataAccessLayer = dataAccessLayer;
         this.proposedBlockGenerator = proposedBlockGenerator;
-        this.lotteryService = lotterService;
+        this.lotteryService = lotteryService;
         this.transactionService = transactionService;
-        this.constantStore = ConstantStore.getInstance();
-        this.queueStore = QueueStore.getInstance();
-
+        this.constantStore = constantStore;
+        this.queueStore = queueStore;
+        
         this.setOnInit(async () => {
             this.keyPair = await this.getOrGenerateKeyPairAsync();
         });

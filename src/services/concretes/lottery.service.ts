@@ -12,9 +12,10 @@ export class LotteryService {
   private queueStore: QueueStore;
   private ticketCount: number = 0;
 
-  constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer) {
+  constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
+              @inject(QueueStore) queueStore: QueueStore) {
     this.dataAccessLayer = dataAccessLayer;
-    this.queueStore = QueueStore.getInstance();
+    this.queueStore = queueStore;
   }
 
   public async drawWinningBlock(parentBlockHash: string,
