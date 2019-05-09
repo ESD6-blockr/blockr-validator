@@ -4,7 +4,6 @@ import { inject, injectable } from "inversify";
 import { join } from "path";
 import { ProposedBlockGenerator } from "../../generators";
 import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
-import { KeyPairGenerator } from "../../utils";
 import { FileUtils } from "../../utils/file.util";
 
 /* The file path of the .keys file */
@@ -16,13 +15,12 @@ const VALIDATOR_VERSION: string = process.env.VALIDATOR_VERSION || "";
 @injectable()
 export class BlockJob extends SchedulableJob {
     private fileUtils: FileUtils;
-    private keyPairGenerator: KeyPairGenerator;
+    private keyPairGenerator: string; // TODO: fix keypair type with bitcoinjs-lib
     private dataAccessLayer: DataAccessLayer;
     private proposedBlockGenerator: ProposedBlockGenerator;
     private keyPair?: { publicKey: string; privateKey: string; };
 
     constructor(@inject(FileUtils) fileUtils: FileUtils,
-                @inject(KeyPairGenerator) keyPairGenerator: KeyPairGenerator,
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator) {
         super(async () => {
@@ -43,7 +41,7 @@ export class BlockJob extends SchedulableJob {
         });
 
         this.fileUtils = fileUtils;
-        this.keyPairGenerator = keyPairGenerator;
+        this.keyPairGenerator = "";
         this.dataAccessLayer = dataAccessLayer;
         this.proposedBlockGenerator = proposedBlockGenerator;
 
@@ -58,10 +56,7 @@ export class BlockJob extends SchedulableJob {
                 resolve(await this.fileUtils.readFileAsync(KEYS_FILE_PATH));
             }
 
-            const keyPair = await this.keyPairGenerator.generateKeyPairAsync();
-            await this.fileUtils.appendStringInFileAsync(KEYS_FILE_PATH, JSON.stringify(keyPair));
-
-            resolve(keyPair);
+            // TODO: Get keypair -> save key? 
         });
     }
 }
