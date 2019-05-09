@@ -1,21 +1,26 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Block, State } from "@blockr/blockr-models";
-import { inject } from "inversify";
-import { seedRandom } from "seedrandom";
+import { inject, injectable } from "inversify";
+import * as seedRandom from "seedrandom";
 import { LotteryException } from "../../exceptions/lotteryException.exception";
+import { QueueStore } from "../../stores/queue.stores";
 import { logger } from "../../utils/logger.util";
 
+@injectable()
 export class LotteryService {
   private dataAccessLayer: DataAccessLayer;
+  private queueStore: QueueStore;
   private ticketCount: number = 0;
 
   constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer) {
     this.dataAccessLayer = dataAccessLayer;
+    this.queueStore = QueueStore.getInstance();
   }
 
-  public async drawWinningBlock(pendingProposedBlocks: Block[], parentBlockHash: string,
+  public async drawWinningBlock(parentBlockHash: string,
                                 walletStates: State[]): Promise<Block> {
       return new Promise(async (resolve, reject) => {
+        const pendingProposedBlocks: Set<Block> = this.queueStore.pendingProposedBlockQueue;
         const stakeMap = await this.convertStatesToStakeMap(walletStates);
 
         try {
@@ -31,7 +36,7 @@ export class LotteryService {
   }
 
   private async chooseWinningBlock(parentBlockHash: string, candidatesMap: Map<string, number>,
-                                   pendingProposedBlocks: Block[]): Promise<Block> {
+                                   pendingProposedBlocks: Set<Block>): Promise<Block> {
     return new Promise((resolve, reject) => {
         // TODO: Perhaps the random stake choosing should be overhauled.
         const randomNumber = seedRandom(parentBlockHash)() * this.ticketCount;
@@ -47,7 +52,7 @@ export class LotteryService {
           upperMargin += stake;
 
           if ((bottomMargin <= randomNumber) && (upperMargin >= randomNumber)) {
-            resolve(pendingProposedBlocks.find((block) => block.blockHeader.validator === publicKey));
+            resolve(Array.from(pendingProposedBlocks).find((block) => block.blockHeader.validator === publicKey));
           }
           bottomMargin += stake;
           candidateIndex += 1;
@@ -57,7 +62,7 @@ export class LotteryService {
   }
 
   private async calculateCandidates(stakeMap: Map<string, number>,
-                                    pendingProposedBlocks: Block[]): Promise<Map<string, number>> {
+                                    pendingProposedBlocks: Set<Block>): Promise<Map<string, number>> {
     return new Promise((resolve, reject) => {
       const candidatesMap = new Map<string, number>();
 

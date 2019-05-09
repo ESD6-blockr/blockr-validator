@@ -4,6 +4,8 @@ import { inject, injectable } from "inversify";
 import { join } from "path";
 import { ProposedBlockGenerator } from "../../generators";
 import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
+import { LotteryService } from "../../services/concretes/lottery.service";
+import { TransactionService } from "../../services/concretes/transaction.service";
 import { QueueStore } from "../../stores/queue.stores";
 import { KeyPairGenerator } from "../../utils";
 import { FileUtils } from "../../utils/file.util";
@@ -21,13 +23,17 @@ export class BlockJob extends SchedulableJob {
     private keyPairGenerator: KeyPairGenerator;
     private dataAccessLayer: DataAccessLayer;
     private proposedBlockGenerator: ProposedBlockGenerator;
+    private lotteryService: LotteryService;
+    private transactionService: TransactionService;
     private queueStore: QueueStore;
     private keyPair?: { publicKey: string; privateKey: string; };
 
     constructor(@inject(FileUtils) fileUtils: FileUtils,
                 @inject(KeyPairGenerator) keyPairGenerator: KeyPairGenerator,
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
-                @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator) {
+                @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator,
+                @inject(LotteryService) lotterService: LotteryService,
+                @inject(TransactionService) transactionService: TransactionService) {
         super(async () => {
             logger.info("[BlockJob] Starting cycle.");
 
@@ -55,13 +61,21 @@ export class BlockJob extends SchedulableJob {
             // TODO: Broadcast proposedBlock in P2P network
 
             const states: State[] = await this.dataAccessLayer.getStatesAsync();
-            // TODO: lotteryTask.scheduleTask(lastBlockHash, states)
+            const victoriousBlock: Block = await this.lotteryService
+                                                        .drawWinningBlock(proposedBlock.blockHeader.parentHash, states);
+
+            await this.transactionService.updatePendingTransactions(victoriousBlock);
+            
+
+            // TODO: Broadcast victoriousBlock in P2P network
         });
 
         this.fileUtils = fileUtils;
         this.keyPairGenerator = keyPairGenerator;
         this.dataAccessLayer = dataAccessLayer;
         this.proposedBlockGenerator = proposedBlockGenerator;
+        this.lotteryService = lotterService;
+        this.transactionService = transactionService;
         this.queueStore = QueueStore.getInstance();
 
         this.setOnInit(async () => {
