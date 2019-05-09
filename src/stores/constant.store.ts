@@ -12,7 +12,7 @@ export class ConstantStore {
     /* The public key of the admin wallet */
     public ADMIN_PUBLIC_KEY: string;
     /* Block reward */
-    public BLOCK_REWARD: number;
+    public BLOCK_REWARD_AMOUNT: number;
     /* Gensis block number */
     public GENESIS_BLOCK_NUMBER: number;
     /* The file path of the .keys file */
@@ -28,7 +28,7 @@ export class ConstantStore {
         this.GENESIS_COIN_AMOUNT = 900_000_000;
         this.GENESIS_STAKE_AMOUNT = 1;
         this.ADMIN_PUBLIC_KEY = process.env.ADMIN_PUBLIC_KEY || "";
-        this.BLOCK_REWARD = 10;
+        this.BLOCK_REWARD_AMOUNT = 10;
         this.GENESIS_BLOCK_NUMBER = 1;
         this.KEYS_FILE_PATH = `${join(__dirname, "../../")}.keys`;
         this.VALIDATOR_VERSION = process.env.VALIDATOR_VERSION || "";
