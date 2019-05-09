@@ -1,6 +1,6 @@
 #!groovy
 
-@Library('blockr-jenkins-lib') _
+@Library('blockr-jenkins-lib@BLO-83-test-stage') _
 
 String repo = 'blockr-validator'
 
