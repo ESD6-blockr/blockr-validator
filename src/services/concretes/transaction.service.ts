@@ -1,13 +1,13 @@
 import { Block } from "@blockr/blockr-models";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { QueueStore } from "../../stores/queue.stores";
 
 @injectable()
 export class TransactionService {
     private queueStore: QueueStore;
 
-    constructor() {
-        this.queueStore = QueueStore.getInstance();
+    constructor(@inject(QueueStore) queueStore: QueueStore) {
+        this.queueStore = queueStore;
     }
 
     public async updatePendingTransactions(victoriousBlock: Block): Promise<void> {

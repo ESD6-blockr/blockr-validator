@@ -2,6 +2,7 @@ import "reflect-metadata";
 
 import { Block, BlockHeader, BlockType, Transaction, TransactionType } from "@blockr/blockr-models";
 import { ProposedBlockGenerator } from "../../generators";
+import { ConstantStore } from "../../stores";
 import { ObjectHasher } from "../../utils/security/objectHasher.util";
 
 jest.mock("@blockr/blockr-logger");
@@ -16,7 +17,7 @@ beforeEach(() => {
         },
     } as unknown as ObjectHasher;
 
-    generator = new ProposedBlockGenerator(objectHasherMock);
+    generator = new ProposedBlockGenerator(objectHasherMock, new ConstantStore());
 });
 
 describe("Proposed block generator", () => {

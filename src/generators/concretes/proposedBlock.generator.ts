@@ -1,19 +1,20 @@
 import { Block, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
+import { ConstantStore } from "../../stores";
 import { ObjectHasher } from "../../utils";
 import { BlockGenerator } from "../abstractions/block.generator";
-
-/* Proposed block reward amount */
-const REWARD_AMOUNT: number = 1;
 
 @injectable()
 export class ProposedBlockGenerator extends BlockGenerator {
     private objectHasher: ObjectHasher;
+    private constantStore: ConstantStore;
 
-    constructor(@inject(ObjectHasher) objectHasher: ObjectHasher) {
+    constructor(@inject(ObjectHasher) objectHasher: ObjectHasher,
+                @inject(ConstantStore) constantStore: ConstantStore) {
         super();
 
         this.objectHasher = objectHasher;
+        this.constantStore = constantStore;
     }
 
     public async generateProposedBlockAsync(parentBlock: Block,
@@ -27,7 +28,7 @@ export class ProposedBlockGenerator extends BlockGenerator {
                                             || await this.objectHasher.hashAsync<Block>(parentBlock);
             const blockNumber: number = parentBlock.blockHeader.blockNumber + 1;
             const block = await this.generateBlockAsync(pendingTransactions, validatorVersion, blockNumber,
-                new Date(), REWARD_AMOUNT, parentHash, validatorPublicKey);
+                new Date(), this.constantStore.BLOCK_REWARD_AMOUNT, parentHash, validatorPublicKey);
             
             resolve(block);
         });

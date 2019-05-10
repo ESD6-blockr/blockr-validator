@@ -4,15 +4,14 @@ import { BlockGeneratorException } from "../../exceptions";
 import { ConstantStore } from "../../stores";
 import { BlockGenerator } from "../abstractions/block.generator";
 
-
 @injectable()
 export class GenesisBlockGenerator extends BlockGenerator {
     private constantStore: ConstantStore;
 
-    constructor() {
+    constructor(@inject(ConstantStore) constantStore: ConstantStore) {
         super();
-        
-        this.constantStore = ConstantStore.getInstance();
+
+        this.constantStore = constantStore;
     }
 
     public async generateGenesisBlockAsync(): Promise<Block> {
@@ -24,7 +23,7 @@ export class GenesisBlockGenerator extends BlockGenerator {
     
             resolve(await this.generateBlockAsync(
                 await this.generateTransactionsAsync(), "",
-                this.constantStore.GENESIS_BLOCK_NUMBER, new Date(), this.constantStore.BLOCK_REWARD,
+                this.constantStore.GENESIS_BLOCK_NUMBER, new Date(), this.constantStore.BLOCK_REWARD_AMOUNT,
                 "", this.constantStore.ADMIN_PUBLIC_KEY));
         });
     }

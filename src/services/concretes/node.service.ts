@@ -33,16 +33,20 @@ export class NodeService {
             // TODO: Where do we use the validatorBus?
     
             await this.initiateBlockchainIfInexistentAsync();
-            this.scheduleBlockJob();
+            await this.scheduleBlockJobAsync();
 
             resolve();
         });
     }
 
-    private scheduleBlockJob() {
-        logger.info("Scheduling Block Job.");
+    private async scheduleBlockJobAsync(): Promise<void> {
+        return new Promise(async (resolve) => {
+            logger.info("Scheduling Block Job.");
         
-        this.blockJob.schedule(1);
+            await this.blockJob.scheduleAsync(1);
+            
+            resolve();
+        });
     }
 
     private async initiateBlockchainIfInexistentAsync(): Promise<void> {

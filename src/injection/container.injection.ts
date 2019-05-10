@@ -5,6 +5,7 @@ import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
 import { BlockJob } from "../jobs";
 import { LotteryService } from "../services/concretes/lottery.service";
 import { TransactionService } from "../services/concretes/transaction.service";
+import { ConstantStore, QueueStore } from "../stores";
 import { ObjectHasher } from "../utils";
 import { FileUtils } from "../utils/file.util";
 import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "../validators";
@@ -43,5 +44,7 @@ DIContainer.bind<IClientConfiguration>("Configuration")
 
 // Bind singletons
 DIContainer.bind<DataSource>("DataSource").toConstantValue(DataSource.MONGO_DB);
+DIContainer.bind<ConstantStore>("ConstantStore").toConstantValue(new ConstantStore());
+DIContainer.bind<QueueStore>("QueueStore").toConstantValue(new QueueStore());
 
 export default DIContainer;

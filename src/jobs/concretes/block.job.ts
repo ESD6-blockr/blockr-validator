@@ -2,6 +2,10 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { logger } from "@blockr/blockr-logger";
 import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
+import { MessageType } from "../../__mocks__/messageType.model";
+import { IPeerMock } from "../../__mocks__/peer";
+import { PeerMockConcrete } from "../../__mocks__/peermockconcrete";
+import { BlockJobException } from "../../exceptions/blockJob.exception";
 import { ProposedBlockGenerator } from "../../generators";
 import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
 import { LotteryService } from "../../services/concretes/lottery.service";
@@ -19,25 +23,75 @@ export class BlockJob extends SchedulableJob {
     private transactionService: TransactionService;
     private constantStore: ConstantStore;
     private queueStore: QueueStore;
+    private peer: PeerMockConcrete;
     private keyPair?: { publicKey: string; privateKey: string; };
 
     constructor(@inject(FileUtils) fileUtils: FileUtils,
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator,
-                @inject(LotteryService) lotterService: LotteryService,
-                @inject(TransactionService) transactionService: TransactionService) {
-        super(async () => {
+                @inject(LotteryService) lotteryService: LotteryService,
+                @inject(TransactionService) transactionService: TransactionService,
+                @inject(ConstantStore) constantStore: ConstantStore,
+                @inject(QueueStore) queueStore: QueueStore,
+                @inject(PeerMockConcrete) peer: IPeerMock) {
+        super();
+
+        this.fileUtils = fileUtils;
+        this.dataAccessLayer = dataAccessLayer;
+        this.proposedBlockGenerator = proposedBlockGenerator;
+        this.lotteryService = lotteryService;
+        this.transactionService = transactionService;
+        this.constantStore = constantStore;
+        this.queueStore = queueStore;
+        this.peer = peer;
+    }
+
+    protected async onInitAsync(): Promise<void> {
+        return new Promise(async (resolve) => {
+            this.keyPair = await this.getOrGenerateKeyPairAsync();
+
+            resolve();
+        });
+    }
+
+    protected async onCycleAsync(): Promise<void> {
+        return new Promise(async (resolve, reject) => {
             logger.info("[BlockJob] Starting cycle.");
 
+            try {
+                const proposedBlock: Block = await this.generateProposedBlockAsync();
+                // TODO: Shouldn't the peer methods be async?
+                this.peer.broadcastMessage(MessageType.NEW_PROPOSED_BLOCK, JSON.stringify(proposedBlock));
+
+                const states: State[] = await this.dataAccessLayer.getStatesAsync();
+                const victoriousBlock: Block = await this.lotteryService
+                                                            .drawWinningBlock(proposedBlock.blockHeader.parentHash,
+                                                                              states);
+                await this.transactionService.updatePendingTransactions(victoriousBlock);
+                // TODO: Shouldn't the peer methods be async?
+                this.peer.broadcastMessage(MessageType.NEW_VICTORIOUS_BLOCK, JSON.stringify(victoriousBlock));
+
+                resolve();
+            } catch (error) {
+                logger.error(error);
+            
+                reject(error);
+                return;
+            }
+        });
+    }
+
+    private async generateProposedBlockAsync(): Promise<Block> {
+        return new Promise(async (resolve, reject) => {
             const blockChain: Block[] = await this.dataAccessLayer.getBlockchainAsync();
 
             if (blockChain.length === 0) {
-                logger.info("[BlockJob] Skipped current cycle because of empty blockchain.");
+                reject(new BlockJobException("[BlockJob] Skipped current cycle because of empty blockchain."));
                 return;
             }
 
             if (!this.keyPair) {
-                logger.error("[BlockJob] Skipped current cycle because the keypair is undefined.");
+                reject(new BlockJobException("[BlockJob] Skipped current cycle because the keypair is undefined."));
                 return;
             }
             
@@ -47,37 +101,9 @@ export class BlockJob extends SchedulableJob {
                                                             lastBlock,
                                                             this.queueStore.pendingTransactionQueue,
                                                             this.constantStore.VALIDATOR_VERSION,
-                                                            this.keyPair.publicKey,
-                                                        );
+                                                            this.keyPair.publicKey);
             
-            // TODO: Broadcast proposedBlock in P2P network
-
-            const states: State[] = await this.dataAccessLayer.getStatesAsync();
-            let victoriousBlock: Block;
-            try {
-                victoriousBlock = await this.lotteryService.drawWinningBlock(proposedBlock.blockHeader.parentHash,
-                                                                             states);
-            } catch (error) {
-                logger.warning("[BlockJob] Canceled current cycle because no victorious block has been drawn.");
-                return;
-            }
-
-            await this.transactionService.updatePendingTransactions(victoriousBlock);
-            
-
-            // TODO: Broadcast victoriousBlock in P2P network
-        });
-
-        this.fileUtils = fileUtils;
-        this.dataAccessLayer = dataAccessLayer;
-        this.proposedBlockGenerator = proposedBlockGenerator;
-        this.lotteryService = lotterService;
-        this.transactionService = transactionService;
-        this.constantStore = ConstantStore.getInstance();
-        this.queueStore = QueueStore.getInstance();
-
-        this.setOnInit(async () => {
-            this.keyPair = await this.getOrGenerateKeyPairAsync();
+            resolve(proposedBlock);
         });
     }
 
