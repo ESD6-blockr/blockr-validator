@@ -27,6 +27,7 @@
     "bitcoinjs-lib": "^5.0.3",
     "inversify": "^5.0.1",
     "node-cron": "^2.0.3",
+    "seedrandom": "^3.0.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {
