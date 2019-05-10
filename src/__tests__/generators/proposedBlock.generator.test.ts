@@ -1,9 +1,10 @@
 import "reflect-metadata";
 
-import { Block, BlockHeader, BlockType, Transaction, TransactionType } from "@blockr/blockr-models";
+import { Block, Transaction, TransactionType } from "@blockr/blockr-models";
 import { ProposedBlockGenerator } from "../../generators";
 import { ConstantStore } from "../../stores";
 import { ObjectHasher } from "../../utils/security/objectHasher.util";
+import { getBlock, getTransactions } from "../constants/model.constants";
 
 jest.mock("@blockr/blockr-logger");
 jest.mock("../../utils/security/objectHasher.util");
@@ -22,27 +23,8 @@ beforeEach(() => {
 
 describe("Proposed block generator", () => {
     it("Should pass with a valid parent block", async () => {
-        const parentBlock = new Block(
-            new BlockHeader(
-                "1.0.0",
-                1,
-                new Date(),
-                10,
-            ),
-            new Set(),
-            BlockType.GENESIS,
-        );
-
-        const pendingTransactions = new Set().add(
-            new Transaction(
-                TransactionType.COIN,
-                "RECIPIENT_KEY_TEST",
-                "SENDER_KEY_TEST",
-                10,
-                new Date(),
-            ),
-        );
-
+        const parentBlock = getBlock();
+        const pendingTransactions = getTransactions();
         const validatorPublicKey = "PUBLIC_KEY_TEST";
 
         const proposedBlock: Block = await generator.generateProposedBlockAsync(

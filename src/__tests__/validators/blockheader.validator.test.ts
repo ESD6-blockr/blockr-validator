@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { DataAccessLayer } from "@blockr/blockr-data-access";
-import { BlockHeader } from "@blockr/blockr-models";
+import { Block, BlockHeader } from "@blockr/blockr-models";
 import { ObjectHasher } from "../../utils/security/objectHasher.util";
 import {  BlockHeaderValidator, IValidator } from "../../validators";
 import { getBlockHeader } from "../constants/blockheader.constants";
@@ -9,6 +9,7 @@ import { INVALID_VALIDATOR_VERSIONS, VALID_VALIDATOR_VERSIONS } from "../constan
 import { INVALID_BLOCK_NUMBRS, VALID_BLOCK_NUMBERS } from "../constants/blockheader.constants";
 import { INVALID_DATES, VALID_DATES } from "../constants/blockheader.constants";
 import { INVALID_BLOCK_REWARDS, VALID_BLOCK_REWARDS } from "../constants/blockheader.constants";
+import { getBlock } from "../constants/model.constants";
 
 jest.mock("@blockr/blockr-logger");
 jest.mock("../../utils/security/objectHasher.util");
@@ -16,7 +17,11 @@ jest.mock("../../utils/security/objectHasher.util");
 let validator: IValidator<BlockHeader>;
 
 beforeEach(() => {
-    const dataAccessLayerMock = {} as DataAccessLayer;
+    const dataAccessLayerMock = {
+        getBlockAsync() {
+            return getBlock();
+        },
+    } as unknown as DataAccessLayer;
     const objectHasherMock = {} as ObjectHasher;
 
     validator = new BlockHeaderValidator(dataAccessLayerMock, objectHasherMock);
