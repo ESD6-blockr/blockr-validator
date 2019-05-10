@@ -1,4 +1,8 @@
 module.exports = {
+    displayName: {
+        name: "blockr-validator",
+        color: "blue"
+    },
     transform: {
         "^.+\\.(ts|tsx)$": "ts-jest"
     },
@@ -7,7 +11,9 @@ module.exports = {
     ],
     collectCoverage: true,
     collectCoverageFrom: [
-        "src/**/*.ts"
+        "src/**/*.ts",
+        "!src/main.ts",
+        "!src/__tests__/**/*"
     ],
     reporters: [
         "default",

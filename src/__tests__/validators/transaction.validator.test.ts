@@ -2,13 +2,15 @@ import "reflect-metadata";
 
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Transaction } from "@blockr/blockr-models";
-import { ObjectHasher } from "../../utils";
+import { ObjectHasher } from "../../utils/security/objectHasher.util";
 import { IValidator, TransactionValidator } from "../../validators";
 import { getTransaction } from "../constants/transaction.constants";
 import { VALID_TYPES } from "../constants/transaction.constants";
 import { VALID_RECIPIENT_KEYS } from "../constants/transaction.constants";
 import { INVALID_AMOUNTS, VALID_AMOUNTS } from "../constants/transaction.constants";
 
+jest.mock("@blockr/blockr-logger");
+jest.mock("../../utils/security/objectHasher.util");
 
 let validator: IValidator<Transaction>;
 

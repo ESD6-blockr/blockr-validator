@@ -2,13 +2,16 @@ import "reflect-metadata";
 
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { BlockHeader } from "@blockr/blockr-models";
-import { ObjectHasher } from "../../utils";
+import { ObjectHasher } from "../../utils/security/objectHasher.util";
 import {  BlockHeaderValidator, IValidator } from "../../validators";
 import { getBlockHeader } from "../constants/blockheader.constants";
 import { INVALID_VALIDATOR_VERSIONS, VALID_VALIDATOR_VERSIONS } from "../constants/blockheader.constants";
 import { INVALID_BLOCK_NUMBRS, VALID_BLOCK_NUMBERS } from "../constants/blockheader.constants";
 import { INVALID_DATES, VALID_DATES } from "../constants/blockheader.constants";
 import { INVALID_BLOCK_REWARDS, VALID_BLOCK_REWARDS } from "../constants/blockheader.constants";
+
+jest.mock("@blockr/blockr-logger");
+jest.mock("../../utils/security/objectHasher.util");
 
 let validator: IValidator<BlockHeader>;
 

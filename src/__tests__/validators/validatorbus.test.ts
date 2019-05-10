@@ -1,9 +1,12 @@
 import "reflect-metadata";
 
 import { DataAccessLayer } from "@blockr/blockr-data-access";
-import { ObjectHasher } from "../../utils";
+import { ObjectHasher } from "../../utils/security/objectHasher.util";
 import { BlockHeaderValidator, TransactionValidator, ValidatorBus } from "../../validators";
 import { UNSUPORTED_OBJECTS, VALID_OBJECTS } from "../constants/validatorbus.constants";
+
+jest.mock("@blockr/blockr-logger");
+jest.mock("../../utils/security/objectHasher.util");
 
 let validatorBus: ValidatorBus;
 
