@@ -13,6 +13,7 @@ module.exports = {
     collectCoverageFrom: [
         "src/**/*.ts",
         "!src/main.ts",
+        "!src/injection/**/*",
         "!src/__tests__/**/*"
     ],
     reporters: [
