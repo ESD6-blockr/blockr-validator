@@ -56,8 +56,7 @@ describe("Transaction validator", () => {
         transaction.amount = amount;
 
         try {
-            const result = await validator.validateObjectAsync(transaction);
-            console.log(result);
+            await validator.validateObjectAsync(transaction);
         } catch (error) {
             expect(error.message).toContain("transaction amount");
         }
