@@ -1,13 +1,12 @@
 import "reflect-metadata";
 
+import { ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer } from "@blockr/blockr-data-access";
-import { ObjectHasher } from "../../utils/security/objectHasher.util";
 import { BlockHeaderValidator, TransactionValidator, ValidatorBus } from "../../validators";
 import { getBlock } from "../constants/model.constants";
 import { UNSUPORTED_OBJECTS, VALID_OBJECTS } from "../constants/validatorbus.constants";
 
 jest.mock("@blockr/blockr-logger");
-jest.mock("../../utils/security/objectHasher.util");
 
 let validatorBus: ValidatorBus;
 
@@ -17,7 +16,13 @@ beforeEach(() => {
             return getBlock();
         },
     } as unknown as DataAccessLayer;
-    const objectHasherMock = {} as ObjectHasher;
+
+    const objectHasherMock = {
+        async hashAsync() {
+            return "TEST_PARENT_HASH";
+        },
+    } as unknown as ObjectHasher;
+
     
     const validators = [
         new BlockHeaderValidator(dataAccessLayerMock, objectHasherMock),

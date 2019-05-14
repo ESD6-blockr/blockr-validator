@@ -1,7 +1,7 @@
+import { ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { BlockHeader } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { ObjectHasher } from "../../utils/security/objectHasher.util";
 import { BaseValidator } from "../abstractions/base.validator";
 import { ValidationCondition } from "./validation.condition";
 
@@ -94,8 +94,8 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
             new ValidationCondition(async (blockHeader: BlockHeader): Promise<boolean> => {
                 return new Promise(async (resolve) => {
                     const previousBlock = await this.dataAccessLayer.getBlockAsync(blockHeader.blockNumber - 1);
-                
-                    resolve(blockHeader.parentHash === previousBlock.blockHeader.parentHash);
+
+                    resolve(blockHeader.parentHash === await this.objectHasher.hashAsync(previousBlock));
                 });
             }, "The parenthash of the block is invalid."),
         ];

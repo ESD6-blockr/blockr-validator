@@ -1,8 +1,8 @@
+import { ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { State, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { BaseValidator } from "..";
-import { ObjectHasher } from "../../utils/security/objectHasher.util";
 import { ValidationCondition } from "./validation.condition";
 
 @injectable()
@@ -55,6 +55,7 @@ export class TransactionValidator extends BaseValidator<Transaction> {
 
     private getMiscellaneousConditions(): Array<ValidationCondition<Transaction>> {
         return [
+            // TODO: Fix mock data
             new ValidationCondition(async (transaction: Transaction): Promise<boolean> => {
                 return new Promise(async (resolve) => {
                     const senderCurrentState: State = await this.dataAccessLayer
@@ -63,7 +64,7 @@ export class TransactionValidator extends BaseValidator<Transaction> {
 
                     resolve(senderCurrentCoinAmount >= transaction.amount);
                 });
-            }, "The parenthash of the block is invalid."),
+            }, "The sender does not have sufficient funds."),
         ];
     }
 }

@@ -1,8 +1,8 @@
 import "reflect-metadata";
 
+import { ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Transaction } from "@blockr/blockr-models";
-import { ObjectHasher } from "../../utils/security/objectHasher.util";
 import { IValidator, TransactionValidator } from "../../validators";
 import { getBlock } from "../constants/model.constants";
 import { getTransaction } from "../constants/transaction.constants";
@@ -11,7 +11,6 @@ import { VALID_RECIPIENT_KEYS } from "../constants/transaction.constants";
 import { INVALID_AMOUNTS, VALID_AMOUNTS } from "../constants/transaction.constants";
 
 jest.mock("@blockr/blockr-logger");
-jest.mock("../../utils/security/objectHasher.util");
 
 let validator: IValidator<Transaction>;
 
@@ -21,7 +20,12 @@ beforeEach(() => {
             return getBlock();
         },
     } as unknown as DataAccessLayer;
-    const objectHasherMock = {} as ObjectHasher;
+    // TODO: Move these shared mocks the the mock folder
+    const objectHasherMock = {
+        async hashAsync() {
+            return "TEST_PARENT_HASH";
+        },
+    } as unknown as ObjectHasher;
 
     validator = new TransactionValidator(dataAccessLayerMock, objectHasherMock);
 });
@@ -52,7 +56,8 @@ describe("Transaction validator", () => {
         transaction.amount = amount;
 
         try {
-            await validator.validateObjectAsync(transaction);
+            const result = await validator.validateObjectAsync(transaction);
+            console.log(result);
         } catch (error) {
             expect(error.message).toContain("transaction amount");
         }

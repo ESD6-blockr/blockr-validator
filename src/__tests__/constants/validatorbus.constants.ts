@@ -1,5 +1,5 @@
+import { ObjectHasher } from "@blockr/blockr-crypto";
 import { BlockHeader, Transaction, TransactionType } from "@blockr/blockr-models";
-import { ObjectHasher } from "../../utils";
 
 const createBlockHeader = (version: string, blockNumber: number, reward: number) => {
     const blockHeader = new BlockHeader(version, blockNumber, new Date(), reward);

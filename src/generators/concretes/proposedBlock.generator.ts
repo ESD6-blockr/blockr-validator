@@ -1,7 +1,7 @@
+import { ObjectHasher } from "@blockr/blockr-crypto";
 import { Block, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { ConstantStore } from "../../stores";
-import { ObjectHasher } from "../../utils";
 import { BlockGenerator } from "../abstractions/block.generator";
 
 @injectable()

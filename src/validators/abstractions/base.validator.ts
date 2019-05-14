@@ -1,6 +1,6 @@
+import { ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { logger } from "@blockr/blockr-logger";
-import { ObjectHasher } from "../../utils/security/objectHasher.util";
 import { ValidationCondition } from "../concretes/validation.condition";
 import { IValidator } from "../interfaces/validator";
 
@@ -36,14 +36,15 @@ export abstract class BaseValidator<IModel> implements IValidator<IModel> {
 
     private async everyConditionIsValidAsync(object: IModel, conditions: Array<ValidationCondition<IModel>>)
                                             : Promise<boolean> {
-        return new Promise(async (resolve) => {
+        return new Promise(async (resolve, reject) => {
             for (const validationCondition of conditions) {
-                const isValid = await validationCondition.validateAsync(object);
-    
-                if (!isValid) {
-                    resolve(false);
+                try {
+                    await validationCondition.validateAsync(object);
+                } catch (error) {
+                    reject(error);
                 }
             }
+
             resolve(true);
         });
     }

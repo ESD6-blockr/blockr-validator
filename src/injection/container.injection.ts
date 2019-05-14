@@ -1,3 +1,4 @@
+import { ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer, DataSource, IClientConfiguration, MongoDBConfiguration } from "@blockr/blockr-data-access";
 import { BlockHeader, Transaction } from "@blockr/blockr-models";
 import { Container } from "inversify";
@@ -6,7 +7,6 @@ import { BlockJob } from "../jobs";
 import { LotteryService } from "../services/concretes/lottery.service";
 import { TransactionService } from "../services/concretes/transaction.service";
 import { ConstantStore, QueueStore } from "../stores";
-import { ObjectHasher } from "../utils";
 import { FileUtils } from "../utils/file.util";
 import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "../validators";
 
