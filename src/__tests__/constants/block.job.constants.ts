@@ -5,8 +5,10 @@ import { FileUtils } from "../../utils/file.util";
 export const getFileUtilWithKeyFile = () => {
     return {
         fileExistsAsync(path: string) {
-            path = path;
-            return true;
+            if (!path) {
+                return true;
+            }
+            return false;
         },
         readFileAsync() {
             return "FILE";
