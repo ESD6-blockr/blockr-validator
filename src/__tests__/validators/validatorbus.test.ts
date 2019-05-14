@@ -1,14 +1,22 @@
 import "reflect-metadata";
 
 import { DataAccessLayer } from "@blockr/blockr-data-access";
-import { ObjectHasher } from "../../utils";
+import { ObjectHasher } from "../../utils/security/objectHasher.util";
 import { BlockHeaderValidator, TransactionValidator, ValidatorBus } from "../../validators";
+import { getBlock } from "../constants/model.constants";
 import { UNSUPORTED_OBJECTS, VALID_OBJECTS } from "../constants/validatorbus.constants";
+
+jest.mock("@blockr/blockr-logger");
+jest.mock("../../utils/security/objectHasher.util");
 
 let validatorBus: ValidatorBus;
 
 beforeEach(() => {
-    const dataAccessLayerMock = {} as DataAccessLayer;
+    const dataAccessLayerMock = {
+        getBlockAsync() {
+            return getBlock();
+        },
+    } as unknown as DataAccessLayer;
     const objectHasherMock = {} as ObjectHasher;
     
     const validators = [

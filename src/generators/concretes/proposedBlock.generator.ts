@@ -26,7 +26,7 @@ export class ProposedBlockGenerator extends BlockGenerator {
             // and should thus remain an empty string
             const parentHash: string = parentBlock.blockHeader.parentHash
                                             || await this.objectHasher.hashAsync<Block>(parentBlock);
-            const blockNumber: number = parentBlock.blockHeader.blockNumber++;
+            const blockNumber: number = parentBlock.blockHeader.blockNumber + 1;
             const block = await this.generateBlockAsync(pendingTransactions, validatorVersion, blockNumber,
                 new Date(), this.constantStore.BLOCK_REWARD_AMOUNT, parentHash, validatorPublicKey);
             

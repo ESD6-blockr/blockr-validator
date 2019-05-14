@@ -1,13 +1,21 @@
 module.exports = {
+    testEnvironment: "node",
+    displayName: {
+        name: "blockr-validator",
+        color: "blue"
+    },
     transform: {
         "^.+\\.(ts|tsx)$": "ts-jest"
     },
     testMatch: [
         "**/__tests__/**/*.test.+(ts|tsx)"
     ],
-    collectCoverage: true,
     collectCoverageFrom: [
-        "src/**/*.ts"
+        "src/**/*.ts",
+        "!src/**/index.ts",
+        "!src/main.ts",
+        "!src/injection/**/*",
+        "!src/__tests__/**/*"
     ],
     reporters: [
         "default",
