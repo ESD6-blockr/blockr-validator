@@ -10,12 +10,13 @@ import { QueueStore } from "../../stores/queue.stores";
 export class LotteryService {
   private dataAccessLayer: DataAccessLayer;
   private queueStore: QueueStore;
-  private ticketCount: number = 0;
+  private ticketCount: number;
 
   constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
               @inject(QueueStore) queueStore: QueueStore) {
     this.dataAccessLayer = dataAccessLayer;
     this.queueStore = queueStore;
+    this.ticketCount = 0;
   }
 
   public async drawWinningBlock(parentBlockHash: string,
@@ -64,13 +65,13 @@ export class LotteryService {
 
   private async calculateCandidates(stakeMap: Map<string, number>,
                                     pendingProposedBlocks: Set<Block>): Promise<Map<string, number>> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const candidatesMap = new Map<string, number>();
 
       for (const pendingProposedBlock of pendingProposedBlocks) {
         const validatorPublicKey = pendingProposedBlock.blockHeader.validator;
 
-        if (!Object.keys(stakeMap).find((publicKey) => publicKey === validatorPublicKey)) {
+        if (!stakeMap.get(validatorPublicKey)) {
           logger.info(`[LotteryService] Inexistent state for validator ${validatorPublicKey}`);
           // TODO: Should we actually insert this empty state?
           const state = new State(validatorPublicKey, 0, 0);
@@ -78,12 +79,7 @@ export class LotteryService {
           continue;
         }
 
-        const validatorStake = stakeMap.get(validatorPublicKey);
-        
-        if (!validatorStake) {
-          reject(new LotteryException(`[LotteryService] Undefined stake for validator ${validatorPublicKey}`));
-          return;
-        }
+        const validatorStake = stakeMap.get(validatorPublicKey) as number;
 
         this.ticketCount += validatorStake;
         candidatesMap.set(validatorPublicKey, validatorStake);

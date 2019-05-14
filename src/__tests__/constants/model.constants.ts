@@ -14,13 +14,30 @@ export const getBlock = () => {
 };
 
 export const getTransactions = () => {
-    return new Set().add(
-        new Transaction(
-            TransactionType.COIN,
-            "RECIPIENT_KEY_TEST",
-            "SENDER_KEY_TEST",
-            10,
-            new Date(),
-        ),
-    );
+    return new Set()
+        .add(
+            new Transaction(
+                TransactionType.COIN,
+                "RECIPIENT_KEY_TEST",
+                "SENDER_KEY_TEST",
+                10,
+                new Date(),
+            ),
+        ).add(
+            new Transaction(
+                TransactionType.STAKE,
+                "RECIPIENT_KEY_TEST",
+                "SENDER_KEY_TEST",
+                123,
+                new Date(),
+            ),
+        ).add(
+            new Transaction(
+                TransactionType.COIN,
+                "RECIPIENT_KEY_TEST",
+                "SENDER_KEY_TEST",
+                7654,
+                new Date(),
+            ),
+        );
 };

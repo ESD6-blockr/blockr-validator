@@ -34,7 +34,7 @@ describe("Proposed block generator", () => {
         expect(proposedBlock.blockHeader.blockReward).toBe(10);
         expect(proposedBlock.blockHeader.date.toDateString()).toBe(new Date().toDateString());
        
-        expect(proposedBlock.transactions.size).toBe(1);
+        expect(proposedBlock.transactions.size).toBe(3);
         
         const transactions: Transaction[] = Array.from(proposedBlock.transactions);
 
