@@ -1,5 +1,5 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
-import { Transaction } from "@blockr/blockr-models";
+import { State, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { BaseValidator } from "..";
 import { ObjectHasher } from "../../utils/security/objectHasher.util";
@@ -16,6 +16,7 @@ export class TransactionValidator extends BaseValidator<Transaction> {
     protected initConditions(): void {
         this.validationConditions.push.apply(this.validationConditions, this.getModelConditions());
         this.validationConditions.push.apply(this.validationConditions, this.getAmountConditions());
+        this.validationConditions.push.apply(this.validationConditions, this.getMiscellaneousConditions());
     }
 
     private getModelConditions(): Array<ValidationCondition<Transaction>> {
@@ -49,6 +50,20 @@ export class TransactionValidator extends BaseValidator<Transaction> {
             new ValidationCondition((transaction: Transaction): boolean => {
                 return (transaction.amount > 0);
             }, "The transaction amount cannot be a negative value."),
+        ];
+    }
+
+    private getMiscellaneousConditions(): Array<ValidationCondition<Transaction>> {
+        return [
+            new ValidationCondition(async (transaction: Transaction): Promise<boolean> => {
+                return new Promise(async (resolve) => {
+                    const senderCurrentState: State = await this.dataAccessLayer
+                                                                            .getStateAsync(transaction.senderKey);
+                    const senderCurrentCoinAmount = senderCurrentState.coin;
+
+                    resolve(senderCurrentCoinAmount >= transaction.amount);
+                });
+            }, "The parenthash of the block is invalid."),
         ];
     }
 }

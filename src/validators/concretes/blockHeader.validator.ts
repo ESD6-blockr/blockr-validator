@@ -92,8 +92,11 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
     private getHashConditions() {
         return [
             new ValidationCondition(async (blockHeader: BlockHeader): Promise<boolean> => {
-                const previousBlock = await this.dataAccessLayer.getBlockAsync(blockHeader.blockNumber - 1);
-                return blockHeader.parentHash === previousBlock.blockHeader.parentHash;
+                return new Promise(async (resolve) => {
+                    const previousBlock = await this.dataAccessLayer.getBlockAsync(blockHeader.blockNumber - 1);
+                
+                    resolve(blockHeader.parentHash === previousBlock.blockHeader.parentHash);
+                });
             }, "The parenthash of the block is invalid."),
         ];
     }

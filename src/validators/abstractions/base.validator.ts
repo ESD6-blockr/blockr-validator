@@ -21,8 +21,7 @@ export abstract class BaseValidator<IModel> implements IValidator<IModel> {
             try {
                 logger.info(`Validating ${object.constructor.name}`);
 
-                const isValid = this.validationConditions
-                                    .every((condition: ValidationCondition<IModel>) => condition.validate(object));
+                const isValid = await this.everyConditionIsValidAsync(object, this.validationConditions);
     
                 resolve([object, isValid]);
             } catch (error) {
@@ -34,4 +33,18 @@ export abstract class BaseValidator<IModel> implements IValidator<IModel> {
     }
 
     protected abstract initConditions(): void;
+
+    private async everyConditionIsValidAsync(object: IModel, conditions: Array<ValidationCondition<IModel>>)
+                                            : Promise<boolean> {
+        return new Promise(async (resolve) => {
+            for (const validationCondition of conditions) {
+                const isValid = await validationCondition.validateAsync(object);
+    
+                if (!isValid) {
+                    resolve(false);
+                }
+            }
+            resolve(true);
+        });
+    }
 }

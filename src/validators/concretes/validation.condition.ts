@@ -13,11 +13,13 @@ export class ValidationCondition<IModel> {
         this.errorMessage = errorMessage;
     }
 
-    public validate(object: IModel) {
-        if (this.condition(object)) {
-            return true;
-        }
-
-        throw new ValidationException(this.errorMessage);
+    public async validateAsync(object: IModel): Promise<boolean> {
+        return new Promise(async (resolve, reject) => {
+            if (await this.condition(object)) {
+                resolve(true);
+            }
+    
+            reject(new ValidationException(this.errorMessage));
+        });
     }
 }
