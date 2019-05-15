@@ -51,7 +51,7 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
     private getValidatorVersionConditions() {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
-                return !(blockHeader.validatorVersion === "");
+                return blockHeader.validatorVersion !== "";
             }, "The validator version cannot be a empty string."),
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
                 const regexExpresion = new RegExp(/[a-z]/i);
