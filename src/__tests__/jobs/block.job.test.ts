@@ -16,6 +16,7 @@ let lotteryServiceMock: LotteryService;
 let transactionServiceMock: TransactionService;
 let constantStoreMock: ConstantStore;
 let queueStoreMock: QueueStore;
+
 beforeEach(() => {
     proposedBlockGeneratorMock = {} as ProposedBlockGenerator;
     lotteryServiceMock = {} as LotteryService;

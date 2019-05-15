@@ -50,7 +50,7 @@ export class LotteryService {
           const publicKey = Array.from(candidatesMap.keys())[candidateIndex];
           // The stake can never be undefined in this part of the code as candidates are only inserted into the map
           // whenever they have an actual stake, thus the exclamation mark.
-          const stake = candidatesMap.get(publicKey)!;
+          const stake = candidatesMap.get(publicKey) as number;
           upperMargin += stake;
 
           if ((bottomMargin <= randomNumber) && (upperMargin >= randomNumber)) {

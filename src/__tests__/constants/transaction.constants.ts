@@ -19,8 +19,8 @@ export const VALID_RECIPIENT_KEYS = [
 export const VALID_AMOUNTS = [
     1,
     10,
-    12342342342323,
-    87654323.2342367543,
+    123423422,
+    876.23423,
 ];
 
 export const INVALID_AMOUNTS = [

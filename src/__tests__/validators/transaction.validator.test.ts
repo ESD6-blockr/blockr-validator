@@ -1,10 +1,8 @@
 import "reflect-metadata";
 
-import { ObjectHasher } from "@blockr/blockr-crypto";
-import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Transaction } from "@blockr/blockr-models";
 import { IValidator, TransactionValidator } from "../../validators";
-import { getBlock } from "../constants/model.constants";
+import { dataAccessLayerMock, objectHasherMock } from "../constants/model.constants";
 import { getTransaction } from "../constants/transaction.constants";
 import { VALID_TYPES } from "../constants/transaction.constants";
 import { VALID_RECIPIENT_KEYS } from "../constants/transaction.constants";
@@ -15,18 +13,6 @@ jest.mock("@blockr/blockr-logger");
 let validator: IValidator<Transaction>;
 
 beforeEach(() => {
-    const dataAccessLayerMock = {
-        getBlockAsync() {
-            return getBlock();
-        },
-    } as unknown as DataAccessLayer;
-    // TODO: Move these shared mocks the the mock folder
-    const objectHasherMock = {
-        async hashAsync() {
-            return "TEST_PARENT_HASH";
-        },
-    } as unknown as ObjectHasher;
-
     validator = new TransactionValidator(dataAccessLayerMock, objectHasherMock);
 });
 

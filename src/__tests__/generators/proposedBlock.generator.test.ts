@@ -1,22 +1,15 @@
 import "reflect-metadata";
 
-import { ObjectHasher } from "@blockr/blockr-crypto";
 import { Block, Transaction, TransactionType } from "@blockr/blockr-models";
 import { ProposedBlockGenerator } from "../../generators";
 import { ConstantStore } from "../../stores";
-import { getBlock, getTransactions } from "../constants/model.constants";
+import { getBlock, getTransactions, objectHasherMock } from "../constants/model.constants";
 
 jest.mock("@blockr/blockr-logger");
 
 let generator: ProposedBlockGenerator;
 
 beforeEach(() => {
-    const objectHasherMock = {
-        hashAsync() {
-            return "HASH_TEST";
-        },
-    } as unknown as ObjectHasher;
-
     generator = new ProposedBlockGenerator(objectHasherMock, new ConstantStore());
 });
 

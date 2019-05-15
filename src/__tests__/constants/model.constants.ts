@@ -1,4 +1,6 @@
-import { Block, BlockHeader, BlockType, Transaction, TransactionType } from "@blockr/blockr-models";
+import { ObjectHasher } from "@blockr/blockr-crypto";
+import { DataAccessLayer } from "@blockr/blockr-data-access";
+import { Block, BlockHeader, BlockType, State, Transaction, TransactionType } from "@blockr/blockr-models";
 
 export const getBlock = () => {
     return new Block(
@@ -41,3 +43,29 @@ export const getTransactions = () => {
             ),
         );
 };
+
+export const getState = () => {
+    return new State(
+            "SENDER_KEY_TEST",
+        999_999_999,
+        10,
+    );
+};
+
+export const dataAccessLayerMock = {
+    async getBlockAsync() {
+        return getBlock();
+    },
+    async updateStateAsync() {
+        return;
+    },
+    async getStateAsync() {
+        return getState();
+    },
+} as unknown as DataAccessLayer;
+
+export const objectHasherMock = {
+    async hashAsync() {
+        return "TEST_PARENT_HASH";
+    },
+} as unknown as ObjectHasher;
