@@ -1,6 +1,5 @@
 import "reflect-metadata";
 
-import { PeerMockConcrete } from "../../__mocks__/peermockconcrete";
 import { ProposedBlockGenerator } from "../../generators";
 import { BlockJob } from "../../jobs";
 import { LotteryService } from "../../services/concretes/lottery.service";
@@ -17,22 +16,19 @@ let lotteryServiceMock: LotteryService;
 let transactionServiceMock: TransactionService;
 let constantStoreMock: ConstantStore;
 let queueStoreMock: QueueStore;
-let peerMock: PeerMockConcrete;
-
 beforeEach(() => {
     proposedBlockGeneratorMock = {} as ProposedBlockGenerator;
     lotteryServiceMock = {} as LotteryService;
     transactionServiceMock = {} as TransactionService;
     constantStoreMock = {} as ConstantStore;
     queueStoreMock = {} as QueueStore;
-    peerMock = {} as PeerMockConcrete;
 });
 
 describe("Block job initialization", () => {
     it("Should succeed with an empty blockchain", async () => {
         const blockJob = new BlockJob(getFileUtilWithKeyFile(), getDataAccessLayerWithoutBlockchain(),
             proposedBlockGeneratorMock, lotteryServiceMock, transactionServiceMock, constantStoreMock,
-            queueStoreMock, peerMock);
+            queueStoreMock);
         
         expect(blockJob).not.toBeNull();
         expect(blockJob).toBeInstanceOf(BlockJob);
@@ -41,7 +37,7 @@ describe("Block job initialization", () => {
     it("Should succeed with a pre filled blockchain", async () => {
         const blockJob = new BlockJob(getFileUtilWithKeyFile(), getDataAccessLayerWithBlockchain(),
             proposedBlockGeneratorMock, lotteryServiceMock, transactionServiceMock, constantStoreMock,
-            queueStoreMock, peerMock);
+            queueStoreMock);
                 
         expect(blockJob).not.toBeNull();
         expect(blockJob).toBeInstanceOf(BlockJob);
@@ -50,7 +46,7 @@ describe("Block job initialization", () => {
     it("Should succeed without an existing key file", async () => {
         const blockJob = new BlockJob(getFileUtilWithoutKeyFile(), getDataAccessLayerWithBlockchain(),
         proposedBlockGeneratorMock, lotteryServiceMock, transactionServiceMock, constantStoreMock,
-        queueStoreMock, peerMock);
+        queueStoreMock);
             
         expect(blockJob).not.toBeNull();
         expect(blockJob).toBeInstanceOf(BlockJob);
