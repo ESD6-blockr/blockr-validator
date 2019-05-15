@@ -1,16 +1,22 @@
 import { ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer } from "@blockr/blockr-data-access";
-import { State, Transaction } from "@blockr/blockr-models";
+import { State, Transaction, TransactionType } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { BaseValidator } from "..";
+import { ConstantStore } from "../../stores";
 import { ValidationCondition } from "./validation.condition";
 
 @injectable()
 export class TransactionValidator extends BaseValidator<Transaction> {
+    private readonly constantStore: ConstantStore;
+
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
-                @inject(ObjectHasher) objectHasher: ObjectHasher) {
+                @inject(ObjectHasher) objectHasher: ObjectHasher,
+                @inject(ConstantStore) constantStore: ConstantStore) {
             
         super(dataAccessLayer, objectHasher);
+
+        this.constantStore = constantStore;
     }
 
     protected initConditions(): void {
@@ -64,6 +70,12 @@ export class TransactionValidator extends BaseValidator<Transaction> {
                     resolve(senderCurrentCoinAmount >= transaction.amount);
                 });
             }, "The sender does not have sufficient funds."),
+            new ValidationCondition((transaction: Transaction): boolean => {
+                if (transaction.type === TransactionType.STAKE) {
+                    return transaction.senderKey === this.constantStore.ADMIN_PUBLIC_KEY;
+                }
+                return true;
+            }, `The sender of the transaction is not an admin, which is required for this type of transaction.`),
         ];
     }
 }
