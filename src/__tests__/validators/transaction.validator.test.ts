@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
 import { Transaction } from "@blockr/blockr-models";
+import { ConstantStore } from "../../stores";
 import { IValidator, TransactionValidator } from "../../validators";
 import { dataAccessLayerMock, objectHasherMock } from "../constants/model.constants";
 import { getTransaction } from "../constants/transaction.constants";
@@ -13,7 +14,7 @@ jest.mock("@blockr/blockr-logger");
 let validator: IValidator<Transaction>;
 
 beforeEach(() => {
-    validator = new TransactionValidator(dataAccessLayerMock, objectHasherMock);
+    validator = new TransactionValidator(dataAccessLayerMock, objectHasherMock, new ConstantStore());
 });
 
 describe("Transaction validator", () => {

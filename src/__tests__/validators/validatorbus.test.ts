@@ -1,5 +1,6 @@
 import "reflect-metadata";
 
+import { ConstantStore } from "../../stores";
 import { BlockHeaderValidator, TransactionValidator, ValidatorBus } from "../../validators";
 import { dataAccessLayerMock, objectHasherMock } from "../constants/model.constants";
 import { UNSUPORTED_OBJECTS, VALID_OBJECTS } from "../constants/validatorbus.constants";
@@ -11,7 +12,7 @@ let validatorBus: ValidatorBus;
 beforeEach(() => {
     const validators = [
         new BlockHeaderValidator(dataAccessLayerMock, objectHasherMock),
-        new TransactionValidator(dataAccessLayerMock, objectHasherMock),
+        new TransactionValidator(dataAccessLayerMock, objectHasherMock, new ConstantStore()),
     ];
 
     validatorBus = new ValidatorBus(validators);
