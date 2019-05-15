@@ -13,7 +13,7 @@ export abstract class SchedulableJob {
         return new Promise(async (resolve) => {
             await this.onInitAsync();
 
-            schedule(`*/${thresholdInMinutes} * * * *`, async () => await this.onCycleAsync());
+            schedule(`*/${thresholdInMinutes} * * * *`, async () => this.onCycleAsync());
 
             resolve();
         });

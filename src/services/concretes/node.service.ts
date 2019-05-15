@@ -8,10 +8,10 @@ import { BlockJob } from "../../jobs/concretes/block.job";
 import { ValidatorBus } from "../../validators";
 
 export class NodeService {
-    private validatorBus: ValidatorBus;
-    private dataAccessLayer: DataAccessLayer;
-    private genesisBlockGenerator: GenesisBlockGenerator;
-    private blockJob: BlockJob;
+    private readonly validatorBus: ValidatorBus;
+    private readonly dataAccessLayer: DataAccessLayer;
+    private readonly genesisBlockGenerator: GenesisBlockGenerator;
+    private readonly blockJob: BlockJob;
 
     constructor(@inject(ValidatorBus) validatorBus: ValidatorBus,
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,

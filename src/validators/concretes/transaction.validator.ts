@@ -55,7 +55,6 @@ export class TransactionValidator extends BaseValidator<Transaction> {
 
     private getMiscellaneousConditions(): Array<ValidationCondition<Transaction>> {
         return [
-            // TODO: Fix mock data
             new ValidationCondition(async (transaction: Transaction): Promise<boolean> => {
                 return new Promise(async (resolve) => {
                     const senderCurrentState: State = await this.dataAccessLayer

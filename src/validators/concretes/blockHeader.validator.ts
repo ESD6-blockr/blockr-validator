@@ -54,10 +54,12 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
                 return blockHeader.validatorVersion === "" ? false : true;
             }, "The validator version cannot be a empty string."),
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
-                return blockHeader.validatorVersion.match(/[a-z]/i) ? false : true;
+                const regexExpresion = new RegExp(/[a-z]/i);
+                return !regexExpresion.test(blockHeader.validatorVersion);
             }, "The validator version cannot contain alphabetical letters."),
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
-                return blockHeader.validatorVersion.match(/^(\d+\.)?(\d+\.)?(\*|\d+)$/) ? true : false;
+                const regexExpresion = new RegExp(/^(\d+\.)?(\d+\.)?(\*|\d+)$/);
+                return regexExpresion.test(blockHeader.validatorVersion);
             }, "The validator version must be a valid version number."),
         ];
     }

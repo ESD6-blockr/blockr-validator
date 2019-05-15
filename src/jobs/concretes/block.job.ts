@@ -2,9 +2,6 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { logger } from "@blockr/blockr-logger";
 import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { MessageType } from "../../__mocks__/messageType.model";
-import { IPeerMock } from "../../__mocks__/peer";
-import { PeerMockConcrete } from "../../__mocks__/peermockconcrete";
 import { BlockJobException } from "../../exceptions/blockJob.exception";
 import { ProposedBlockGenerator } from "../../generators";
 import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
@@ -16,14 +13,13 @@ import { FileUtils } from "../../utils/file.util";
 
 @injectable()
 export class BlockJob extends SchedulableJob {
-    private fileUtils: FileUtils;
-    private dataAccessLayer: DataAccessLayer;
-    private proposedBlockGenerator: ProposedBlockGenerator;
-    private lotteryService: LotteryService;
-    private transactionService: TransactionService;
-    private constantStore: ConstantStore;
-    private queueStore: QueueStore;
-    private peer: PeerMockConcrete;
+    private readonly fileUtils: FileUtils;
+    private readonly dataAccessLayer: DataAccessLayer;
+    private readonly proposedBlockGenerator: ProposedBlockGenerator;
+    private readonly lotteryService: LotteryService;
+    private readonly transactionService: TransactionService;
+    private readonly constantStore: ConstantStore;
+    private readonly queueStore: QueueStore;
     private keyPair?: { publicKey: string; privateKey: string; };
 
     constructor(@inject(FileUtils) fileUtils: FileUtils,
@@ -32,8 +28,7 @@ export class BlockJob extends SchedulableJob {
                 @inject(LotteryService) lotteryService: LotteryService,
                 @inject(TransactionService) transactionService: TransactionService,
                 @inject(ConstantStore) constantStore: ConstantStore,
-                @inject(QueueStore) queueStore: QueueStore,
-                @inject(PeerMockConcrete) peer: IPeerMock) {
+                @inject(QueueStore) queueStore: QueueStore) {
         super();
 
         this.fileUtils = fileUtils;
@@ -43,7 +38,6 @@ export class BlockJob extends SchedulableJob {
         this.transactionService = transactionService;
         this.constantStore = constantStore;
         this.queueStore = queueStore;
-        this.peer = peer;
     }
 
     protected async onInitAsync(): Promise<void> {
@@ -61,7 +55,7 @@ export class BlockJob extends SchedulableJob {
             try {
                 const proposedBlock: Block = await this.generateProposedBlockAsync();
                 // TODO: Shouldn't the peer methods be async?
-                this.peer.broadcastMessage(MessageType.NEW_PROPOSED_BLOCK, JSON.stringify(proposedBlock));
+               // this.peer.broadcastMessage(MessageType.NEW_PROPOSED_BLOCK, JSON.stringify(proposedBlock));
 
                 const states: State[] = await this.dataAccessLayer.getStatesAsync();
                 const victoriousBlock: Block = await this.lotteryService
@@ -69,7 +63,7 @@ export class BlockJob extends SchedulableJob {
                                                                               states);
                 await this.transactionService.updatePendingTransactions(victoriousBlock);
                 // TODO: Shouldn't the peer methods be async?
-                this.peer.broadcastMessage(MessageType.NEW_VICTORIOUS_BLOCK, JSON.stringify(victoriousBlock));
+                // this.peer.broadcastMessage(MessageType.NEW_VICTORIOUS_BLOCK, JSON.stringify(victoriousBlock));
 
                 resolve();
             } catch (error) {

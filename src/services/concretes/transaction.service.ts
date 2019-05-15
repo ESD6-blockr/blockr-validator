@@ -4,7 +4,7 @@ import { QueueStore } from "../../stores/queue.stores";
 
 @injectable()
 export class TransactionService {
-    private queueStore: QueueStore;
+    private readonly queueStore: QueueStore;
 
     constructor(@inject(QueueStore) queueStore: QueueStore) {
         this.queueStore = queueStore;

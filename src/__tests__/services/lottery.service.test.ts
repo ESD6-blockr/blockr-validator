@@ -1,22 +1,15 @@
 import "reflect-metadata";
 
-import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { State } from "@blockr/blockr-models";
 import { LotteryService } from "../../services/concretes/lottery.service";
 import { QueueStore } from "../../stores";
-import { getBlock } from "../constants/model.constants";
+import { dataAccessLayerMock, getBlock } from "../constants/model.constants";
 
 jest.mock("@blockr/blockr-logger");
 
-let dataAccessLayerMock: DataAccessLayer;
 let queueStore: QueueStore;
 
 beforeEach(() => {
-    dataAccessLayerMock = {
-        updateStateAsync() {
-            return;
-        },
-    } as unknown as DataAccessLayer;
     queueStore = new QueueStore();
 });
 

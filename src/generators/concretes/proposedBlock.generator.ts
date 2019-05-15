@@ -6,8 +6,8 @@ import { BlockGenerator } from "../abstractions/block.generator";
 
 @injectable()
 export class ProposedBlockGenerator extends BlockGenerator {
-    private objectHasher: ObjectHasher;
-    private constantStore: ConstantStore;
+    private readonly objectHasher: ObjectHasher;
+    private readonly constantStore: ConstantStore;
 
     constructor(@inject(ObjectHasher) objectHasher: ObjectHasher,
                 @inject(ConstantStore) constantStore: ConstantStore) {
