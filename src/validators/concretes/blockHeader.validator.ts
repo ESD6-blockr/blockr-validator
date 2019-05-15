@@ -51,7 +51,7 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
     private getValidatorVersionConditions() {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
-                return blockHeader.validatorVersion === "" ? false : true;
+                return !(blockHeader.validatorVersion === "");
             }, "The validator version cannot be a empty string."),
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
                 const regexExpresion = new RegExp(/[a-z]/i);
@@ -78,7 +78,7 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
     private getDateConditions() {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
-                return new Date(blockHeader.date.toDateString()) < new Date(new Date().toDateString()) ? false : true;
+                return !(new Date(blockHeader.date.toDateString()) < new Date(new Date().toDateString()));
             }, "The date cannot be before today."),
         ];
     }
