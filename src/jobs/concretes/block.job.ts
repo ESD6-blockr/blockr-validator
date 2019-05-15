@@ -13,13 +13,13 @@ import { FileUtils } from "../../utils/file.util";
 
 @injectable()
 export class BlockJob extends SchedulableJob {
-    private fileUtils: FileUtils;
-    private dataAccessLayer: DataAccessLayer;
-    private proposedBlockGenerator: ProposedBlockGenerator;
-    private lotteryService: LotteryService;
-    private transactionService: TransactionService;
-    private constantStore: ConstantStore;
-    private queueStore: QueueStore;
+    private readonly fileUtils: FileUtils;
+    private readonly dataAccessLayer: DataAccessLayer;
+    private readonly proposedBlockGenerator: ProposedBlockGenerator;
+    private readonly lotteryService: LotteryService;
+    private readonly transactionService: TransactionService;
+    private readonly constantStore: ConstantStore;
+    private readonly queueStore: QueueStore;
     private keyPair?: { publicKey: string; privateKey: string; };
 
     constructor(@inject(FileUtils) fileUtils: FileUtils,

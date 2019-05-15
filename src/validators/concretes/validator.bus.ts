@@ -6,7 +6,7 @@ import { IValidator } from "../interfaces/validator";
 
 @injectable()
 export class ValidatorBus {
-    private validators: Array<IValidator<IModel>>;
+    private readonly validators: Array<IValidator<IModel>>;
 
     constructor(@multiInject("Validators") validators: Array<IValidator<IModel>>) {
         this.validators = validators;

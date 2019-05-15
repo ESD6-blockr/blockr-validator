@@ -6,7 +6,7 @@ import { BlockGenerator } from "../abstractions/block.generator";
 
 @injectable()
 export class GenesisBlockGenerator extends BlockGenerator {
-    private constantStore: ConstantStore;
+    private readonly constantStore: ConstantStore;
 
     constructor(@inject(ConstantStore) constantStore: ConstantStore) {
         super();

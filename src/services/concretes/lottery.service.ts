@@ -8,8 +8,8 @@ import { QueueStore } from "../../stores/queue.stores";
 
 @injectable()
 export class LotteryService {
-  private dataAccessLayer: DataAccessLayer;
-  private queueStore: QueueStore;
+  private readonly dataAccessLayer: DataAccessLayer;
+  private readonly queueStore: QueueStore;
   private ticketCount: number;
 
   constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,

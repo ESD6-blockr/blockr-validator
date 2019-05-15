@@ -5,8 +5,8 @@ export class ValidationCondition<IModel> {
         return !(object === null || object === undefined);
     }
 
-    private condition: (object: IModel) => boolean | Promise<boolean>;
-    private errorMessage: string;
+    private readonly condition: (object: IModel) => boolean | Promise<boolean>;
+    private readonly errorMessage: string;
 
     constructor(condition: (object: IModel) => boolean | Promise<boolean>, errorMessage: string) {
         this.condition = condition;
