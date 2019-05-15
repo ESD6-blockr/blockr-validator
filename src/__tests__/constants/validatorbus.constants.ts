@@ -27,13 +27,13 @@ export const VALID_OBJECTS = [
         objects: [
             createBlockHeader("2.0.1", 567, 1),
             createBlockHeader("1.1.0", 32, 87654),
-            createTransaction(TransactionType.STAKE, 43),
+            createTransaction(TransactionType.COIN, 43),
         ],
     },
     {
         objects: [
             createTransaction(TransactionType.COIN, 1),
-            createTransaction(TransactionType.STAKE, 3423),
+            createTransaction(TransactionType.COIN, 3423),
             createTransaction(TransactionType.COIN, 98765),
         ],
     },
