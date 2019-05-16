@@ -7,7 +7,6 @@ import { TransactionService } from "../../services/concretes/transaction.service
 import { ConstantStore, QueueStore } from "../../stores";
 import { getDataAccessLayerWithBlockchain } from "../constants/block.job.constants";
 import { getDataAccessLayerWithoutBlockchain } from "../constants/block.job.constants";
-import { getFileUtilWithKeyFile, getFileUtilWithoutKeyFile } from "../constants/block.job.constants";
 
 jest.mock("@blockr/blockr-logger");
 
@@ -27,7 +26,7 @@ beforeEach(() => {
 
 describe("Block job initialization", () => {
     it("Should succeed with an empty blockchain", async () => {
-        const blockJob = new BlockJob(getFileUtilWithKeyFile(), getDataAccessLayerWithoutBlockchain(),
+        const blockJob = new BlockJob(getDataAccessLayerWithoutBlockchain(),
             proposedBlockGeneratorMock, lotteryServiceMock, transactionServiceMock, constantStoreMock,
             queueStoreMock);
         
@@ -36,7 +35,7 @@ describe("Block job initialization", () => {
     });
 
     it("Should succeed with a pre filled blockchain", async () => {
-        const blockJob = new BlockJob(getFileUtilWithKeyFile(), getDataAccessLayerWithBlockchain(),
+        const blockJob = new BlockJob(getDataAccessLayerWithBlockchain(),
             proposedBlockGeneratorMock, lotteryServiceMock, transactionServiceMock, constantStoreMock,
             queueStoreMock);
                 
@@ -45,7 +44,7 @@ describe("Block job initialization", () => {
     });
 
     it("Should succeed without an existing key file", async () => {
-        const blockJob = new BlockJob(getFileUtilWithoutKeyFile(), getDataAccessLayerWithBlockchain(),
+        const blockJob = new BlockJob(getDataAccessLayerWithBlockchain(),
         proposedBlockGeneratorMock, lotteryServiceMock, transactionServiceMock, constantStoreMock,
         queueStoreMock);
             

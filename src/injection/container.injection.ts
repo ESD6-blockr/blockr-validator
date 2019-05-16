@@ -1,4 +1,4 @@
-import { ObjectHasher } from "@blockr/blockr-crypto";
+import { CryptoKeyUtil, ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer, DataSource, IClientConfiguration, MongoDBConfiguration } from "@blockr/blockr-data-access";
 import { BlockHeader, Transaction } from "@blockr/blockr-models";
 import { Container } from "inversify";
@@ -36,6 +36,7 @@ DIContainer.bind<TransactionService>(TransactionService).toSelf().inTransientSco
 
 // Bind request scopes
 DIContainer.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
+DIContainer.bind<CryptoKeyUtil>(CryptoKeyUtil).toSelf().inRequestScope();
 DIContainer.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
 
 // Bind constants

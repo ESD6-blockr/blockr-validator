@@ -1,28 +1,5 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Block, BlockHeader, Transaction, TransactionType } from "@blockr/blockr-models";
-import { FileUtils } from "../../utils/file.util";
-
-export const getFileUtilWithKeyFile = () => {
-    return {
-        fileExistsAsync(path: string) {
-            if (!path) {
-                return true;
-            }
-            return false;
-        },
-        readFileAsync() {
-            return "FILE";
-        },
-    } as unknown as FileUtils;
-};
-
-export const getFileUtilWithoutKeyFile = () => {
-    return {
-        appendStringInFileAsync() {
-            return;
-        },
-    } as unknown as FileUtils;
-};
 
 const blockChain = [
     new Block(
