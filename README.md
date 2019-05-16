@@ -1,1 +1,1 @@
-blox-validator
+Blockr-validator
