@@ -4,6 +4,7 @@ import { BlockHeader, Transaction } from "@blockr/blockr-models";
 import { Container } from "inversify";
 import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
 import { BlockJob } from "../jobs";
+import { AdminKeyService } from "../services/concretes/adminKey.service";
 import { LotteryService } from "../services/concretes/lottery.service";
 import { TransactionService } from "../services/concretes/transaction.service";
 import { ConstantStore, QueueStore } from "../stores";
@@ -33,6 +34,7 @@ DIContainer.bind<BlockJob>(BlockJob).toSelf().inTransientScope();
 
 DIContainer.bind<LotteryService>(LotteryService).toSelf().inTransientScope();
 DIContainer.bind<TransactionService>(TransactionService).toSelf().inTransientScope();
+DIContainer.bind<AdminKeyService>(AdminKeyService).toSelf().inTransientScope();
 
 // Bind request scopes
 DIContainer.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();

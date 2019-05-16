@@ -1,4 +1,3 @@
-import { CryptoKeyUtil, IKeyPair } from "@blockr/blockr-crypto";
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { logger } from "@blockr/blockr-logger";
 import { Block } from "@blockr/blockr-models";
@@ -6,33 +5,26 @@ import { inject } from "inversify";
 import { NodeStartupException } from "../../exceptions";
 import { GenesisBlockGenerator } from "../../generators";
 import { BlockJob } from "../../jobs/concretes/block.job";
-import { ConstantStore } from "../../stores";
-import { FileUtils } from "../../utils/file.util";
 import { ValidatorBus } from "../../validators";
+import { AdminKeyService } from "./adminKey.service";
 
 export class NodeService {
     private readonly validatorBus: ValidatorBus;
     private readonly dataAccessLayer: DataAccessLayer;
     private readonly genesisBlockGenerator: GenesisBlockGenerator;
     private readonly blockJob: BlockJob;
-    private readonly cryptoKeyUtil: CryptoKeyUtil;
-    private readonly fileUtils: FileUtils;
-    private readonly constantStore: ConstantStore;
+    private readonly adminKeyService: AdminKeyService;
 
     constructor(@inject(ValidatorBus) validatorBus: ValidatorBus,
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(GenesisBlockGenerator) genesisBlockGenerator: GenesisBlockGenerator,
                 @inject(BlockJob) blockJob: BlockJob,
-                @inject(CryptoKeyUtil) cryptoKeyUtil: CryptoKeyUtil,
-                @inject(FileUtils) fileUtils: FileUtils,
-                @inject(ConstantStore) constantStore: ConstantStore) {
+                @inject(AdminKeyService) adminKeyService: AdminKeyService) {
         this.validatorBus = validatorBus;
         this.dataAccessLayer = dataAccessLayer;
         this.genesisBlockGenerator = genesisBlockGenerator;
         this.blockJob = blockJob;
-        this.cryptoKeyUtil = cryptoKeyUtil;
-        this.fileUtils = fileUtils;
-        this.constantStore = constantStore;
+        this.adminKeyService = adminKeyService;
     }
 
     public async start(): Promise<void> {
@@ -88,13 +80,13 @@ export class NodeService {
     
                 if (blockchain.length === 0) {
                     // TODO: kijken of hier blockchain gerequest moet worden of genesis block gemaakt moet worden
-                    this.initiateOrRequestAdminKeyIfInexistentAsync(true);
+                    this.adminKeyService.initiateOrRequestAdminKeyIfInexistentAsync(true);
                     await this.initiateBlockchainAsync();
                     return;
                 }
 
                 // TODO: Blockchain should be requested from random peer
-                this.initiateOrRequestAdminKeyIfInexistentAsync(false);
+                this.adminKeyService.initiateOrRequestAdminKeyIfInexistentAsync(false);
     
                 logger.info("Blockchain received.");
                 resolve();
@@ -102,46 +94,6 @@ export class NodeService {
                 reject(new NodeStartupException(error.message));
             }
         });
-    }
-
-    private async initiateOrRequestAdminKeyIfInexistentAsync(shouldGenerateKey: boolean): Promise<void> {
-        return new Promise(async (resolve) => {
-            if (shouldGenerateKey) {
-                this.generateAndSaveAdminKeyAsync();
-                return;
-            }
-    
-            if (await this.fileUtils.fileExistsAsync(this.constantStore.KEYS_FILE_PATH)) {
-                logger.info("[NodeService] Grabbing Admin Key Pair From Keys File.");
-                this.constantStore.ADMIN_PUBLIC_KEY = await this.fileUtils
-                                                                    .readFileAsync(this.constantStore.KEYS_FILE_PATH);
-                return;
-            }
-            
-            logger.info("[NodeService] Grabbing Admin Key Pair From Keys File.");
-            // send broadcast request for admin pubkey
-            // TODO: the value should be received from the broadcast reply
-            this.constantStore.ADMIN_PUBLIC_KEY = "";
-            await this.saveAdminKeyInFile();
-            
-            resolve();
-        });
-    }
-
-    private async generateAndSaveAdminKeyAsync(): Promise<void> {
-        return new Promise(async (resolve) => {
-            logger.info("[NodeService] Generating Admin Key Pair.");
-
-            this.constantStore.ADMIN_PUBLIC_KEY = this.cryptoKeyUtil.generateKeyPair().getPublic(true, "hex") as string;
-            await this.saveAdminKeyInFile();
-
-            resolve();
-        });
-    }
-
-    private saveAdminKeyInFile(): Promise<void> {
-        return this.fileUtils.appendStringInFileAsync(this.constantStore.KEYS_FILE_PATH,
-                                               JSON.stringify(this.constantStore.ADMIN_PUBLIC_KEY));
     }
 
     private async initiateBlockchainAsync(): Promise<void> {
