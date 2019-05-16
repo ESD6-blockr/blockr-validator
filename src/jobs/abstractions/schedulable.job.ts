@@ -11,18 +11,11 @@ export abstract class SchedulableJob {
      */
     public scheduleAsync(thresholdInMinutes: number): Promise<void> {
         return new Promise(async (resolve) => {
-            await this.onInitAsync();
-
             schedule(`*/${thresholdInMinutes} * * * *`, async () => this.onCycleAsync());
 
             resolve();
         });
     }
-
-    /**
-     * This method handles all required initialization logic and is executed only once.
-     */
-    protected abstract async onInitAsync(): Promise<void>;
     /**
      * This method handles all repetitive logic of the job and is executed every scheduled cycle. 
      */

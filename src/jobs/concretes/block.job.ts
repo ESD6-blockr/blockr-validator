@@ -9,43 +9,30 @@ import { LotteryService } from "../../services/concretes/lottery.service";
 import { TransactionService } from "../../services/concretes/transaction.service";
 import { ConstantStore } from "../../stores";
 import { QueueStore } from "../../stores/queue.stores";
-import { FileUtils } from "../../utils/file.util";
 
 @injectable()
 export class BlockJob extends SchedulableJob {
-    private readonly fileUtils: FileUtils;
     private readonly dataAccessLayer: DataAccessLayer;
     private readonly proposedBlockGenerator: ProposedBlockGenerator;
     private readonly lotteryService: LotteryService;
     private readonly transactionService: TransactionService;
     private readonly constantStore: ConstantStore;
     private readonly queueStore: QueueStore;
-    private keyPair?: { publicKey: string; privateKey: string; };
 
-    constructor(@inject(FileUtils) fileUtils: FileUtils,
-                @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
+    constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator,
                 @inject(LotteryService) lotteryService: LotteryService,
                 @inject(TransactionService) transactionService: TransactionService,
                 @inject(ConstantStore) constantStore: ConstantStore,
                 @inject(QueueStore) queueStore: QueueStore) {
         super();
-
-        this.fileUtils = fileUtils;
+        
         this.dataAccessLayer = dataAccessLayer;
         this.proposedBlockGenerator = proposedBlockGenerator;
         this.lotteryService = lotteryService;
         this.transactionService = transactionService;
         this.constantStore = constantStore;
         this.queueStore = queueStore;
-    }
-
-    protected async onInitAsync(): Promise<void> {
-        return new Promise(async (resolve) => {
-            this.keyPair = await this.getOrGenerateKeyPairAsync();
-
-            resolve();
-        });
     }
 
     protected async onCycleAsync(): Promise<void> {
@@ -84,7 +71,7 @@ export class BlockJob extends SchedulableJob {
                 return;
             }
 
-            if (!this.keyPair) {
+            if (this.constantStore.VALIDATOR_PUBLIC_KEY.length === 0) {
                 reject(new BlockJobException("[BlockJob] Skipped current cycle because the keypair is undefined."));
                 return;
             }
@@ -95,26 +82,9 @@ export class BlockJob extends SchedulableJob {
                                                             lastBlock,
                                                             this.queueStore.pendingTransactionQueue,
                                                             this.constantStore.VALIDATOR_VERSION,
-                                                            this.keyPair.publicKey);
+                                                            this.constantStore.VALIDATOR_PUBLIC_KEY);
             
             resolve(proposedBlock);
-        });
-    }
-
-    private async getOrGenerateKeyPairAsync(): Promise<{ publicKey: string; privateKey: string; }> {
-        return new Promise(async (resolve) => {
-            logger.info("[BlockJob] Grabbing and/or generating keypair.");
-
-            if (await this.fileUtils.fileExistsAsync(this.constantStore.KEYS_FILE_PATH)) {
-                resolve(await this.fileUtils.readFileAsync(this.constantStore.KEYS_FILE_PATH));
-            }
-
-            // TODO: Get keypair -> save key? 
-            const keyPair = {publicKey: "", privateKey: ""};
-
-            await this.fileUtils.appendStringInFileAsync(this.constantStore.KEYS_FILE_PATH, JSON.stringify(keyPair));
-
-            resolve(keyPair);
         });
     }
 }
