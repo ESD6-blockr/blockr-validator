@@ -28,6 +28,7 @@ export class GenesisBlockGenerator extends BlockGenerator {
         });
     }
 
+    // TODO: Sign transactions?
     private generateTransactionsAsync(): Promise<Set<Transaction>> {
         return new Promise((resolve) => {
             const currentDate = new Date();

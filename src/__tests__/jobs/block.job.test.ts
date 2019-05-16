@@ -42,13 +42,4 @@ describe("Block job initialization", () => {
         expect(blockJob).not.toBeNull();
         expect(blockJob).toBeInstanceOf(BlockJob);
     });
-
-    it("Should succeed without an existing key file", async () => {
-        const blockJob = new BlockJob(getDataAccessLayerWithBlockchain(),
-        proposedBlockGeneratorMock, lotteryServiceMock, transactionServiceMock, constantStoreMock,
-        queueStoreMock);
-            
-        expect(blockJob).not.toBeNull();
-        expect(blockJob).toBeInstanceOf(BlockJob);
-    });
 });

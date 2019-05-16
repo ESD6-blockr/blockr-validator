@@ -8,10 +8,12 @@ jest.mock("@blockr/blockr-logger");
 
 describe("Genesis block generator", () => {
     it("Should pass with a valid admin public key", async () => {
-        const recipientKey = "PUBLIC_KEY_TEST";
-        process.env.ADMIN_PUBLIC_KEY = recipientKey;
+        const adminKey = "PUBLIC_KEY_TEST";
 
-        const generator = new GenesisBlockGenerator(new ConstantStore());
+        const constantStore = new ConstantStore();
+        constantStore.ADMIN_PUBLIC_KEY = adminKey;
+
+        const generator = new GenesisBlockGenerator(constantStore);
 
         const genesisBlock: Block = await generator.generateGenesisBlockAsync();
 
@@ -24,12 +26,12 @@ describe("Genesis block generator", () => {
         const transactions: Transaction[] = Array.from(genesisBlock.transactions);
 
         expect(transactions[0].type).toBe(TransactionType.COIN);
-        expect(transactions[0].senderKey).toBe(recipientKey);
+        expect(transactions[0].senderKey).toBe(adminKey);
         expect(transactions[0].amount).toBe(900_000_000);
         expect(transactions[0].date.toDateString()).toBe(new Date().toDateString());
 
         expect(transactions[1].type).toBe(TransactionType.STAKE);
-        expect(transactions[1].senderKey).toBe(recipientKey);
+        expect(transactions[1].senderKey).toBe(adminKey);
         expect(transactions[1].amount).toBe(1);
         expect(transactions[1].date.toDateString()).toBe(new Date().toDateString());
     });
