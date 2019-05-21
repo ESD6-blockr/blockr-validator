@@ -1,6 +1,6 @@
 import { Block } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { QueueStore } from "../../stores/queue.stores";
+import { QueueStore } from "../../stores/queue.store";
 
 @injectable()
 export class TransactionService {

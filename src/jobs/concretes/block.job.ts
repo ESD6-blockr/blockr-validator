@@ -7,8 +7,7 @@ import { ProposedBlockGenerator } from "../../generators";
 import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
 import { LotteryService } from "../../services/concretes/lottery.service";
 import { TransactionService } from "../../services/concretes/transaction.service";
-import { ConstantStore } from "../../stores";
-import { QueueStore } from "../../stores/queue.stores";
+import { ConstantStore, QueueStore } from "../../stores";
 
 @injectable()
 export class BlockJob extends SchedulableJob {

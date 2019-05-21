@@ -4,7 +4,7 @@ import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import * as seedRandom from "seedrandom";
 import { LotteryException } from "../../exceptions/lotteryException.exception";
-import { QueueStore } from "../../stores/queue.stores";
+import { QueueStore } from "../../stores/queue.store";
 
 @injectable()
 export class LotteryService {

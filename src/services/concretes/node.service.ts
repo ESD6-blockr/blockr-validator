@@ -1,8 +1,9 @@
 import { logger } from "@blockr/blockr-logger";
-import { inject } from "inversify";
+import { inject, injectable } from "inversify";
 import { BlockJob } from "../../jobs/concretes/block.job";
 import { BlockchainInitializationService } from "./blockchainInitialization.service";
 
+@injectable()
 export class NodeService {
     private readonly blockchainInitializationService: BlockchainInitializationService;
     private readonly blockJob: BlockJob;
