@@ -27,6 +27,10 @@ export class ConstantStore {
     public SENTRY_DSN: string;
     /* The Sentry Environment */
     public SENTRY_ENVIRONMENT: string;
+    /* The database connection string */
+    public DB_CONNECTION_STRING: string;
+    /* The database name */
+    public DB_NAME: string;
     
     public constructor() {
         this.GENESIS_COIN_AMOUNT = 900_000_000;
@@ -40,5 +44,7 @@ export class ConstantStore {
         this.VALIDATOR_VERSION = process.env.VALIDATOR_VERSION || "";
         this.SENTRY_DSN = process.env.SENTRY_DSN || "";
         this.SENTRY_ENVIRONMENT = process.env.SENTRY_ENVIRONMENT || "";
+        this.DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING || "";
+        this.DB_NAME = process.env.DB_NAME || "";
     }
 }

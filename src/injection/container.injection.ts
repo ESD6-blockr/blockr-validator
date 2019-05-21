@@ -46,8 +46,11 @@ DIContainer.bind<CryptoKeyUtil>(CryptoKeyUtil).toSelf().inRequestScope();
 DIContainer.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
 
 // Bind constants
+// The local constantStore instance is required to load the DB credentials from process.env
+const constantStore = new ConstantStore();
 DIContainer.bind<IClientConfiguration>("Configuration")
-                    .toConstantValue(new MongoDBConfiguration("conn string", "database"));
+                    .toConstantValue(new MongoDBConfiguration(constantStore.DB_CONNECTION_STRING,
+                                                              constantStore.DB_NAME));
 
 // Bind singletons
 DIContainer.bind<DataSource>("DataSource").toConstantValue(DataSource.MONGO_DB);
