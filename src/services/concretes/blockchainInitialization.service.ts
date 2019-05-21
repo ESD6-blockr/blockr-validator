@@ -80,8 +80,6 @@ export class BlockchainInitializationService {
 
                 resolve();
             } catch (error) {
-                logger.error(error.message);
-
                 reject(error);
             }
         });
