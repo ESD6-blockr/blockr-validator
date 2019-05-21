@@ -1,15 +1,20 @@
 import "reflect-metadata";
 
+import { logger } from "@blockr/blockr-logger";
 import * as Sentry from "@sentry/node";
 import DIContainer from "./injection/container.injection";
 import { NodeService } from "./services";
 import { ConstantStore } from "./stores/constant.store";
 
 async function main() {
-    initSentry();
+    try {
+        initSentry();
 
-    const service = DIContainer.resolve<NodeService>(NodeService);
-    await service.start();
+        const service = DIContainer.resolve<NodeService>(NodeService);
+        await service.start();
+    } catch (error) {
+        logger.error(error);
+    }
 }
 
 function initSentry() {

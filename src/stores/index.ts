@@ -1,2 +1,2 @@
 export { ConstantStore } from "./constant.store";
-export { QueueStore } from "./queue.stores";
+export { QueueStore } from "./queue.store";
