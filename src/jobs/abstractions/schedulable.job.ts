@@ -1,3 +1,4 @@
+import { logger } from "@blockr/blockr-logger";
 import { schedule } from "node-cron";
 
 /**
@@ -11,7 +12,8 @@ export abstract class SchedulableJob {
      */
     public scheduleAsync(thresholdInMinutes: number): Promise<void> {
         return new Promise(async (resolve) => {
-            schedule(`*/${thresholdInMinutes} * * * *`, async () => this.onCycleAsync());
+            schedule(`*/${thresholdInMinutes} * * * *`,
+                            async () => this.onCycleAsync().catch((error) => logger.error(error)));
 
             resolve();
         });

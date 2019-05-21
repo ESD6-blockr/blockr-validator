@@ -54,7 +54,7 @@ DIContainer.bind<IClientConfiguration>("Configuration")
 
 // Bind singletons
 DIContainer.bind<DataSource>("DataSource").toConstantValue(DataSource.MONGO_DB);
-DIContainer.bind<ConstantStore>(ConstantStore).to(ConstantStore);
-DIContainer.bind<QueueStore>(QueueStore).to(QueueStore);
+DIContainer.bind<ConstantStore>(ConstantStore).toConstantValue(constantStore);
+DIContainer.bind<QueueStore>(QueueStore).to(QueueStore).inSingletonScope();
 
 export default DIContainer;

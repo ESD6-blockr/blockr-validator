@@ -52,15 +52,16 @@ export class BlockchainInitializationService {
     
                 if (blockchain.length === 0) {
                     // TODO: kijken of hier blockchain gerequest moet worden of genesis block gemaakt moet worden
-                    this.adminKeyService.initiateOrRequestAdminKeyIfInexistentAsync(true);
+                    await this.adminKeyService.initiateOrRequestAdminKeyIfInexistentAsync(true);
                     await this.initiateBlockchainAsync();
                     return;
                 }
+                console.log("===== SYNC =====", blockchain);
 
                 // TODO: Blockchain should be requested from random peer
-                this.adminKeyService.initiateOrRequestAdminKeyIfInexistentAsync(false);
+                await this.adminKeyService.initiateOrRequestAdminKeyIfInexistentAsync(false);
     
-                logger.info("[BlockchainInitializationService] Blockchain received.");
+                logger.info("[BlockchainInitializationService] Synced blockchain.");
                 resolve();
             } catch (error) {
                 reject(new NodeStartupException(error.message));
@@ -73,10 +74,14 @@ export class BlockchainInitializationService {
             try {
                 logger.info("[BlockchainInitializationService] Initiating blockchain.");
 
-                const genesisBlock = await this.genesisBlockGenerator.generateGenesisBlockAsync();
+                const genesisBlock: Block = await this.genesisBlockGenerator.generateGenesisBlockAsync();
+
+                console.log("===== GEN =====", genesisBlock);
                 
                 await this.dataAccessLayer.addBlockAsync(genesisBlock);
                 await this.dataAccessLayer.updateStatesAsync(Array.from(genesisBlock.transactions));
+                
+                logger.info("[BlockchainInitializationService] Initiated blockchain.");
 
                 resolve();
             } catch (error) {

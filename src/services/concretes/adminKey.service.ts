@@ -19,21 +19,24 @@ export class AdminKeyService {
         this.constantStore = constantStore;
     }
 
-    public async initiateOrRequestAdminKeyIfInexistentAsync(shouldGenerateKey: boolean): Promise<void> {
+    public async initiateOrRequestAdminKeyIfInexistentAsync(shouldGenerateKeyIfFileInexistent: boolean): Promise<void> {
         return new Promise(async (resolve) => {
-            if (shouldGenerateKey) {
-                this.generateAndSaveAdminKeyAsync();
-                return;
-            }
-    
             if (await this.fileUtils.fileExistsAsync(this.constantStore.KEYS_FILE_PATH)) {
-                logger.info("[AdminKeyService] Grabbing Admin Key Pair From Keys File.");
+                logger.info("[AdminKeyService] Grabbing admin key pair from keys file.");
+
                 this.constantStore.ADMIN_PUBLIC_KEY = await this.fileUtils
                                                                     .readFileAsync(this.constantStore.KEYS_FILE_PATH);
+
+                resolve();
                 return;
             }
             
-            logger.info("[AdminKeyService] Grabbing Admin Key Pair From Keys File.");
+            if (shouldGenerateKeyIfFileInexistent) {
+                this.generateAndSaveAdminKeyAsync();
+                
+                resolve();
+                return;
+            }
             // send broadcast request for admin pubkey
             // TODO: the value should be received from the broadcast reply
             this.constantStore.ADMIN_PUBLIC_KEY = "";
@@ -45,7 +48,7 @@ export class AdminKeyService {
 
     private async generateAndSaveAdminKeyAsync(): Promise<void> {
         return new Promise(async (resolve) => {
-            logger.info("[AdminKeyService] Generating Admin Key Pair.");
+            logger.info("[AdminKeyService] Generating admin key pair.");
 
             this.constantStore.ADMIN_PUBLIC_KEY = this.cryptoKeyUtil.generateKeyPair().getPublic(true, "hex") as string;
             await this.saveAdminKeyInFile();

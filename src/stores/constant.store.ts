@@ -33,6 +33,8 @@ export class ConstantStore {
     public DB_NAME: string;
     
     public constructor() {
+        console.log("============= ConstantStore INIT ==========");
+
         this.GENESIS_COIN_AMOUNT = 900_000_000;
         this.GENESIS_STAKE_AMOUNT = 1;
         this.ADMIN_PUBLIC_KEY = "";
