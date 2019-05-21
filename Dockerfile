@@ -2,6 +2,7 @@ FROM node:alpine as BUILD
 WORKDIR /opt
 COPY .npmrc .
 COPY package.json .
+COPY package-lock.json .
 RUN npm i
 COPY tslint.json .
 COPY tsconfig.json .
@@ -20,6 +21,7 @@ COPY --from=BUILD /opt/dist .
 WORKDIR /
 COPY --from=BUILD /opt/package.json ./
 COPY --from=BUILD /opt/package-lock.json ./
+COPY --from=BUILD /opt/.npmrc ./
 ENV NODE_ENV=production
 RUN npm i
 ENTRYPOINT [ "node", "dist/main" ]

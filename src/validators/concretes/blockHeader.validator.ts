@@ -95,7 +95,8 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         return [
             new ValidationCondition(async (blockHeader: BlockHeader): Promise<boolean> => {
                 return new Promise(async (resolve) => {
-                    const previousBlock = await this.dataAccessLayer.getBlockAsync(blockHeader.blockNumber - 1);
+                    const previousBlock = (await this.dataAccessLayer
+                        .getBlocksByQueryAsync({ "blockHeader.blockNumber": blockHeader.blockNumber - 1 }))[0];
 
                     resolve(blockHeader.parentHash === await this.objectHasher.hashAsync(previousBlock));
                 });

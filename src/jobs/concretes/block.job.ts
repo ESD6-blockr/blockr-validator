@@ -63,7 +63,7 @@ export class BlockJob extends SchedulableJob {
 
     private async generateProposedBlockAsync(): Promise<Block> {
         return new Promise(async (resolve, reject) => {
-            const blockChain: Block[] = await this.dataAccessLayer.getBlockchainAsync();
+            const blockChain: Block[] = await this.dataAccessLayer.getBlocksByQueryAsync({});
 
             if (blockChain.length === 0) {
                 reject(new BlockJobException("[BlockJob] Skipped current cycle because of empty blockchain."));
