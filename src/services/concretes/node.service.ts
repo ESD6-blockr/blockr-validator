@@ -16,13 +16,17 @@ export class NodeService {
     }
 
     public async start(): Promise<void> {
-        return new Promise(async (resolve) => {
+        return new Promise(async (resolve, reject) => {
             logger.info(`${this.constructor.name} is starting.`);
 
-            await this.blockchainInitializationService.initiateBlockchainIfInexistentAsync();
-            await this.scheduleBlockJobAsync();
-
-            resolve();
+            try {
+                await this.blockchainInitializationService.initiateBlockchainIfInexistentAsync();
+                await this.scheduleBlockJobAsync();
+    
+                resolve();
+            } catch (error) {
+                reject(error);
+            }
         });
     }
 
