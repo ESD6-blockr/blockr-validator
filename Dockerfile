@@ -1,19 +1,27 @@
-FROM node:8
-WORKDIR /app
-COPY package.json ./package.json
-COPY package-lock.json ./package-lock.json
+FROM node:alpine as BUILD
+WORKDIR /opt
+COPY .npmrc .
+COPY package.json .
+COPY package-lock.json .
 RUN npm i
+COPY tslint.json .
+COPY tsconfig.json .
+COPY src ./src
+RUN npm run lint && npm run build
 
-COPY src/lib ./lib
-COPY src/logic ./logic
-COPY public ./public
-COPY src/services ./services
-COPY src/tasks ./tasks
-COPY src/util ./util
-COPY src/validator-mongodb ./validator-mongodb
-COPY database_volume ./database
+FROM node:alpine as TEST
+COPY jest.config.js .
+COPY src ./src
+RUN npm i jest ts-jest jest-junit 
+ENTRYPOINT [ "jest", "--collectCoverage" ]
 
-COPY src/.env ./.env
-COPY src/server.js ./server.js
-
-ENTRYPOINT ["node", "server.js"]
+FROM node:alpine as FINAL
+WORKDIR /dist
+COPY --from=BUILD /opt/dist .
+WORKDIR /
+COPY --from=BUILD /opt/package.json ./
+COPY --from=BUILD /opt/package-lock.json ./
+COPY --from=BUILD /opt/.npmrc ./
+ENV NODE_ENV=production
+RUN npm i
+ENTRYPOINT [ "node", "dist/main" ]

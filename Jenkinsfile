@@ -1,6 +1,6 @@
 #!groovy
 
-@Library('blockr-jenkins-lib') _
+@Library('blockr-jenkins-lib@docker-pipeline') _
 
 String repo = 'blockr-validator'
 
@@ -10,4 +10,4 @@ Map settings = [
     archive_folders: ['dist/']
 ]
 
-tsBuildAndPublish(repo, settings)
+tsDockerBuildAndDeploy(repo, settings)

@@ -53,7 +53,7 @@ export const getState = () => {
 };
 
 export const dataAccessLayerMock = {
-    async getBlockAsync() {
+    async getBlocksByQueryAsync() {
         return getBlock();
     },
     async updateStateAsync() {

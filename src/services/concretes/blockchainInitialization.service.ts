@@ -48,7 +48,7 @@ export class BlockchainInitializationService {
             try {
                 logger.info("[BlockchainInitializationService] Checking the state of the blockchain.");
     
-                const blockchain: Block[] = await this.dataAccessLayer.getBlockchainAsync();
+                const blockchain: Block[] = await this.dataAccessLayer.getBlocksByQueryAsync({});
     
                 if (blockchain.length === 0) {
                     // TODO: kijken of hier blockchain gerequest moet worden of genesis block gemaakt moet worden
