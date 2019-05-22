@@ -37,7 +37,6 @@ export class BlockJob extends SchedulableJob {
     protected async onCycleAsync(): Promise<void> {
         return new Promise(async (resolve, reject) => {
             logger.info("[BlockJob] Starting cycle.");
-            console.log(this.constantStore);
 
             try {
                 const proposedBlock: Block = await this.generateProposedBlockAsync();

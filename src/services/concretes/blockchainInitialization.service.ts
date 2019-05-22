@@ -56,7 +56,6 @@ export class BlockchainInitializationService {
                     await this.initiateBlockchainAsync();
                     return;
                 }
-                console.log("===== SYNC =====", blockchain);
 
                 // TODO: Blockchain should be requested from random peer
                 await this.adminKeyService.initiateOrRequestAdminKeyIfInexistentAsync(false);
@@ -75,8 +74,6 @@ export class BlockchainInitializationService {
                 logger.info("[BlockchainInitializationService] Initiating blockchain.");
 
                 const genesisBlock: Block = await this.genesisBlockGenerator.generateGenesisBlockAsync();
-
-                console.log("===== GEN =====", genesisBlock);
                 
                 await this.dataAccessLayer.addBlockAsync(genesisBlock);
                 await this.dataAccessLayer.updateStatesAsync(Array.from(genesisBlock.transactions));
