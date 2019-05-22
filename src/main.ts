@@ -9,16 +9,15 @@ import { ConstantStore } from "./stores/constant.store";
 async function main() {
     try {
         initSentry();
-        const store = DIContainer.resolve<ConstantStore>(ConstantStore);
-        // const service = DIContainer.resolve<NodeService>(NodeService);
-        // await service.start();
+        const service = DIContainer.resolve<NodeService>(NodeService);
+        await service.start();
     } catch (error) {
         logger.error(error);
     }
 }
 
 function initSentry() {
-    const constantStore = DIContainer.resolve<ConstantStore>(ConstantStore);
+    const constantStore = DIContainer.get<ConstantStore>(ConstantStore);
     
     Sentry.init({
         dsn: constantStore.SENTRY_DSN,
