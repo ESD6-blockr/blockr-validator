@@ -59,7 +59,7 @@ export class LotteryService {
           bottomMargin += stake;
           candidateIndex += 1;
         }
-        reject(new LotteryException("The lottery does not yield any winner for the given proposedblocks."));
+        reject(new LotteryException("The lottery does not yield any winner for the given proposed blocks."));
     });
   }
 

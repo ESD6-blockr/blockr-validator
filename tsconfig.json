@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-       // "allowJs": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "outDir": "dist",
@@ -22,6 +21,5 @@
     },
     "include": [
         "src/**/*",
-        //"deprecated/lib/p2p/**/*.js"
     ],
 }
