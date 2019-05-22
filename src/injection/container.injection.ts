@@ -22,6 +22,12 @@ import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } 
  */
 const DIContainer = new Container({skipBaseClassChecks: true});
 
+DIContainer.bind<ConstantStore>(ConstantStore).toDynamicValue(() => new ConstantStore()).inSingletonScope();
+
+DIContainer.load();
+
+const constantStore = DIContainer.resolve<ConstantStore>(ConstantStore);
+
 // Bind transients
 DIContainer.bind<DataAccessLayer>(DataAccessLayer).toSelf().inTransientScope();
 
@@ -45,16 +51,11 @@ DIContainer.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
 DIContainer.bind<CryptoKeyUtil>(CryptoKeyUtil).toSelf().inRequestScope();
 DIContainer.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
 
-// Bind constants
-// The local constantStore instance is required to load the DB credentials from process.env
-const constantStore = new ConstantStore();
+// Bind singletons
+DIContainer.bind<DataSource>("DataSource").toConstantValue(DataSource.MONGO_DB);
 DIContainer.bind<IClientConfiguration>("Configuration")
                     .toConstantValue(new MongoDBConfiguration(constantStore.DB_CONNECTION_STRING,
                                                               constantStore.DB_NAME));
-
-// Bind singletons
-DIContainer.bind<DataSource>("DataSource").toConstantValue(DataSource.MONGO_DB);
-DIContainer.bind<ConstantStore>(ConstantStore).toConstantValue(constantStore);
 DIContainer.bind<QueueStore>(QueueStore).to(QueueStore).inSingletonScope();
 
 export default DIContainer;

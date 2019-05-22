@@ -9,9 +9,9 @@ import { ConstantStore } from "./stores/constant.store";
 async function main() {
     try {
         initSentry();
-
-        const service = DIContainer.resolve<NodeService>(NodeService);
-        await service.start();
+        const store = DIContainer.resolve<ConstantStore>(ConstantStore);
+        // const service = DIContainer.resolve<NodeService>(NodeService);
+        // await service.start();
     } catch (error) {
         logger.error(error);
     }
