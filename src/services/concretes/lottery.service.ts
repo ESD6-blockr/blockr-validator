@@ -3,7 +3,6 @@ import { logger } from "@blockr/blockr-logger";
 import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import * as seedRandom from "seedrandom";
-import { LotteryException } from "../../exceptions/lotteryException.exception";
 import { QueueStore } from "../../stores/queue.store";
 
 @injectable()
@@ -20,7 +19,7 @@ export class LotteryService {
   }
 
   public async drawWinningBlock(parentBlockHash: string,
-                                walletStates: State[]): Promise<Block> {
+                                walletStates: State[]): Promise<Block | undefined> {
       return new Promise(async (resolve, reject) => {
         const pendingProposedBlocks: Set<Block> = this.queueStore.pendingProposedBlockQueue;
         const stakeMap = await this.convertStatesToStakeMap(walletStates);
@@ -30,16 +29,14 @@ export class LotteryService {
 
           resolve(await this.chooseWinningBlock(parentBlockHash, candidatesMap, pendingProposedBlocks));
         } catch (error) {
-          logger.error(error);
-          
           reject(error);
         }
       });
   }
 
   private async chooseWinningBlock(parentBlockHash: string, candidatesMap: Map<string, number>,
-                                   pendingProposedBlocks: Set<Block>): Promise<Block> {
-    return new Promise((resolve, reject) => {
+                                   pendingProposedBlocks: Set<Block>): Promise<Block | undefined> {
+    return new Promise((resolve) => {
         // TODO: Perhaps the random stake choosing should be overhauled.
         const randomNumber = seedRandom(parentBlockHash)() * this.ticketCount;
         let bottomMargin = 0;
@@ -59,7 +56,9 @@ export class LotteryService {
           bottomMargin += stake;
           candidateIndex += 1;
         }
-        reject(new LotteryException("The lottery does not yield any winner for the given proposed blocks."));
+
+        logger.warn("[LotteryService] The lottery does not yield any winner for the given proposed blocks.");
+        resolve(undefined);
     });
   }
 

@@ -44,9 +44,17 @@ export class BlockJob extends SchedulableJob {
                // this.peer.broadcastMessage(MessageType.NEW_PROPOSED_BLOCK, JSON.stringify(proposedBlock));
 
                 const states: State[] = await this.dataAccessLayer.getStatesAsync();
-                const victoriousBlock: Block = await this.lotteryService
+                const victoriousBlock: Block | undefined = await this.lotteryService
                                                             .drawWinningBlock(proposedBlock.blockHeader.parentHash,
                                                                               states);
+
+                if (!victoriousBlock) {
+                    logger.warn("[BlockJob] Skipped current cycle because no victorious block could be chosen.");
+
+                    resolve();
+                    return;
+                }
+                
                 await this.transactionService.updatePendingTransactions(victoriousBlock);
                 // TODO: Shouldn't the peer methods be async?
                 // this.peer.broadcastMessage(MessageType.NEW_VICTORIOUS_BLOCK, JSON.stringify(victoriousBlock));
@@ -69,7 +77,8 @@ export class BlockJob extends SchedulableJob {
             }
 
             if (this.constantStore.VALIDATOR_PUBLIC_KEY.length === 0) {
-                reject(new BlockJobException("[BlockJob] Skipped current cycle because the keypair is undefined."));
+                reject(new BlockJobException("[BlockJob] Skipped current cycle because the " +
+                                             "validator's public key is undefined."));
                 return;
             }
             

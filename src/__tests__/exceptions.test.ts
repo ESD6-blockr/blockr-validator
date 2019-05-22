@@ -1,5 +1,5 @@
 import { BlockGeneratorException, BlockJobException, KeyPairGenerationException } from "../exceptions";
-import { LotteryException, NodeStartupException, ValidationException, ValidatorBusException } from "../exceptions";
+import { NodeStartupException, ValidationException, ValidatorBusException } from "../exceptions";
 
 describe("Exception: {name} should instantiate with a message", () => {
     it("{Block generation}", () => {
@@ -23,14 +23,6 @@ describe("Exception: {name} should instantiate with a message", () => {
 
         expect(exception).not.toBeNull();
         expect(exception).toBeInstanceOf(KeyPairGenerationException);
-        expect(exception.message).toBe("Exception");
-    });
-
-    it("{Lottery exception}", () => {
-        const exception = new LotteryException("Exception");
-
-        expect(exception).not.toBeNull();
-        expect(exception).toBeInstanceOf(LotteryException);
         expect(exception.message).toBe("Exception");
     });
 
