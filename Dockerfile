@@ -1,17 +1,12 @@
 FROM node:alpine as BUILD
 WORKDIR /opt
-COPY .npmrc .
-COPY package.json .
-COPY package-lock.json .
+COPY [ ".npmrc", "package.json", "package-lock.json",  "./" ]
 RUN npm i
-COPY tslint.json .
-COPY tsconfig.json .
-COPY src ./src
+COPY [ "tslint.json", "tsconfig.json", "src", "./" ]
 RUN npm run lint && npm run build
 
 FROM node:alpine as TEST
-COPY jest.config.js .
-COPY src ./src
+COPY [ "jest.config.js", "src",  "./" ]
 RUN npm i jest ts-jest jest-junit 
 ENTRYPOINT [ "jest", "--collectCoverage" ]
 
