@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@blockr/blockr-crypto": "^1.0.0-3",
-    "@blockr/blockr-data-access": "^2.1.0-24",
+    "@blockr/blockr-data-access": "^3.0.0-build.13",
     "@blockr/blockr-logger": "^1.3.0",
     "@blockr/blockr-models": "^1.4.0-2",
     "@sentry/node": "^4.6.6",
