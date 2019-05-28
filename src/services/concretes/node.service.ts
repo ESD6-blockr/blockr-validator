@@ -20,6 +20,7 @@ export class NodeService {
             logger.info(`${this.constructor.name} is starting.`);
 
             try {
+                // get validator --> als undefined ben ik de eerste
                 // TODO: Somehow grab validator's public key and save in ConstantStore
                 await this.blockchainInitializationService.initiateBlockchainIfInexistentAsync();
                 await this.scheduleBlockJobAsync();
