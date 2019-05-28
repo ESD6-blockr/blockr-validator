@@ -11,6 +11,8 @@ export class ConstantStore {
     public GENESIS_STAKE_AMOUNT: number;
     /* The public key of the admin wallet */
     public ADMIN_PUBLIC_KEY: string;
+    /* The private key of the admin wallet */
+    public ADMIN_PRIVATE_KEY: string;
     /* The currently configured public key that the validator should mine for */
     public VALIDATOR_PUBLIC_KEY: string;
     /* Block reward */
@@ -36,6 +38,7 @@ export class ConstantStore {
         this.GENESIS_COIN_AMOUNT = 900_000_000;
         this.GENESIS_STAKE_AMOUNT = 1;
         this.ADMIN_PUBLIC_KEY = "";
+        this.ADMIN_PRIVATE_KEY = "";
         this.VALIDATOR_PUBLIC_KEY = process.env.VALIDATOR_PUBLIC_KEY || "";
         this.BLOCK_REWARD_AMOUNT = 10;
         this.GENESIS_BLOCK_NUMBER = 1;

@@ -25,7 +25,7 @@ export class AdminKeyService {
                 logger.info("[AdminKeyService] Grabbing admin key pair from keys file.");
 
                 this.constantStore.ADMIN_PUBLIC_KEY = await this.fileUtils
-                                                                    .readFileAsync(this.constantStore.KEYS_FILE_PATH);
+                    .readFileAsync(this.constantStore.KEYS_FILE_PATH);
 
                 resolve();
                 return;
@@ -37,9 +37,10 @@ export class AdminKeyService {
                 resolve();
                 return;
             }
+
             // send broadcast request for admin pubkey
-            // TODO: the value should be received from the broadcast reply
-            this.constantStore.ADMIN_PUBLIC_KEY = "";
+            // TODO: p2p lib ask for admin public key to verify signature
+            this.constantStore.ADMIN_PUBLIC_KEY = ""; // save public key;
             await this.saveAdminKeyInFile();
             
             resolve();
@@ -50,7 +51,10 @@ export class AdminKeyService {
         return new Promise(async (resolve) => {
             logger.info("[AdminKeyService] Generating admin key pair.");
 
-            this.constantStore.ADMIN_PUBLIC_KEY = this.cryptoKeyUtil.generateKeyPair().getPublic(true, "hex") as string;
+            const keyPair = this.cryptoKeyUtil.generateKeyPair();
+            this.constantStore.ADMIN_PUBLIC_KEY = keyPair.getPublic(true, "hex") as string;
+            this.constantStore.ADMIN_PRIVATE_KEY = keyPair.getPrivate("hex") as string;
+
             await this.saveAdminKeyInFile();
 
             resolve();
@@ -59,6 +63,9 @@ export class AdminKeyService {
 
     private saveAdminKeyInFile(): Promise<void> {
         return this.fileUtils.appendStringInFileAsync(this.constantStore.KEYS_FILE_PATH,
-                                               JSON.stringify(this.constantStore.ADMIN_PUBLIC_KEY));
+            JSON.stringify({
+                privateKey: this.constantStore.ADMIN_PRIVATE_KEY,
+                publicKey: this.constantStore.ADMIN_PUBLIC_KEY,
+            }));
     }
 }

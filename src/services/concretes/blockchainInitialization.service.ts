@@ -13,8 +13,8 @@ export class BlockchainInitializationService {
     private readonly adminKeyService: AdminKeyService;
 
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
-        @inject(GenesisBlockGenerator) genesisBlockGenerator: GenesisBlockGenerator,
-        @inject(AdminKeyService) adminKeyService: AdminKeyService) {
+                @inject(GenesisBlockGenerator) genesisBlockGenerator: GenesisBlockGenerator,
+                @inject(AdminKeyService) adminKeyService: AdminKeyService) {
         this.dataAccessLayer = dataAccessLayer;
         this.genesisBlockGenerator = genesisBlockGenerator;
         this.adminKeyService = adminKeyService;
@@ -58,6 +58,7 @@ export class BlockchainInitializationService {
                 }
 
                 // TODO: Blockchain should be requested from random peer
+                // p2p request blockchain
                 await this.adminKeyService.initiateOrRequestAdminKeyIfInexistentAsync(false);
 
                 logger.info("[BlockchainInitializationService] Synced blockchain.");
