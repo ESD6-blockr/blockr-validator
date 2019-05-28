@@ -5,9 +5,9 @@ import { ValidationCondition } from "../concretes/validation.condition";
 import { IValidator } from "../interfaces/validator";
 
 export abstract class BaseValidator<IModel> implements IValidator<IModel> {
-    protected dataAccessLayer: DataAccessLayer;
-    protected objectHasher: ObjectHasher;
-    protected validationConditions: Array<ValidationCondition<IModel>> = [];
+    protected readonly dataAccessLayer: DataAccessLayer;
+    protected readonly objectHasher: ObjectHasher;
+    protected readonly validationConditions: Array<ValidationCondition<IModel>> = [];
 
     constructor(dataAccessLayer: DataAccessLayer, objectHasher: ObjectHasher) {
         this.dataAccessLayer = dataAccessLayer;

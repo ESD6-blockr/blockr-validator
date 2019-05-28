@@ -63,11 +63,22 @@ export class TransactionValidator extends BaseValidator<Transaction> {
         return [
             new ValidationCondition(async (transaction: Transaction): Promise<boolean> => {
                 return new Promise(async (resolve) => {
-                    const senderCurrentState: State = await this.dataAccessLayer
+                    const senderCurrentState: State | undefined = await this.dataAccessLayer
                                                                             .getStateAsync(transaction.senderKey);
-                    const senderCurrentCoinAmount = senderCurrentState.coin;
 
-                    resolve(senderCurrentCoinAmount >= transaction.amount);
+                    resolve(ValidationCondition.isNotNullNorUndefined(senderCurrentState));
+                });
+            }, "No state exists for the given sender."),
+            new ValidationCondition(async (transaction: Transaction): Promise<boolean> => {
+                return new Promise(async (resolve) => {
+                    const senderCurrentState: State | undefined = await this.dataAccessLayer
+                                                                            .getStateAsync(transaction.senderKey);
+
+                    if (senderCurrentState) {
+                        const senderCurrentCoinAmount = senderCurrentState.coin;
+
+                        resolve(senderCurrentCoinAmount >= transaction.amount);
+                    }
                 });
             }, "The sender does not have sufficient funds."),
             new ValidationCondition((transaction: Transaction): boolean => {

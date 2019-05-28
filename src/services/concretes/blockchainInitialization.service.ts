@@ -1,65 +1,49 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { logger } from "@blockr/blockr-logger";
-import { Block, State, Transaction } from "@blockr/blockr-models";
+import { Block, State, Transaction, TransactionType } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
+import { BlockchainAdapter } from "../../adapters/concretes/blockchain.adapter";
+import { IBlockchainServiceAdapter } from "../../adapters/interfaces/blockchain.adapter";
 import { NodeStartupException } from "../../exceptions";
 import { GenesisBlockGenerator } from "../../generators";
 import { AdminKeyService } from "./adminKey.service";
 
 @injectable()
-export class BlockchainInitializationService {
+export class BlockchainInitializationService implements IBlockchainServiceAdapter {
     private readonly dataAccessLayer: DataAccessLayer;
     private readonly genesisBlockGenerator: GenesisBlockGenerator;
     private readonly adminKeyService: AdminKeyService;
+    private readonly blockchainAdapter: BlockchainAdapter;
 
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(GenesisBlockGenerator) genesisBlockGenerator: GenesisBlockGenerator,
-                @inject(AdminKeyService) adminKeyService: AdminKeyService) {
+                @inject(AdminKeyService) adminKeyService: AdminKeyService,
+                @inject(BlockchainAdapter) blockchainAdapter: BlockchainAdapter) {
         this.dataAccessLayer = dataAccessLayer;
         this.genesisBlockGenerator = genesisBlockGenerator;
         this.adminKeyService = adminKeyService;
+        this.blockchainAdapter = blockchainAdapter;
+
+        this.blockchainAdapter.setAdapter(this);
     }
 
     public async initiateBlockchainIfInexistentAsync(): Promise<void> {
-        // TODO: init P2P client?
-        // TODO: BlockJob P2P implementations
-        // TODO: validator#start#initiateHandleRequests --> peer message bindings inits
-        // TODO: Where do we use the validatorBus?
-
-
-        // If should create genesis block
-        // generate key pair
-        // save in file
-        // save in constant
-
-        // generate genesis block
-        // If should not create genesis block
-        // if .keys pair exists
-        // grab key pair from file and put in constant
-        // if .keys pair does not exists
-        // send broadcast request for admin pubkey
-        // create .keys file and fill with pair
-        // save in constant
-
-        // Request blockchain from random peer
-
-
         return new Promise(async (resolve, reject) => {
             try {
                 logger.info("[BlockchainInitializationService] Checking the state of the blockchain.");
 
-                const blockchain: Block[] = await this.dataAccessLayer.getBlocksByQueryAsync({});
+                const shouldGenerateGenesisBlock: boolean = this.blockchainAdapter.shouldGenerateGenesisBlock();
+                await this.adminKeyService.initiateOrRequestAdminKeyIfInexistentAsync(shouldGenerateGenesisBlock);
 
-                if (blockchain.length === 0) {
-                    // TODO: kijken of hier blockchain gerequest moet worden of genesis block gemaakt moet worden
-                    await this.adminKeyService.initiateOrRequestAdminKeyIfInexistentAsync(true);
+                if (shouldGenerateGenesisBlock) {
                     await this.initiateBlockchainAsync();
+                    resolve();
+
                     return;
                 }
 
-                // TODO: Blockchain should be requested from random peer
-                // p2p request blockchain
-                await this.adminKeyService.initiateOrRequestAdminKeyIfInexistentAsync(false);
+                const blockchain: Block[] = await this.blockchainAdapter.requestBlockchainAsync();
+                await this.saveBlockchainAsync(blockchain);
 
                 logger.info("[BlockchainInitializationService] Synced blockchain.");
                 resolve();
@@ -69,17 +53,20 @@ export class BlockchainInitializationService {
         });
     }
 
+    private async saveBlockchainAsync(blockchain: Block[]): Promise<void> {
+        return this.dataAccessLayer.addBlocksAsync(blockchain);
+    }
+
     private async initiateBlockchainAsync(): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
                 logger.info("[BlockchainInitializationService] Initiating blockchain.");
 
                 const genesisBlock: Block = await this.genesisBlockGenerator.generateGenesisBlockAsync();
-                const states: State[] = await this.updateStatesForTransactionsAsync(
-                    Array.from(genesisBlock.transactions));
+                const genesisState: State = this.generateGenesisState(genesisBlock.transactions);
 
                 await this.dataAccessLayer.addBlockAsync(genesisBlock);
-                await this.dataAccessLayer.updateStatesAsync(states);
+                await this.dataAccessLayer.setStatesAsync([genesisState]);
 
                 logger.info("[BlockchainInitializationService] Initiated blockchain.");
 
@@ -90,26 +77,14 @@ export class BlockchainInitializationService {
         });
     }
 
-    private async updateStatesForTransactionsAsync(transactions: Transaction[]): Promise<State[]> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const states: State[] = [];
+    private generateGenesisState(transactions: Set<Transaction>): State {
+        const transactionArray = Array.from(transactions);
 
-                for (const transaction of transactions) {
-                    const senderState = await this.dataAccessLayer.getStateAsync(transaction.senderKey);
-                    const recipientState = await this.dataAccessLayer.getStateAsync(transaction.recipientKey);
+        const stakeTransaction: Transaction = transactionArray
+            .find((t) => t.type === TransactionType.STAKE) as Transaction;
+        const coinTransaction: Transaction = transactionArray
+            .find((t) => t.type === TransactionType.COIN) as Transaction;
 
-                    senderState.coin -= transaction.amount;
-                    recipientState.coin += transaction.amount;
-
-                    states.push(senderState);
-                    states.push(recipientState);
-                }
-
-                resolve(states);
-            } catch (error) {
-                reject(error);
-            }
-        });
+        return new State(stakeTransaction.senderKey, coinTransaction.amount, stakeTransaction.amount);
     }
 }

@@ -1,46 +1,36 @@
-import { IBlockChainAdapter } from "../interfaces/blockChain.adapter";
-import { Peer, Message } from "@blockr/blockr-p2p-lib";
-import { inject } from "inversify";
-import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
+import { Block } from "@blockr/blockr-models";
+import { Message, Peer } from "@blockr/blockr-p2p-lib";
+import { PeerType } from "@blockr/blockr-p2p-lib/dist/enums";
+import { injectable } from "inversify";
+import { BaseAdapter } from "../abstractions/base.adapter";
+import { MessageType } from "../enums/messageType.enum";
+import { IBlockchainServiceAdapter } from "../interfaces/blockchain.adapter";
 
-export class BlocksAdapter {
-
-    private readonly peer: Peer;
-    private readonly blockChain: IBlocksAdapter;
-
-    public constructor(@inject(Peer) peer: Peer, blockChain: IBlocksAdapter) {
-        this.peer = peer;
-        this.blockChain = blockChain;
-        this.initilizeMessageHandles();
+@injectable()
+export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
+    constructor(peer: Peer) {
+        super(peer);
     }
 
-    public sendProposedBlock(){
-        this.peer.sendMessageAsync();
-    }
- 
-
-    private initilizeMessageHandles(): void {
-        this.peer.registerReceiveHandlerForMessageType("proposedblock", async (message: Message, senderGuid: string, response: RESPONSE_TYPE) => { 
-                                                        await this.handleProposedblock(message, senderGuid, response)} );
-
+    public shouldGenerateGenesisBlock(): boolean {
+        return !this.peer.getPeerOfType(PeerType.VALIDATOR);
     }
 
-    private handleProposedblock(message: Message, senderGuid: string, response: RESPONSE_TYPE): Promise<void>{
-        this.blockChain.validateAsync(message);
+    // TODO: Should implement onMessage for BLOCKCHAIN_REQUEST
 
-    }
+    /**
+     * Requests the blockchain from a random validator within the peer-to-peer network
+     */
+    public async requestBlockchainAsync(): Promise<Block[]> {
+        return new Promise(async (resolve) => {
+            const message = new Message(MessageType.BLOCKCHAIN_REQUEST);
+            
+            this.peer.sendMessageToRandomPeerAsync(message, PeerType.VALIDATOR, (responseMessage: Message) => {
+                const blockchain: Block[] = JSON.parse(responseMessage.body as string);
 
-
-    this.peer.addbroadcastMessageHandler('proposedblock', (message) => {
-        this.blockValidator.validateAsync(message.data).then(() => {
-          this.blockValidator.validateTransactionsAsync(message.data).then(() => {
-            TemporaryStorage.addProposedBlock(message.data);
-          }, (err) => {
-            console.log(err);
-          });
-        }, (err) => {
-          console.log(err);
+                resolve(blockchain);
+            });
+            await this.peer.getPromiseForResponse(message);
         });
-      });
-        
+    }
 }

@@ -33,6 +33,8 @@ export class ConstantStore {
     public DB_CONNECTION_STRING: string;
     /* The database name */
     public DB_NAME: string;
+    /* The initial peer */
+    public INITIAL_PEER: string;
     
     public constructor() {
         this.GENESIS_COIN_AMOUNT = 900_000_000;
@@ -49,5 +51,6 @@ export class ConstantStore {
         this.SENTRY_ENVIRONMENT = process.env.SENTRY_ENVIRONMENT || "";
         this.DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING || "";
         this.DB_NAME = process.env.DB_NAME || "";
+        this.INITIAL_PEER = process.env.INITIAL_PEER || "";
     }
 }

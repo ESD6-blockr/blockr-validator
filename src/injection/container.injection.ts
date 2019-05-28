@@ -4,7 +4,10 @@
 import { CryptoKeyUtil, ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer, DataSource, IClientConfiguration, MongoDBConfiguration } from "@blockr/blockr-data-access";
 import { BlockHeader, Transaction } from "@blockr/blockr-models";
+import { Peer } from "@blockr/blockr-p2p-lib";
+import { PeerType } from "@blockr/blockr-p2p-lib/dist/enums";
 import { Container } from "inversify";
+import { BlockchainAdapter } from "../adapters/concretes/blockchain.adapter";
 import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
 import { BlockJob } from "../jobs";
 import { NodeService } from "../services";
@@ -36,7 +39,8 @@ DIContainer.bind<DataSource>("DataSource").toConstantValue(DataSource.MONGO_DB);
 DIContainer.bind<IClientConfiguration>("Configuration")
                     .toConstantValue(new MongoDBConfiguration(constantStore.DB_CONNECTION_STRING,
                                                               constantStore.DB_NAME));
-DIContainer.bind<QueueStore>(QueueStore).to(QueueStore).inSingletonScope();
+DIContainer.bind<QueueStore>(QueueStore).toSelf().inSingletonScope();
+DIContainer.bind<Peer>(Peer).toConstantValue(new Peer(PeerType.VALIDATOR));
 
 // Requests
 DIContainer.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
@@ -60,5 +64,7 @@ DIContainer.bind<TransactionService>(TransactionService).toSelf().inTransientSco
 DIContainer.bind<AdminKeyService>(AdminKeyService).toSelf().inTransientScope();
 DIContainer.bind<BlockchainInitializationService>(BlockchainInitializationService).toSelf().inTransientScope();
 DIContainer.bind<NodeService>(NodeService).toSelf().inTransientScope();
+
+DIContainer.bind<BlockchainAdapter>(BlockchainAdapter).toSelf().inTransientScope();
 
 export default DIContainer;
