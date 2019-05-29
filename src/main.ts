@@ -18,19 +18,29 @@ async function main() {
 }
 
 async function initPeer() {
-    logger.info("[Main] Initializing Peer");
-    const peer = DIContainer.get<Peer>(Peer);
-    await peer.init();
+    try {
+        logger.info("[Main] Initializing Peer.");
+
+        const peer = DIContainer.get<Peer>(Peer);
+        await peer.init();
+    } catch (error) {
+        logger.error(error);
+    }
 }
 
 async function initNodeService() {
-    logger.info("[Main] Initializing NodeService");
-    const service = DIContainer.get<NodeService>(NodeService);
-    await service.start();
+    try {
+        logger.info("[Main] Initializing NodeService.");
+
+        const service = DIContainer.get<NodeService>(NodeService);
+        await service.start();
+    } catch (error) {
+        logger.error(error);
+    }
 }
 
 function initSentry() {
-    logger.info("[Main] Initializing Sentry");
+    logger.info("[Main] Initializing Sentry.");
     const constantStore = DIContainer.get<ConstantStore>(ConstantStore);
     
     Sentry.init({
