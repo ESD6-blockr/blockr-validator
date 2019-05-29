@@ -12,8 +12,6 @@ import { IBlockchainServiceAdapter } from "../interfaces/blockchain.adapter";
 export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     constructor(@inject(Peer) peer: Peer) {
         super(peer);
-
-        this.initReceiveHandlers();
     }
 
     public shouldGenerateGenesisBlock(): boolean {
@@ -36,7 +34,7 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
         });
     }
 
-    private initReceiveHandlers(): void {
+    protected initReceiveHandlers(): void {
         this.peer.registerReceiveHandlerForMessageType(MessageType.BLOCKCHAIN_REQUEST,
                 async (message: Message, senderGuid: string, response: RESPONSE_TYPE) => {
             await this.handleBlockchainRequest(message, senderGuid, response).catch((error) => logger.error(error));

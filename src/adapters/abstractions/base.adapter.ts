@@ -8,6 +8,8 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
 
     public constructor(peer: Peer) {
         this.peer = peer;
+
+        this.initReceiveHandlers();
     }
 
     /**
@@ -24,4 +26,9 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
 
         throw new AdapterException("The adapter is undefined.");
     }
+
+    /**
+     * This function should initialize all the adapter's receive handlers.
+     */
+    protected abstract initReceiveHandlers(): void;
 }
