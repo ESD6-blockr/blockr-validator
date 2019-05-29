@@ -22,49 +22,49 @@ import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } 
 /**
  * Dependency container
  */
-const DIContainer = new Container({skipBaseClassChecks: true});
+const DI_CONTAINER = new Container({skipBaseClassChecks: true});
 
 /**
  * Application configuration
  */
-DIContainer.bind<ConstantStore>(ConstantStore).toSelf().inSingletonScope();
-const constantStore = DIContainer.get<ConstantStore>(ConstantStore);
+DI_CONTAINER.bind<ConstantStore>(ConstantStore).toSelf().inSingletonScope();
+const constantStore = DI_CONTAINER.get<ConstantStore>(ConstantStore);
 
 /**
  * Injections
  */
 
  // Singletons
-DIContainer.bind<DataSource>("DataSource").toConstantValue(DataSource.MONGO_DB);
-DIContainer.bind<IClientConfiguration>("Configuration")
+DI_CONTAINER.bind<DataSource>("DataSource").toConstantValue(DataSource.MONGO_DB);
+DI_CONTAINER.bind<IClientConfiguration>("Configuration")
                     .toConstantValue(new MongoDBConfiguration(constantStore.DB_CONNECTION_STRING,
                                                               constantStore.DB_NAME));
-DIContainer.bind<QueueStore>(QueueStore).toSelf().inSingletonScope();
-DIContainer.bind<Peer>(Peer).toConstantValue(new Peer(PeerType.VALIDATOR));
+DI_CONTAINER.bind<QueueStore>(QueueStore).toSelf().inSingletonScope();
+DI_CONTAINER.bind<Peer>(Peer).toConstantValue(new Peer(PeerType.VALIDATOR));
 
 // Requests
-DIContainer.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
-DIContainer.bind<CryptoKeyUtil>(CryptoKeyUtil).toSelf().inRequestScope();
-DIContainer.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
+DI_CONTAINER.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
+DI_CONTAINER.bind<CryptoKeyUtil>(CryptoKeyUtil).toSelf().inRequestScope();
+DI_CONTAINER.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
 
 // Transients
-DIContainer.bind<DataAccessLayer>(DataAccessLayer).toSelf().inTransientScope();
+DI_CONTAINER.bind<DataAccessLayer>(DataAccessLayer).toSelf().inTransientScope();
 
-DIContainer.bind<IValidator<BlockHeader>>("Validators").to(BlockHeaderValidator).inTransientScope();
-DIContainer.bind<IValidator<Transaction>>("Validators").to(TransactionValidator).inTransientScope();
-DIContainer.bind<ValidatorBus>(ValidatorBus).toSelf().inTransientScope();
+DI_CONTAINER.bind<IValidator<BlockHeader>>("Validators").to(BlockHeaderValidator).inTransientScope();
+DI_CONTAINER.bind<IValidator<Transaction>>("Validators").to(TransactionValidator).inTransientScope();
+DI_CONTAINER.bind<ValidatorBus>(ValidatorBus).toSelf().inTransientScope();
 
-DIContainer.bind<GenesisBlockGenerator>(GenesisBlockGenerator).toSelf().inTransientScope();
-DIContainer.bind<ProposedBlockGenerator>(ProposedBlockGenerator).toSelf().inTransientScope();
+DI_CONTAINER.bind<GenesisBlockGenerator>(GenesisBlockGenerator).toSelf().inTransientScope();
+DI_CONTAINER.bind<ProposedBlockGenerator>(ProposedBlockGenerator).toSelf().inTransientScope();
 
-DIContainer.bind<BlockJob>(BlockJob).toSelf().inTransientScope();
+DI_CONTAINER.bind<BlockJob>(BlockJob).toSelf().inTransientScope();
 
-DIContainer.bind<LotteryService>(LotteryService).toSelf().inTransientScope();
-DIContainer.bind<TransactionService>(TransactionService).toSelf().inTransientScope();
-DIContainer.bind<AdminKeyService>(AdminKeyService).toSelf().inTransientScope();
-DIContainer.bind<BlockchainInitializationService>(BlockchainInitializationService).toSelf().inTransientScope();
-DIContainer.bind<NodeService>(NodeService).toSelf().inTransientScope();
+DI_CONTAINER.bind<LotteryService>(LotteryService).toSelf().inTransientScope();
+DI_CONTAINER.bind<TransactionService>(TransactionService).toSelf().inTransientScope();
+DI_CONTAINER.bind<AdminKeyService>(AdminKeyService).toSelf().inTransientScope();
+DI_CONTAINER.bind<BlockchainInitializationService>(BlockchainInitializationService).toSelf().inTransientScope();
+DI_CONTAINER.bind<NodeService>(NodeService).toSelf().inTransientScope();
 
-DIContainer.bind<BlockchainAdapter>(BlockchainAdapter).toSelf().inTransientScope();
+DI_CONTAINER.bind<BlockchainAdapter>(BlockchainAdapter).toSelf().inTransientScope();
 
-export default DIContainer;
+export default DI_CONTAINER;

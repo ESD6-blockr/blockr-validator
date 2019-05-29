@@ -29,19 +29,25 @@ export class GenesisBlockGenerator extends BlockGenerator {
     }
 
     // TODO: Sign transactions?
-    private generateTransactionsAsync(): Promise<Set<Transaction>> {
+    private generateTransactionsAsync(): Promise<Transaction[]> {
         return new Promise((resolve) => {
             const currentDate = new Date();
 
             resolve(
-                new Set(
-                    [
-                        new Transaction(TransactionType.COIN, "",
-                            this.constantStore.ADMIN_PUBLIC_KEY, this.constantStore.GENESIS_COIN_AMOUNT, currentDate),
-                        new Transaction(TransactionType.STAKE, "",
-                            this.constantStore.ADMIN_PUBLIC_KEY, this.constantStore.GENESIS_STAKE_AMOUNT, currentDate),
-                    ],
-                ),
+                [
+                    new Transaction(
+                        TransactionType.COIN, "",
+                        this.constantStore.ADMIN_PUBLIC_KEY,
+                        this.constantStore.GENESIS_COIN_AMOUNT,
+                        currentDate,
+                    ),
+                    new Transaction(
+                        TransactionType.STAKE, "",
+                        this.constantStore.ADMIN_PUBLIC_KEY,
+                        this.constantStore.GENESIS_STAKE_AMOUNT,
+                        currentDate,
+                    ),
+                ],
             );
         });
     }

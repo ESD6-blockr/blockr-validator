@@ -9,7 +9,7 @@ const blockChain = [
             new Date(),
             10,
         ),
-        new Set().add(
+        [
             new Transaction(
                 TransactionType.COIN,
                 "RECIPIENT_KEY_TEST",
@@ -17,7 +17,7 @@ const blockChain = [
                 10,
                 new Date(),
             ),
-        ),
+        ],
     ),
 ];
 

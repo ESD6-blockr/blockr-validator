@@ -10,38 +10,35 @@ export const getBlock = () => {
             new Date(),
             10,
         ),
-        new Set(),
+        [],
         BlockType.GENESIS,
     );
 };
 
 export const getTransactions = () => {
-    return new Set()
-        .add(
-            new Transaction(
-                TransactionType.COIN,
-                "RECIPIENT_KEY_TEST",
-                "SENDER_KEY_TEST",
-                10,
-                new Date(),
-            ),
-        ).add(
-            new Transaction(
-                TransactionType.STAKE,
-                "RECIPIENT_KEY_TEST",
-                "SENDER_KEY_TEST",
-                123,
-                new Date(),
-            ),
-        ).add(
-            new Transaction(
-                TransactionType.COIN,
-                "RECIPIENT_KEY_TEST",
-                "SENDER_KEY_TEST",
-                7654,
-                new Date(),
-            ),
-        );
+    return [
+                new Transaction(
+                    TransactionType.COIN,
+                    "RECIPIENT_KEY_TEST",
+                    "SENDER_KEY_TEST",
+                    10,
+                    new Date(),
+                ),
+                new Transaction(
+                    TransactionType.STAKE,
+                    "RECIPIENT_KEY_TEST",
+                    "SENDER_KEY_TEST",
+                    123,
+                    new Date(),
+                ),
+                new Transaction(
+                    TransactionType.COIN,
+                    "RECIPIENT_KEY_TEST",
+                    "SENDER_KEY_TEST",
+                    7654,
+                    new Date(),
+                ),
+    ];
 };
 
 export const getState = () => {

@@ -3,7 +3,7 @@ import "reflect-metadata";
 import { logger } from "@blockr/blockr-logger";
 import { Peer } from "@blockr/blockr-p2p-lib";
 import * as Sentry from "@sentry/node";
-import DIContainer from "./injection/container.injection";
+import DI_CONTAINER from "./injection/container.injection";
 import { NodeService } from "./services";
 import { ConstantStore } from "./stores/constant.store";
 
@@ -21,7 +21,7 @@ async function initPeer() {
     try {
         logger.info("[Main] Initializing Peer.");
 
-        const peer = DIContainer.get<Peer>(Peer);
+        const peer = DI_CONTAINER.get<Peer>(Peer);
         await peer.init();
     } catch (error) {
         logger.error(error);
@@ -32,7 +32,7 @@ async function initNodeService() {
     try {
         logger.info("[Main] Initializing NodeService.");
 
-        const service = DIContainer.get<NodeService>(NodeService);
+        const service = DI_CONTAINER.get<NodeService>(NodeService);
         await service.start();
     } catch (error) {
         logger.error(error);
@@ -41,7 +41,7 @@ async function initNodeService() {
 
 function initSentry() {
     logger.info("[Main] Initializing Sentry.");
-    const constantStore = DIContainer.get<ConstantStore>(ConstantStore);
+    const constantStore = DI_CONTAINER.get<ConstantStore>(ConstantStore);
     
     Sentry.init({
         dsn: constantStore.SENTRY_DSN,

@@ -26,9 +26,9 @@ describe("Proposed block generator", () => {
         expect(proposedBlock.blockHeader.blockReward).toBe(10);
         expect(proposedBlock.blockHeader.date.toDateString()).toBe(new Date().toDateString());
        
-        expect(proposedBlock.transactions.size).toBe(3);
+        expect(proposedBlock.transactions.length).toBe(3);
         
-        const transactions: Transaction[] = Array.from(proposedBlock.transactions);
+        const transactions: Transaction[] = proposedBlock.transactions;
 
         expect(transactions[0].type).toBe(TransactionType.COIN);
         expect(transactions[0].amount).toBe(10);

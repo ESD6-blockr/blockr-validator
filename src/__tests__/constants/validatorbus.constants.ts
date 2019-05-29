@@ -56,7 +56,7 @@ export const UNSUPORTED_OBJECTS = [
     {
         objects: [
             new ObjectHasher(),
-            new Set(),
+            [],
         ],
     },
 ];

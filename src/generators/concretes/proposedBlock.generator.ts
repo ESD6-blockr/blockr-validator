@@ -18,7 +18,7 @@ export class ProposedBlockGenerator extends BlockGenerator {
     }
 
     public async generateProposedBlockAsync(parentBlock: Block,
-                                            pendingTransactions: Set<Transaction>,
+                                            pendingTransactions: Transaction[],
                                             validatorVersion: string, validatorPublicKey: string): Promise<Block> {
 
         return new Promise(async (resolve) => {

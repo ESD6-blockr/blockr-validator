@@ -86,7 +86,7 @@ export class BlockJob extends SchedulableJob {
             const proposedBlock: Block = await this.proposedBlockGenerator
                                                         .generateProposedBlockAsync(
                                                             lastBlock,
-                                                            this.queueStore.pendingTransactionQueue,
+                                                            Array.from(this.queueStore.pendingTransactionQueue),
                                                             this.constantStore.VALIDATOR_VERSION,
                                                             this.constantStore.VALIDATOR_PUBLIC_KEY);
             

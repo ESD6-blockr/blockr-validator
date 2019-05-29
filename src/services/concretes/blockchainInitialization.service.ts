@@ -42,15 +42,21 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
                     return;
                 }
 
+                logger.info("[BlockchainInitializationService] Syncing blockchain.");
                 const blockchain: Block[] = await this.blockchainAdapter.requestBlockchainAsync();
+                await this.dataAccessLayer.pruneBlockchainAsync();
                 await this.saveBlockchainAsync(blockchain);
 
-                logger.info("[BlockchainInitializationService] Synced blockchain.");
+                logger.info("[BlockchainInitializationService] Successfully synced blockchain.");
                 resolve();
             } catch (error) {
                 reject(new NodeStartupException(error.message));
             }
         });
+    }
+
+    public async getBlockchainAsync(): Promise<Block[]> {
+        return this.dataAccessLayer.getBlocksByQueryAsync();
     }
 
     private async saveBlockchainAsync(blockchain: Block[]): Promise<void> {
@@ -77,12 +83,10 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
         });
     }
 
-    private generateGenesisState(transactions: Set<Transaction>): State {
-        const transactionArray = Array.from(transactions);
-
-        const stakeTransaction: Transaction = transactionArray
+    private generateGenesisState(transactions: Transaction[]): State {
+        const stakeTransaction: Transaction = transactions
             .find((t) => t.type === TransactionType.STAKE) as Transaction;
-        const coinTransaction: Transaction = transactionArray
+        const coinTransaction: Transaction = transactions
             .find((t) => t.type === TransactionType.COIN) as Transaction;
 
         return new State(stakeTransaction.senderKey, coinTransaction.amount, stakeTransaction.amount);

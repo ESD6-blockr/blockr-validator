@@ -2,7 +2,7 @@ import { Block, BlockHeader, Transaction } from "@blockr/blockr-models";
 import { BlockGeneratorException } from "../../exceptions";
 
 export abstract class BlockGenerator {
-    protected async generateBlockAsync(transactions: Set<Transaction>, version: string, blockNumber: number,
+    protected async generateBlockAsync(transactions: Transaction[], version: string, blockNumber: number,
                                        date: Date, blockReward: number,
                                        parentHash: string, validator: string): Promise<Block> {
         return new Promise(async (resolve, reject) => {

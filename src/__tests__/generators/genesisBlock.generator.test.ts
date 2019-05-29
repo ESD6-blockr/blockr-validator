@@ -20,10 +20,10 @@ describe("Genesis block generator", () => {
         expect(genesisBlock.blockHeader.blockNumber).toBe(1);
         expect(genesisBlock.blockHeader.blockReward).toBe(10);
         expect(genesisBlock.blockHeader.date.toDateString()).toBe(new Date().toDateString());
-       
-        expect(genesisBlock.transactions.size).toBe(2);
+
+        expect(genesisBlock.transactions.length).toBe(2);
         
-        const transactions: Transaction[] = Array.from(genesisBlock.transactions);
+        const transactions: Transaction[] = genesisBlock.transactions;
 
         expect(transactions[0].type).toBe(TransactionType.COIN);
         expect(transactions[0].senderKey).toBe(adminKey);
