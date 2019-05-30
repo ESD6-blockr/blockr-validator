@@ -8,6 +8,7 @@ import { Peer } from "@blockr/blockr-p2p-lib";
 import { PeerType } from "@blockr/blockr-p2p-lib/dist/enums";
 import { Container } from "inversify";
 import { BlockchainAdapter } from "../adapters/concretes/blockchain.adapter";
+import { KeyAdapter } from "../adapters/concretes/key.adapter";
 import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
 import { BlockJob } from "../jobs";
 import { NodeService } from "../services";
@@ -66,5 +67,6 @@ DI_CONTAINER.bind<BlockchainInitializationService>(BlockchainInitializationServi
 DI_CONTAINER.bind<NodeService>(NodeService).toSelf().inTransientScope();
 
 DI_CONTAINER.bind<BlockchainAdapter>(BlockchainAdapter).toSelf().inTransientScope();
+DI_CONTAINER.bind<KeyAdapter>(KeyAdapter).toSelf().inTransientScope();
 
 export default DI_CONTAINER;

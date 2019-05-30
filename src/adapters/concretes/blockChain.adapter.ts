@@ -22,15 +22,19 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
      * Requests the blockchain and the states from a random validator within the peer-to-peer network
      */
     public async requestBlockchainAndStatesAsync(): Promise<[Block[], State[]]> {
-        return new Promise(async (resolve) => {
-            const message = new Message(MessageType.BLOCKCHAIN_AND_STATES_REQUEST);
+        return new Promise(async (resolve, reject) => {
+            try {
+                const message = new Message(MessageType.BLOCKCHAIN_AND_STATES_REQUEST);
             
-            this.peer.sendMessageToRandomPeerAsync(message, PeerType.VALIDATOR, (responseMessage: Message) => {
-                const blockchainAndStates: [Block[], State[]] = JSON.parse(responseMessage.body as string);
-                
-                resolve(blockchainAndStates);
-            });
-            await this.peer.getPromiseForResponse(message);
+                this.peer.sendMessageToRandomPeerAsync(message, PeerType.VALIDATOR, (responseMessage: Message) => {
+                    const blockchainAndStates: [Block[], State[]] = JSON.parse(responseMessage.body as string);
+                    
+                    resolve(blockchainAndStates);
+                });
+                await this.peer.getPromiseForResponse(message);
+            } catch (error) {
+                reject(error);
+            }
         });
     }
 

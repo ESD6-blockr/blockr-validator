@@ -1,22 +1,30 @@
 import { CryptoKeyUtil } from "@blockr/blockr-crypto";
 import { logger } from "@blockr/blockr-logger";
 import { inject, injectable } from "inversify";
+import { KeyAdapter } from "../../adapters/concretes/key.adapter";
+import { IKeyServiceAdapter } from "../../adapters/interfaces/key.adapter";
+import { AdapterException } from "../../exceptions/adapter.exception";
 import { ConstantStore } from "../../stores";
 import { FileUtils } from "../../utils/file.util";
 
 @injectable()
-export class AdminKeyService {
+export class AdminKeyService implements IKeyServiceAdapter {
     private readonly cryptoKeyUtil: CryptoKeyUtil;
     private readonly fileUtils: FileUtils;
     private readonly constantStore: ConstantStore;
+    private readonly keyAdapter: KeyAdapter;
 
     constructor(@inject(CryptoKeyUtil) cryptoKeyUtil: CryptoKeyUtil,
                 @inject(FileUtils) fileUtils: FileUtils,
-                @inject(ConstantStore) constantStore: ConstantStore) {
+                @inject(ConstantStore) constantStore: ConstantStore,
+                @inject(KeyAdapter) keyAdapter: KeyAdapter) {
 
         this.cryptoKeyUtil = cryptoKeyUtil;
         this.fileUtils = fileUtils;
         this.constantStore = constantStore;
+        this.keyAdapter = keyAdapter;
+
+        this.keyAdapter.setAdapter(this);
     }
 
     public async initiateOrRequestAdminKeyIfInexistentAsync(shouldGenerateKeyIfFileInexistent: boolean): Promise<void> {
@@ -38,12 +46,22 @@ export class AdminKeyService {
                 return;
             }
 
-            // send broadcast request for admin pubkey
-            // TODO: p2p lib ask for admin public key to verify signature
-            this.constantStore.ADMIN_PUBLIC_KEY = ""; // save public key;
+            logger.info("[AdminKeyService] Requesting admin key from a random validator.");
+            this.constantStore.ADMIN_PUBLIC_KEY = await this.keyAdapter.requestAdminKeyAsync();
             await this.saveAdminKeyInFile();
             
             resolve();
+        });
+    }
+
+    public async getAdminKeyFromFileAsync(): Promise<string> {
+        return new Promise(async (resolve, reject) => {
+            if (!await this.fileUtils.fileExistsAsync(this.constantStore.KEYS_FILE_PATH)) {
+                reject(new AdapterException("The admin's key file does not exist upon "
+                                            + "request of the key from a validator."));
+            }
+            
+            resolve(await this.fileUtils.readFileAsync(this.constantStore.KEYS_FILE_PATH));
         });
     }
 
