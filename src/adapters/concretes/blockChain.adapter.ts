@@ -1,5 +1,5 @@
 import { logger } from "@blockr/blockr-logger";
-import { Block } from "@blockr/blockr-models";
+import { Block, State } from "@blockr/blockr-models";
 import { Message, Peer } from "@blockr/blockr-p2p-lib";
 import { PeerType } from "@blockr/blockr-p2p-lib/dist/enums";
 import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
@@ -19,23 +19,23 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     }
 
     /**
-     * Requests the blockchain from a random validator within the peer-to-peer network
+     * Requests the blockchain and the states from a random validator within the peer-to-peer network
      */
-    public async requestBlockchainAsync(): Promise<Block[]> {
+    public async requestBlockchainAndStatesAsync(): Promise<[Block[], State[]]> {
         return new Promise(async (resolve) => {
-            const message = new Message(MessageType.BLOCKCHAIN_REQUEST);
+            const message = new Message(MessageType.BLOCKCHAIN_AND_STATES_REQUEST);
             
             this.peer.sendMessageToRandomPeerAsync(message, PeerType.VALIDATOR, (responseMessage: Message) => {
-                const blockchain: Block[] = JSON.parse(responseMessage.body as string);
-
-                resolve(blockchain);
+                const blockchainAndStates: [Block[], State[]] = JSON.parse(responseMessage.body as string);
+                
+                resolve(blockchainAndStates);
             });
             await this.peer.getPromiseForResponse(message);
         });
     }
 
     protected initReceiveHandlers(): void {
-        this.peer.registerReceiveHandlerForMessageType(MessageType.BLOCKCHAIN_REQUEST,
+        this.peer.registerReceiveHandlerForMessageType(MessageType.BLOCKCHAIN_AND_STATES_REQUEST,
                 async (message: Message, senderGuid: string, response: RESPONSE_TYPE) => {
             await this.handleBlockchainRequest(message, senderGuid, response).catch((error) => logger.error(error));
         });
@@ -45,8 +45,14 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
         return new Promise(async (resolve, reject) => {
             try {
                 const blockchain = await this.getAdapter().getBlockchainAsync();
+                const states = await this.getAdapter().getStatesAsync();
+                const blockchainAndStates: [Block[], State[]] = [blockchain, states];
 
-                resolve(response(new Message(MessageType.BLOCKCHAIN_REQUEST_RESPONSE, JSON.stringify(blockchain))));
+                resolve(response(new Message(
+                        MessageType.BLOCKCHAIN_AND_STATES_REQUEST_RESPONSE,
+                        JSON.stringify(blockchainAndStates),
+                    ),
+                ));
             } catch (error) {
                 reject(error);
             }
