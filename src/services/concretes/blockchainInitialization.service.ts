@@ -44,9 +44,12 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
 
                 logger.info("[BlockchainInitializationService] Syncing blockchain.");
                 const blockchain: Block[] = await this.blockchainAdapter.requestBlockchainAsync();
-                // TODO: States should also be synced
+                
                 await this.dataAccessLayer.pruneBlockchainAsync();
                 await this.saveBlockchainAsync(blockchain);
+
+                // TODO: States should also be synced
+                await this.dataAccessLayer.pruneStatesAsync();
 
                 logger.info("[BlockchainInitializationService] Successfully synced blockchain.");
                 resolve();
