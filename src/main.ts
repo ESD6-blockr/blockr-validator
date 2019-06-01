@@ -9,9 +9,9 @@ import { ConstantStore } from "./stores/constant.store";
 
 async function main() {
     try {
-        initSentry();
-        initPeer();
-        initNodeService();
+        await initSentry();
+        await initPeer();
+        await initNodeService();
     } catch (error) {
         logger.error(error);
     }
