@@ -24,7 +24,7 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
         this.adminKeyService = adminKeyService;
         this.blockchainAdapter = blockchainAdapter;
 
-        this.blockchainAdapter.setAdapter(this);
+        this.blockchainAdapter.setServiceAdapter(this);
     }
 
     public async initiateBlockchainIfInexistentAsync(): Promise<void> {

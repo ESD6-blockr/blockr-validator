@@ -41,7 +41,7 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
     private handleAdminKeyRequest(_message: Message, _senderGuid: string, response: RESPONSE_TYPE): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
-                const key: string = await this.getAdapter().getAdminKeyFromFileAsync();
+                const key: string = await this.getServiceAdapter().getAdminKeyFromFileAsync();
 
                 resolve(response(new Message(
                         MessageType.ADMIN_KEY_REQUEST_RESPONSE,

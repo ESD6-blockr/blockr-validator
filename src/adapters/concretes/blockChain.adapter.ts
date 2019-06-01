@@ -48,8 +48,8 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     private handleBlockchainRequest(_message: Message, _senderGuid: string, response: RESPONSE_TYPE): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
-                const blockchain = await this.getAdapter().getBlockchainAsync();
-                const states = await this.getAdapter().getStatesAsync();
+                const blockchain = await this.getServiceAdapter().getBlockchainAsync();
+                const states = await this.getServiceAdapter().getStatesAsync();
                 const blockchainAndStates: [Block[], State[]] = [blockchain, states];
 
                 resolve(response(new Message(

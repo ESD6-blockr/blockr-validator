@@ -24,7 +24,7 @@ export class AdminKeyService implements IKeyServiceAdapter {
         this.constantStore = constantStore;
         this.keyAdapter = keyAdapter;
 
-        this.keyAdapter.setAdapter(this);
+        this.keyAdapter.setServiceAdapter(this);
     }
 
     public async initiateOrRequestAdminKeyIfInexistentAsync(shouldGenerateKeyIfFileInexistent: boolean): Promise<void> {
