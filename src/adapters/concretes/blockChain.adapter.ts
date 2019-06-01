@@ -14,7 +14,6 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     }
 
     public shouldGenerateGenesisBlock(): boolean {
-        console.log(this.peer.getPeerOfType(PeerType.VALIDATOR));
         return !this.peer.getPeerOfType(PeerType.VALIDATOR);
     }
 
@@ -24,9 +23,11 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     public async requestBlockchainAndStatesAsync(): Promise<[Block[], State[]]> {
         return new Promise(async (resolve, reject) => {
             try {
+                logger.info("[BlockchainAdapter] Requesting blockchain and states.");
                 const message = new Message(MessageType.BLOCKCHAIN_AND_STATES_REQUEST);
             
                 this.peer.sendMessageToRandomPeerAsync(message, PeerType.VALIDATOR, (responseMessage: Message) => {
+                    logger.info("[BlockchainAdapter] Received blockchain and states.");
                     const blockchainAndStates: [Block[], State[]] = JSON.parse(responseMessage.body as string);
                     
                     resolve(blockchainAndStates);

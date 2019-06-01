@@ -21,13 +21,8 @@ async function initPeer() {
     try {
         logger.info("[Main] Initializing Peer.");
 
-        const peer = new Peer(PeerType.VALIDATOR);
-        console.log("GUID BEFORE INIT", peer.connectionService.GUID);
-
+        const peer = DI_CONTAINER.get<Peer>(Peer);
         await peer.init("8081", ["192.168.178.73"]);
-        
-        console.log("GUID", peer.connectionService.GUID);
-        console.log("peerOfType", peer.getPeerOfType(PeerType.VALIDATOR));
     } catch (error) {
         logger.error(error);
     }
