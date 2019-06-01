@@ -1,11 +1,11 @@
 import { logger } from "@blockr/blockr-logger";
 import { Block, State } from "@blockr/blockr-models";
 import { Message, Peer, PeerType } from "@blockr/blockr-p2p-lib";
+import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
 import { inject, injectable } from "inversify";
 import { BaseAdapter } from "../abstractions/base.adapter";
 import { MessageType } from "../enums/messageType.enum";
 import { IBlockchainServiceAdapter } from "../interfaces/blockchain.adapter";
-import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
 
 @injectable()
 export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
@@ -14,6 +14,7 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     }
 
     public shouldGenerateGenesisBlock(): boolean {
+        console.log(this.peer.getPeerOfType(PeerType.VALIDATOR));
         return !this.peer.getPeerOfType(PeerType.VALIDATOR);
     }
 
