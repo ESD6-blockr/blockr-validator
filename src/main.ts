@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { logger } from "@blockr/blockr-logger";
-import { Peer } from "@blockr/blockr-p2p-lib";
+import { Peer, PeerType } from "@blockr/blockr-p2p-lib";
 import * as Sentry from "@sentry/node";
 import DI_CONTAINER from "./injection/container.injection";
 import { NodeService } from "./services";
@@ -21,8 +21,13 @@ async function initPeer() {
     try {
         logger.info("[Main] Initializing Peer.");
 
-        const peer = DI_CONTAINER.get<Peer>(Peer);
-        await peer.init();
+        const peer = new Peer(PeerType.VALIDATOR);
+        console.log("GUID BEFORE INIT", peer.connectionService.GUID);
+
+        await peer.init("8081", ["192.168.178.73"]);
+        
+        console.log("GUID", peer.connectionService.GUID);
+        console.log("peerOfType", peer.getPeerOfType(PeerType.VALIDATOR));
     } catch (error) {
         logger.error(error);
     }
