@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package transactions;
+
+message Transaction{
+  string type = 1;
+  string recipientKey = 2;
+  string senderKey = 3;
+  int64 amount = 4;
+  string date = 5;
+  string signature = 6;
+}
+
+message AddTransactionRequest {
+    Transaction transaction = 1;
+}
+
+message AddTransactionResponse {
+}
+
+service TransactionRpcService {
+    rpc AddTransaction (AddTransactionRequest) returns (AddTransactionResponse) {}
+}
