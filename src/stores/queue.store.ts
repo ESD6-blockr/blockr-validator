@@ -9,7 +9,7 @@ export class QueueStore {
     public pendingProposedBlockQueue: Set<Block>;
 
     public constructor() {
-        this.pendingTransactionQueue = new Set();
-        this.pendingProposedBlockQueue = new Set();
+        this.pendingTransactionQueue = new Set<Transaction>();
+        this.pendingProposedBlockQueue = new Set<Block>();
     }
 }

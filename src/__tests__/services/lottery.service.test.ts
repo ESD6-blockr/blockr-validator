@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { State } from "@blockr/blockr-models";
+import { State, Block } from "@blockr/blockr-models";
 import { LotteryService } from "../../services/concretes/lottery.service";
 import { QueueStore } from "../../stores";
 import { dataAccessLayerMock, getBlock } from "../constants/model.constants";
@@ -38,10 +38,10 @@ describe("Drawing winning block", () => {
     });
 
     it("Should succeed with a pre filled queue and valid states", async () => {
-        const block = getBlock();
+        const block: Block = getBlock();
         block.blockHeader.validator = "TEST_PUBLIC_KEY";
 
-        queueStore.pendingProposedBlockQueue = new Set().add(block);
+        queueStore.pendingProposedBlockQueue.add(block);
 
         const lotterService = new LotteryService(dataAccessLayerMock, queueStore);
 
@@ -56,7 +56,7 @@ describe("Drawing winning block", () => {
         const block = getBlock();
         block.blockHeader.validator = "TEST_PUBLIC_KEY";
 
-        queueStore.pendingProposedBlockQueue = new Set().add(block);
+        queueStore.pendingProposedBlockQueue.add(block);
 
         const lotterService = new LotteryService(dataAccessLayerMock, queueStore);
 
