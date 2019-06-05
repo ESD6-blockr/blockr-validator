@@ -1,3 +1,4 @@
+import { logger } from "@blockr/blockr-logger";
 import { Transaction } from "@blockr/blockr-models";
 import { loadSync } from "@grpc/proto-loader";
 import { loadPackageDefinition, Server, ServerCredentials } from "grpc";
@@ -42,7 +43,7 @@ export class RpcTransactionService {
   }
 
   private addTransaction(transaction: Transaction) {
-    transaction = transaction;
+    logger.info(transaction);
     // Call addTransaction()
   }
 }

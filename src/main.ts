@@ -9,7 +9,7 @@ import { ConstantStore } from "./stores/constant.store";
 
 async function main() {
     try {
-        await initSentry();
+        initSentry();
         await initPeer();
         await initNodeService();
     } catch (error) {
