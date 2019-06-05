@@ -7,7 +7,7 @@ COPY src/ ./src
 RUN npm run build:docker
 
 FROM node:alpine as TEST
-ARG WORKDIR
+ARG WORKDIR=/
 WORKDIR ${WORKDIR}
 COPY package.json jest.config.js tsconfig.json ./
 COPY src/ ./src
