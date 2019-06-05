@@ -3,12 +3,17 @@ import { Message, Peer, PeerType } from "@blockr/blockr-p2p-lib";
 import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
 import { inject, injectable } from "inversify";
 import { BaseAdapter, MessageType } from "..";
+import { P2PMessageSendingHandler } from "../communication/handlers/concretes/p2pMessageSending.handler";
+import { P2POnMessageHandler } from "../communication/handlers/concretes/p2pOnMessage.handler";
+import { IMessageSendingHandler } from "../communication/handlers/interfaces/messageSending.handler";
+import { IOnMessageHandler } from "../communication/handlers/interfaces/onMessage.handler";
+import { P2PCommunicationRepository } from "../communication/repositories/concretes/p2pCommunication.repository";
 import { IKeyServiceAdapter } from "../interfaces/keyService.adapter";
 
 @injectable()
 export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
     constructor(@inject(Peer) peer: Peer) {
-        super(peer);
+        super(new P2PCommunicationRepository(peer));
     }
 
     /**
@@ -18,24 +23,33 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
         return new Promise(async (resolve, reject) => {
             try {
                 const message = new Message(MessageType.ADMIN_KEY_REQUEST);
+                const handler: IMessageSendingHandler = new P2PMessageSendingHandler(
+                    message,
+                    PeerType.VALIDATOR,
+                    (responseMessage: Message) => {
+                        const key: string = responseMessage.body as string;
+                        
+                        resolve(key);
+                    },
+                );
             
-                this.peer.sendMessageToRandomPeerAsync(message, PeerType.VALIDATOR, (responseMessage: Message) => {
-                    const key: string = responseMessage.body as string;
-                    
-                    resolve(key);
-                });
-                await this.peer.getPromiseForResponse(message);
+                this.communicationRepository.sendMessageToRandomNodeAsync!(handler);
+                await (this.communicationRepository as P2PCommunicationRepository).getPromiseForResponse(message);
             } catch (error) {
                 reject(error);
             }
         });
     }
 
-    protected initReceiveHandlers(): void {
-        this.peer.registerReceiveHandlerForMessageType(MessageType.ADMIN_KEY_REQUEST,
-                async (message: Message, senderGuid: string, response: RESPONSE_TYPE) => {
-            await this.handleAdminKeyRequest(message, senderGuid, response).catch((error) => logger.error(error));
-        });
+    protected initOnMessageHandlers(): void {
+        const adminKeyRequestHandler: IOnMessageHandler = new P2POnMessageHandler(
+            MessageType.ADMIN_KEY_REQUEST,
+            async (message: Message, senderGuid: string, response: RESPONSE_TYPE) => {
+                await this.handleAdminKeyRequest(message, senderGuid, response).catch((error) => logger.error(error));
+            },
+        );
+
+        this.communicationRepository.addOnMessageHandler(adminKeyRequestHandler);
     }
 
     private handleAdminKeyRequest(_message: Message, _senderGuid: string, response: RESPONSE_TYPE): Promise<void> {

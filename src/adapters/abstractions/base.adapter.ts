@@ -1,15 +1,15 @@
-import { Peer } from "@blockr/blockr-p2p-lib";
 import { AdapterException } from "../../exceptions/adapter.exception";
+import { ICommunicationRepository } from "../communication/repositories/interfaces/communication.repository";
 import { IBaseServiceAdapter } from "../interfaces/baseService.adapter";
 
 export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
-    protected readonly peer: Peer;
+    protected readonly communicationRepository: ICommunicationRepository;
     private serviceAdapter?: T;
 
-    public constructor(peer: Peer) {
-        this.peer = peer;
+    public constructor(communicationRepository: ICommunicationRepository) {
+        this.communicationRepository = communicationRepository;
 
-        this.initReceiveHandlers();
+        this.initOnMessageHandlers();
     }
 
     /**
@@ -30,5 +30,5 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
     /**
      * This function should initialize all the adapter's receive handlers.
      */
-    protected abstract initReceiveHandlers(): void;
+    protected abstract initOnMessageHandlers(): void;
 }
