@@ -40,6 +40,7 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     }
 
     protected initReceiveHandlers(): void {
+        // TODO: Repository pattern should be implemented
         this.peer.registerReceiveHandlerForMessageType(MessageType.BLOCKCHAIN_AND_STATES_REQUEST,
                 async (message: Message, senderGuid: string, response: RESPONSE_TYPE) => {
             await this.handleBlockchainRequest(message, senderGuid, response).catch((error) => logger.error(error));

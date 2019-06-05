@@ -36,6 +36,8 @@ export class NodeService {
         return new Promise(async (resolve) => {
             logger.info("[NodeService] Scheduling Block Job.");
         
+            // TODO: Make sure the jobs on all nodes are exactly synced. Using UTC time could be a viable solution.
+            
             await this.blockJob.scheduleAsync(1);
             
             resolve();
