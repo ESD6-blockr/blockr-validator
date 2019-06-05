@@ -6,7 +6,7 @@ String repo = 'blockr-validator'
 
 Map settings = [
     sonar_key: 'blockr-validator',
-    sonar_exclusions: 'src/__test__/**/*,src/**/index.ts,src/main.ts,src/injection/**/*',
+    sonar_exclusions: '**/__tests__/**/*,**/**/index.ts,**/**/main.ts,**/injection/**/*',
     source_folder: 'src/',
     archive_folders: ['dist/']
 ]
