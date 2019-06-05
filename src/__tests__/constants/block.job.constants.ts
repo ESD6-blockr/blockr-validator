@@ -1,8 +1,9 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
-import { Block, BlockHeader, Transaction, TransactionType } from "@blockr/blockr-models";
+import { Block, BlockHeader, BlockType, Transaction, TransactionHeader, TransactionType } from "@blockr/blockr-models";
 
 const blockChain = [
     new Block(
+        BlockType.REGULAR,
         new BlockHeader(
             "1.0.0",
             1,
@@ -12,10 +13,13 @@ const blockChain = [
         [
             new Transaction(
                 TransactionType.COIN,
-                "RECIPIENT_KEY_TEST",
-                "SENDER_KEY_TEST",
-                10,
-                new Date(),
+                new TransactionHeader(
+                    "RECIPIENT_KEY_TEST",
+                    "SENDER_KEY_TEST",
+                    10,
+                    new Date(),
+                ),
+                "FAKE_SIGNATURE",
             ),
         ],
     ),

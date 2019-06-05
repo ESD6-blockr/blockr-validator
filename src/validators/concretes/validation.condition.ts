@@ -1,19 +1,19 @@
 import { ValidationException } from "../../exceptions";
 
-export class ValidationCondition<IModel> {
+export class ValidationCondition<T> {
     public static isNotNullNorUndefined<K>(object: K): boolean {
         return !(object === null || object === undefined);
     }
 
-    private readonly condition: (object: IModel) => boolean | Promise<boolean>;
+    private readonly condition: (object: T) => boolean | Promise<boolean>;
     private readonly errorMessage: string;
 
-    constructor(condition: (object: IModel) => boolean | Promise<boolean>, errorMessage: string) {
+    constructor(condition: (object: T) => boolean | Promise<boolean>, errorMessage: string) {
         this.condition = condition;
         this.errorMessage = errorMessage;
     }
 
-    public async validateAsync(object: IModel): Promise<boolean> {
+    public async validateAsync(object: T): Promise<boolean> {
         return new Promise(async (resolve, reject) => {
             if (await this.condition(object)) {
                 resolve(true);

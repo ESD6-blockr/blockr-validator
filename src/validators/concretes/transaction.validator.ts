@@ -31,13 +31,13 @@ export class TransactionValidator extends BaseValidator<Transaction> {
                 return ValidationCondition.isNotNullNorUndefined(transaction);
             }, "The transaction is null or undefined."),
             new ValidationCondition((transaction: Transaction): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(transaction.amount);
+                return ValidationCondition.isNotNullNorUndefined(transaction.transactionHeader.amount);
             }, "The transaction amount is null or undefined."),
             new ValidationCondition((transaction: Transaction): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(transaction.recipientKey);
+                return ValidationCondition.isNotNullNorUndefined(transaction.transactionHeader.recipientKey);
             }, "The transaction recipientKey is null or undefined."),
             new ValidationCondition((transaction: Transaction): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(transaction.senderKey);
+                return ValidationCondition.isNotNullNorUndefined(transaction.transactionHeader.senderKey);
             }, "The transaction senderKey is null or undefined."),
             new ValidationCondition((transaction: Transaction): boolean => {
                 return ValidationCondition.isNotNullNorUndefined(transaction.signature);
@@ -54,7 +54,7 @@ export class TransactionValidator extends BaseValidator<Transaction> {
     private getAmountConditions(): Array<ValidationCondition<Transaction>> {
         return [
             new ValidationCondition((transaction: Transaction): boolean => {
-                return (transaction.amount > 0);
+                return (transaction.transactionHeader.amount > 0);
             }, "The transaction amount cannot be a negative value."),
         ];
     }
@@ -63,27 +63,17 @@ export class TransactionValidator extends BaseValidator<Transaction> {
         return [
             new ValidationCondition(async (transaction: Transaction): Promise<boolean> => {
                 return new Promise(async (resolve) => {
-                    const senderCurrentState: State | undefined = await this.dataAccessLayer
-                                                                            .getStateAsync(transaction.senderKey);
+                    const senderCurrentState: State = (await this.dataAccessLayer
+                        .getStateAsync(transaction.transactionHeader.senderKey) as State);
 
-                    resolve(ValidationCondition.isNotNullNorUndefined(senderCurrentState));
-                });
-            }, "No state exists for the given sender."),
-            new ValidationCondition(async (transaction: Transaction): Promise<boolean> => {
-                return new Promise(async (resolve) => {
-                    const senderCurrentState: State | undefined = await this.dataAccessLayer
-                                                                            .getStateAsync(transaction.senderKey);
+                    const senderCurrentCoinAmount = senderCurrentState.amount;
 
-                    if (senderCurrentState) {
-                        const senderCurrentCoinAmount = senderCurrentState.coin;
-
-                        resolve(senderCurrentCoinAmount >= transaction.amount);
-                    }
+                    resolve(senderCurrentCoinAmount >= transaction.transactionHeader.amount);
                 });
             }, "The sender does not have sufficient funds."),
             new ValidationCondition((transaction: Transaction): boolean => {
                 if (transaction.type === TransactionType.STAKE) {
-                    return transaction.senderKey === this.constantStore.ADMIN_PUBLIC_KEY;
+                    return transaction.transactionHeader.senderKey === this.constantStore.ADMIN_PUBLIC_KEY;
                 }
                 return true;
             }, `The sender of the transaction is not an admin, which is required for this type of transaction.`),

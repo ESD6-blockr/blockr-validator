@@ -41,7 +41,8 @@ export class RpcTransactionService {
     return server;
   }
 
-  public addTransaction(transaction: Transaction) {
+  private addTransaction(transaction: Transaction) {
+    transaction = transaction;
     // Call addTransaction()
   }
 }

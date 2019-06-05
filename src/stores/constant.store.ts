@@ -35,6 +35,8 @@ export class ConstantStore {
     public DB_NAME: string;
     /* The initial peer */
     public INITIAL_PEER: string;
+    /* Default stake amount */
+    public DEFAULT_STAKE_AMOUNT: number;
     
     public constructor() {
         this.GENESIS_COIN_AMOUNT = 900_000_000;
@@ -52,5 +54,6 @@ export class ConstantStore {
         this.DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING || "";
         this.DB_NAME = process.env.DB_NAME || "";
         this.INITIAL_PEER = process.env.INITIAL_PEER || "";
+        this.DEFAULT_STAKE_AMOUNT = 1;
     }
 }

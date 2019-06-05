@@ -1,13 +1,15 @@
 FROM node:alpine as BUILD
 WORKDIR /opt
-COPY [ ".npmrc", "package.json", "package-lock.json",  "./" ]
+COPY .npmrc package.json package-lock.json ./
 RUN npm i
-COPY [ "tslint.json", "tsconfig.json", "src", "./" ]
-RUN npm run lint && npm run build
+COPY tslint.json tsconfig.json ./
+COPY src/ ./src
+RUN npm run build:docker
 
 FROM node:alpine as TEST
-COPY [ "jest.config.js", "src",  "./" ]
-RUN npm i jest ts-jest jest-junit 
+WORKDIR /opt
+COPY jest.config.js tsconfig.json ./
+COPY --from=BUILD /opt/node_modules ./node_modules
 ENTRYPOINT [ "jest", "--collectCoverage" ]
 
 FROM node:alpine as FINAL
