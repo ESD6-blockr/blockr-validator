@@ -1,6 +1,6 @@
 import { Peer } from "@blockr/blockr-p2p-lib";
 import { AdapterException } from "../../exceptions/adapter.exception";
-import { IBaseServiceAdapter } from "../interfaces/base.adapter";
+import { IBaseServiceAdapter } from "../interfaces/baseService.adapter";
 
 export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
     protected readonly peer: Peer;

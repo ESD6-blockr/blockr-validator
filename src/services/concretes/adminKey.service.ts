@@ -2,7 +2,7 @@ import { CryptoKeyUtil } from "@blockr/blockr-crypto";
 import { logger } from "@blockr/blockr-logger";
 import { inject, injectable } from "inversify";
 import { KeyAdapter } from "../../adapters/concretes/key.adapter";
-import { IKeyServiceAdapter } from "../../adapters/interfaces/key.adapter";
+import { IKeyServiceAdapter } from "../../adapters/interfaces/keyService.adapter";
 import { AdapterException } from "../../exceptions/adapter.exception";
 import { ConstantStore } from "../../stores";
 import { FileUtils } from "../../utils/file.util";

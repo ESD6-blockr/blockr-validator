@@ -3,7 +3,7 @@ import { Message, Peer, PeerType } from "@blockr/blockr-p2p-lib";
 import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
 import { inject, injectable } from "inversify";
 import { BaseAdapter, MessageType } from "..";
-import { IKeyServiceAdapter } from "../interfaces/key.adapter";
+import { IKeyServiceAdapter } from "../interfaces/keyService.adapter";
 
 @injectable()
 export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
