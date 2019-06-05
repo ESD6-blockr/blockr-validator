@@ -3,7 +3,7 @@ import { logger } from "@blockr/blockr-logger";
 import { Block, State, Transaction, TransactionType } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { BlockchainAdapter } from "../../adapters/concretes/blockchain.adapter";
-import { IBlockchainServiceAdapter } from "../../adapters/interfaces/blockchain.adapter";
+import { IBlockchainServiceAdapter } from "../../adapters/interfaces/blockchainService.adapter";
 import { NodeStartupException } from "../../exceptions";
 import { GenesisBlockGenerator } from "../../generators";
 import { AdminKeyService } from "./adminKey.service";

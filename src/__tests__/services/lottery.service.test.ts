@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { State, Block } from "@blockr/blockr-models";
+import { Block, State } from "@blockr/blockr-models";
 import { LotteryService } from "../../services/concretes/lottery.service";
 import { QueueStore } from "../../stores";
 import { dataAccessLayerMock, getBlock } from "../constants/model.constants";
