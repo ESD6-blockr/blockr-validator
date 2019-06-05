@@ -10,7 +10,8 @@ const PORT = "5678";
 @injectable()
 export class RpcTransactionService {
   // No type exists for this property as it is defined in the protocol (.proto) file, hence any.
-  private transactionProto: any;
+  private readonly transactionProto: any;
+  private readonly server: Server;
 
   constructor() {
     const packageDefinition = loadSync(
@@ -23,16 +24,20 @@ export class RpcTransactionService {
         oneofs: true,
       });
     this.transactionProto = loadPackageDefinition(packageDefinition).transactions;
+
+    this.server = this.initServer();
   }
 
-  public getServer(): Server {
+  private initServer(): Server {
     const server = new Server();
+    
     server.addProtoService(this.transactionProto.TransactionRpcService.service, {
       addTransaction: this.addTransaction,
     });
 
     server.bind(`${HOST}:${PORT}`, ServerCredentials.createInsecure());
     server.start();
+
     return server;
   }
 
