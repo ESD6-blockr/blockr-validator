@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package transactions;
 
-message Transaction{
+message Transaction {
   string type = 1;
   string recipientKey = 2;
   string senderKey = 3;
@@ -11,8 +11,13 @@ message Transaction{
   string signature = 6;
 }
 
+message TransactionWrapper {
+  Transaction transaction = 1;
+  string signature = 2;
+}
+
 message AddTransactionRequest {
-    Transaction transaction = 1;
+    TransactionWrapper transactionWrapper = 1;
 }
 
 message AddTransactionResponse {
