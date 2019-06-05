@@ -8,7 +8,7 @@ Map settings = [
     sonar_key: 'blockr-validator',
     sonar_exclusions: '**/__tests__/**/*,**/**/index.ts,**/**/main.ts,**/injection/**/*',
     source_folder: 'src/',
-    archive_folders: ['dist/']
+    archive_folders: ['Dockerfile']
 ]
 
 tsDockerBuildAndPublish(repo, settings)

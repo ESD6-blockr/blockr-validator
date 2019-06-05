@@ -2,8 +2,7 @@ FROM node:alpine as BUILD
 ARG REGISTRY='@blockr:registry=https://registry.npmjs.org'
 WORKDIR /
 RUN echo ${REGISTRY} > ./.npmrc
-COPY package.json .
-COPY package-lock.json* .
+COPY package*.json .
 RUN npm i
 COPY tslint.json tsconfig.json ./
 COPY src/ ./src
