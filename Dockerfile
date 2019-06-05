@@ -8,9 +8,10 @@ RUN npm run build:docker
 
 FROM node:alpine as TEST
 WORKDIR /opt
-COPY jest.config.js tsconfig.json ./
+COPY package.json jest.config.js tsconfig.json ./
+COPY src/ ./src
 COPY --from=BUILD /opt/node_modules ./node_modules
-ENTRYPOINT [ "jest", "--collectCoverage" ]
+ENTRYPOINT [ "npm", "run", "test" ]
 
 FROM node:alpine as FINAL
 WORKDIR /dist
