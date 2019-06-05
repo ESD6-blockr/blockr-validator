@@ -21,6 +21,8 @@ export class LotteryService {
   public async drawWinningBlock(parentBlockHash: string,
                                 walletStates: State[]): Promise<Block | undefined> {
       return new Promise(async (resolve, reject) => {
+        // TODO: Important: queue should be cloned, no pointer should be used to ensure that
+        // no blocks will be added to the queue while executing the lottery.
         const pendingProposedBlocks: Set<Block> = this.queueStore.pendingProposedBlockQueue;
         const stakeMap = await this.convertStatesToStakeMap(walletStates);
 
