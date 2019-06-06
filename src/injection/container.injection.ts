@@ -1,4 +1,4 @@
-/**
+j/**
  * Composition root
  */
 import { CryptoKeyUtil, ObjectHasher } from "@blockr/blockr-crypto";
@@ -7,6 +7,7 @@ import { BlockHeader, Transaction } from "@blockr/blockr-models";
 import { Peer } from "@blockr/blockr-p2p-lib";
 import { PeerType } from "@blockr/blockr-p2p-lib/dist/enums";
 import { Container } from "inversify";
+import { P2PCommunicationRepository } from "../adapters/communication/repositories/concretes/p2pCommunication.repository";
 import { BlockchainAdapter } from "../adapters/concretes/blockchain.adapter";
 import { KeyAdapter } from "../adapters/concretes/key.adapter";
 import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
@@ -41,6 +42,7 @@ DI_CONTAINER.bind<IClientConfiguration>("Configuration")
                     .toConstantValue(new MongoDBConfiguration(constantStore.DB_CONNECTION_STRING,
                                                               constantStore.DB_NAME));
 DI_CONTAINER.bind<QueueStore>(QueueStore).toSelf().inSingletonScope();
+DI_CONTAINER.bind<P2PCommunicationRepository>(P2PCommunicationRepository).toSelf().inSingletonScope();
 DI_CONTAINER.bind<Peer>(Peer).toConstantValue(new Peer(PeerType.VALIDATOR));
 
 // Requests

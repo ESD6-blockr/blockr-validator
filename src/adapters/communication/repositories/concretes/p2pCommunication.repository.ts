@@ -1,4 +1,5 @@
 import { Message, Peer, PeerType } from "@blockr/blockr-p2p-lib";
+import { inject, injectable } from "inversify";
 import { AdapterException } from "../../../../exceptions/adapter.exception";
 import { P2PMessageSendingHandler } from "../../handlers/concretes/p2pMessageSending.handler";
 import { P2POnMessageHandler } from "../../handlers/concretes/p2pOnMessage.handler";
@@ -6,10 +7,11 @@ import { IMessageSendingHandler } from "../../handlers/interfaces/messageSending
 import { IOnMessageHandler } from "../../handlers/interfaces/onMessage.handler";
 import { ICommunicationRepository } from "../interfaces/communication.repository";
 
+@injectable()
 export class P2PCommunicationRepository implements ICommunicationRepository {
     private readonly peer: Peer;
     
-    constructor(peer: Peer) {
+    constructor(@inject(Peer) peer: Peer) {
         this.peer = peer;
     }
 
