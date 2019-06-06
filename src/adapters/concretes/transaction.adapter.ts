@@ -26,7 +26,7 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
     }
 
     private async handleNewTransactionAsync(serverUnaryCall: ServerUnaryCall<Transaction>): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             try {
                 const transaction: Transaction = serverUnaryCall.request;
     
@@ -36,8 +36,6 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
                 resolve();
             } catch (error) {
                 logger.error(error);
-                
-                reject(error);
             }
         });
     }

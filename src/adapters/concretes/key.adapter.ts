@@ -53,7 +53,7 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
     }
 
     private handleAdminKeyRequestAsync(response: RESPONSE_TYPE): Promise<void> {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve) => {
             try {
                 const key: string = await this.getServiceAdapter().getAdminKeyFromFileAsync();
 
@@ -63,7 +63,7 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
                     ),
                 ));
             } catch (error) {
-                reject(error);
+                logger.error(error);
             }
         });
     }

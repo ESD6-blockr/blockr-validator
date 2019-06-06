@@ -47,7 +47,7 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
     }
 
     private async handleNewVictoriousBlock(message: Message): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             try {
                 logger.info("[BlockAdapter] Received new victorious block.");
 
@@ -60,7 +60,7 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
 
                 resolve(this.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock));
             } catch (error) {
-                reject(error);
+                logger.error(error);
             }
         });
     }

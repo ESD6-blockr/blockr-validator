@@ -47,7 +47,7 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
     }
 
     private async handleNewProposedBlock(message: Message): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             try {
                 logger.info("[BlockAdapter] Received new proposed block.");
 
@@ -60,7 +60,7 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
 
                 resolve(this.getServiceAdapter().addProposedBlockAsync(proposedBlock));
             } catch (error) {
-                reject(error);
+                logger.error(error);
             }
         });
     }

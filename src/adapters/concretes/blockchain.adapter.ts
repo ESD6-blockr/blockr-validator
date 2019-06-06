@@ -67,7 +67,7 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     }
 
     private handleBlockchainRequestAsync(response: RESPONSE_TYPE): Promise<void> {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve) => {
             try {
                 const blockchain = await this.getServiceAdapter().getBlockchainAsync();
                 const states = await this.getServiceAdapter().getStatesAsync();
@@ -79,7 +79,7 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
                     ),
                 ));
             } catch (error) {
-                reject(error);
+                logger.error(error);
             }
         });
     }
