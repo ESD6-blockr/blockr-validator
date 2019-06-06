@@ -1,10 +1,12 @@
 import { AdapterException } from "../../exceptions/adapter.exception";
+import { ValidatorBus } from "../../validators";
 import { ICommunicationRepository } from "../communication/repositories/interfaces/communication.repository";
 import { IBaseServiceAdapter } from "../interfaces/baseService.adapter";
 
 export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
     protected readonly communicationRepository: ICommunicationRepository;
     private serviceAdapter?: T;
+    private validatorBus?: ValidatorBus;
 
     public constructor(communicationRepository: ICommunicationRepository) {
         this.communicationRepository = communicationRepository;
@@ -13,10 +15,15 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
     }
 
     /**
-     * This function should be called before executing any functions within the adapter itself.
+     * This function should be called before executing any functions within the adapter itself
+     * whenever functions of a service should be executed.
      */
     public setServiceAdapter(serviceAdapter: T): void {
         this.serviceAdapter = serviceAdapter;
+    }
+
+    public setValidatorBus(validatorBus: ValidatorBus): void {
+        this.validatorBus = validatorBus;
     }
 
     protected getServiceAdapter(): T {
@@ -25,6 +32,14 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
         }
 
         throw new AdapterException("The service adapter is undefined.");
+    }
+
+    protected getValidatorBus(): ValidatorBus {
+        if (this.validatorBus) {
+            return this.validatorBus;
+        }
+
+        throw new AdapterException("The validator bus is undefined.");
     }
 
     /**
