@@ -1,10 +1,11 @@
 import { ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { State, TransactionHeader } from "@blockr/blockr-models";
-import { inject } from "inversify";
+import { inject, injectable } from "inversify";
 import { BaseValidator } from "../abstractions/base.validator";
 import { ValidationCondition } from "./validation.condition";
 
+@injectable()
 export class TransactionHeaderValidator extends BaseValidator<TransactionHeader> {
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ObjectHasher) objectHasher: ObjectHasher) {

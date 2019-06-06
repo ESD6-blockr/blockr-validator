@@ -1,13 +1,14 @@
 import { ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Block, BlockHeader, BlockType, Transaction } from "@blockr/blockr-models";
-import { inject } from "inversify";
+import { inject, injectable } from "inversify";
 import { BlockHeaderValidator, IValidator } from "..";
 import { ConstantStore } from "../../stores";
 import { BaseValidator } from "../abstractions/base.validator";
 import { TransactionValidator } from "./transaction.validator";
 import { ValidationCondition } from "./validation.condition";
 
+@injectable()
 export class BlockValidator extends BaseValidator<Block> {
     private readonly constantStore: ConstantStore;
     private readonly blockHeaderValidator: IValidator<BlockHeader>;
