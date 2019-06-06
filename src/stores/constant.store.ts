@@ -63,6 +63,6 @@ export class ConstantStore {
         this.DEFAULT_STAKE_AMOUNT = 1;
         this.RPC_SERVER_HOST = "127.0.0.1";
         this.RPC_SERVER_PORT = "5678";
-        this.RPC_PROTOCOL_FILE_PATH = `${join(__dirname, "../utils/")}transactions.proto`;
+        this.RPC_PROTOCOL_FILE_PATH = `${join(__dirname, "utils/")}transactions.proto`;
     }
 }
