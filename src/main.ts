@@ -22,7 +22,7 @@ async function initPeer() {
         logger.info("[Main] Initializing Peer.");
 
         const peer = DI_CONTAINER.get<Peer>(Peer);
-        await peer.init("8081", ["192.168.178.73"]);
+        await peer.init("8081", ["initialpeer"]);
     } catch (error) {
         logger.error(error);
     }
