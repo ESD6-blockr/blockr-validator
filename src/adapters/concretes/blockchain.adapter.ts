@@ -40,10 +40,17 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
                     message,
                     PeerType.VALIDATOR,
                     (responseMessage: Message) => {
-                        logger.info("[BlockchainAdapter] Received blockchain and states.");
-                        const blockchainAndStates: [Block[], State[]] = JSON.parse(responseMessage.body as string);
-                        
-                        resolve(blockchainAndStates);
+                        try {
+                            logger.info("[BlockchainAdapter] Received blockchain and states.");
+                            const blockchainAndStates: [Block[], State[]] = JSON.parse(responseMessage.body as string);
+    
+                            this.getValidatorBus().validateAsync(blockchainAndStates[0]);
+                            this.getValidatorBus().validateAsync(blockchainAndStates[1]);
+                            
+                            resolve(blockchainAndStates);
+                        } catch (error) {
+                            reject(error);
+                        }
                     },
                 );
 

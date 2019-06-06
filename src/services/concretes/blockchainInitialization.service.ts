@@ -51,8 +51,6 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
                     await this.blockchainAdapter.requestBlockchainAndStatesAsync();
                 const blockchain: Block[] = blockchainAndStates[0];
                 const states: State[] = blockchainAndStates[1];
-
-                // TODO: Check whether the synced blockchain is actually valid; ValidatorBus
                 
                 await this.dataAccessLayer.pruneBlockchainAsync();
                 await this.saveBlockchainAsync(blockchain);
