@@ -2,7 +2,7 @@ FROM node:alpine as BUILD
 ARG REGISTRY='@blockr:registry=https://registry.npmjs.org'
 WORKDIR /
 RUN echo ${REGISTRY} > ./.npmrc
-COPY package.json .
+COPY package*.json ./
 RUN npm i
 COPY tslint.json tsconfig.json ./
 COPY src/ ./src
@@ -20,8 +20,8 @@ FROM node:alpine as FINAL
 WORKDIR /dist
 COPY --from=BUILD /dist .
 WORKDIR /
-COPY --from=BUILD /package.json ./
 COPY --from=BUILD /.npmrc ./
+COPY --from=BUILD /package*.json ./
 ENV NODE_ENV=production
 RUN npm i
 ENTRYPOINT [ "node", "dist/main" ]
