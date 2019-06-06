@@ -57,6 +57,12 @@ DI_CONTAINER.bind<IValidator<Block>>("Validators").to(BlockValidator).inTransien
 DI_CONTAINER.bind<IValidator<BlockHeader>>("Validators").to(BlockHeaderValidator).inTransientScope();
 DI_CONTAINER.bind<IValidator<Transaction>>("Validators").to(TransactionValidator).inTransientScope();
 DI_CONTAINER.bind<IValidator<TransactionHeader>>("Validators").to(TransactionHeaderValidator).inTransientScope();
+
+DI_CONTAINER.bind<IValidator<Block>>(BlockValidator).toSelf().inTransientScope();
+DI_CONTAINER.bind<IValidator<BlockHeader>>(BlockHeaderValidator).toSelf().inTransientScope();
+DI_CONTAINER.bind<IValidator<Transaction>>(TransactionValidator).toSelf().inTransientScope();
+DI_CONTAINER.bind<IValidator<TransactionHeader>>(TransactionHeaderValidator).toSelf().inTransientScope();
+
 DI_CONTAINER.bind<ValidatorBus>(ValidatorBus).toSelf().inTransientScope();
 
 DI_CONTAINER.bind<GenesisBlockGenerator>(GenesisBlockGenerator).toSelf().inTransientScope();
