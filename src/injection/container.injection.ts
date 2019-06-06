@@ -8,6 +8,7 @@ import { Peer } from "@blockr/blockr-p2p-lib";
 import { PeerType } from "@blockr/blockr-p2p-lib/dist/enums";
 import { Container } from "inversify";
 import { P2PCommunicationRepository, RPCCommunicationRepository } from "../adapters";
+import { BlockAdapter } from "../adapters/concretes/block.adapter";
 import { BlockchainAdapter } from "../adapters/concretes/blockchain.adapter";
 import { KeyAdapter } from "../adapters/concretes/key.adapter";
 import { TransactionAdapter } from "../adapters/concretes/transaction.adapter";
@@ -71,5 +72,6 @@ DI_CONTAINER.bind<StateService>(StateService).toSelf().inTransientScope();
 DI_CONTAINER.bind<BlockchainAdapter>(BlockchainAdapter).toSelf().inTransientScope();
 DI_CONTAINER.bind<KeyAdapter>(KeyAdapter).toSelf().inTransientScope();
 DI_CONTAINER.bind<TransactionAdapter>(TransactionAdapter).toSelf().inTransientScope();
+DI_CONTAINER.bind<BlockAdapter>(BlockAdapter).toSelf().inTransientScope();
 
 export default DI_CONTAINER;
