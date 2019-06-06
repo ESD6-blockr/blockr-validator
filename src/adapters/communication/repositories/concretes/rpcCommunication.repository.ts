@@ -29,9 +29,6 @@ export class RPCCommunicationRepository implements ICommunicationRepository {
 
         this.transactionPrototype = loadPackageDefinition(packageDefinition).transactions;
         this.server = this.initServer();
-
-        logger.info("[RPCCommunicationRepository] Starting RPC server.");
-        this.server.start();
     }
 
     public addOnMessageHandler(onMessageHandler: IOnMessageHandler): void {
@@ -43,6 +40,11 @@ export class RPCCommunicationRepository implements ICommunicationRepository {
                                     onMessageHandler.implementation);
     }
 
+    public startServer(): void {
+        logger.info("[RPCCommunicationRepository] Starting RPC server.");
+        this.server.start();
+    }
+
     private initServer(): Server {
         logger.info("[RPCCommunicationRepository] Initializing RPC server.");
 
@@ -51,5 +53,5 @@ export class RPCCommunicationRepository implements ICommunicationRepository {
                     ServerCredentials.createInsecure());
     
         return server;
-      }
+    }
 }

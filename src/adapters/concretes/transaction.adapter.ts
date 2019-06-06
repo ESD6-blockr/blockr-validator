@@ -14,6 +14,7 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
         super(communicationRepository);
 
         super.setValidatorBus(validatorBus);
+        (communicationRepository as RPCCommunicationRepository).startServer();
     }
 
     protected initOnMessageHandlers(): void {
