@@ -22,7 +22,7 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
         this.serviceAdapter = serviceAdapter;
     }
 
-    public setValidatorBus(validatorBus: ValidatorBus): void {
+    protected setValidatorBus(validatorBus: ValidatorBus): void {
         this.validatorBus = validatorBus;
     }
 

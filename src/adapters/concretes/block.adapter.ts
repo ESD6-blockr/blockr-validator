@@ -70,6 +70,8 @@ export class BlockAdapter extends BaseAdapter<IBlockServiceAdapter> {
                 }
 
                 const proposedBlock: Block = JSON.parse(message.body);
+                this.getValidatorBus().validateAsync([proposedBlock]);
+
                 resolve(this.getServiceAdapter().addProposedBlockAsync(proposedBlock));
             } catch (error) {
                 reject(error);
@@ -85,6 +87,8 @@ export class BlockAdapter extends BaseAdapter<IBlockServiceAdapter> {
                 }
 
                 const victoriousBlock: Block = JSON.parse(message.body);
+                this.getValidatorBus().validateAsync([victoriousBlock]);
+
                 resolve(this.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock));
             } catch (error) {
                 reject(error);
