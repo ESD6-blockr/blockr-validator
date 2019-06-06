@@ -14,43 +14,58 @@ export class StateService {
         this.dataAccessLayer = dataAccessLayer;
     }
     
-    public async updateStatesForTransactionsAsync(transactions: Transaction[]): Promise<State[]> {
+    public async updateStatesForTransactionsAsync(transactions: Transaction[]): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
-                const states: State[] = [];
+                const statesToUpdate: State[] = [];
+                const newStatesToSet: State[] = [];
 
                 for (const transaction of transactions) {
-                    let senderState = await this.dataAccessLayer
+                    let senderState: State | undefined = await this.dataAccessLayer
                         .getStateAsync(transaction.transactionHeader.senderKey);
-                    let recipientState = await this.dataAccessLayer
+                    let recipientState: State | undefined = await this.dataAccessLayer
                         .getStateAsync(transaction.transactionHeader.recipientKey);
 
-                    senderState = this.updateStateAmount(
-                        Operator.MINUS,
-                        transaction.transactionHeader.amount,
-                        transaction.transactionHeader.senderKey,
-                        senderState,
-                    );
+                    if (senderState) {
+                        senderState = this.calculateUpdatedState(
+                            Operator.MINUS,
+                            transaction.transactionHeader.amount,
+                            transaction.transactionHeader.senderKey,
+                            senderState,
+                        );
 
-                    recipientState = this.updateStateAmount(
-                        Operator.PLUS,
-                        transaction.transactionHeader.amount,
-                        transaction.transactionHeader.recipientKey,
-                        recipientState,
-                    );
+                        statesToUpdate.push(senderState);
+                    }
 
-                    states.push(senderState);
-                    states.push(recipientState);
+                    const newEmptySenderState = new State(transaction.transactionHeader.senderKey, 0, 0);
+                    newStatesToSet.push(newEmptySenderState);
+
+                    if (recipientState) {
+                        recipientState = this.calculateUpdatedState(
+                            Operator.PLUS,
+                            transaction.transactionHeader.amount,
+                            transaction.transactionHeader.recipientKey,
+                            recipientState,
+                        );
+
+                        statesToUpdate.push(recipientState);
+                    }
+
+                    const newEmptyRecipientState = new State(transaction.transactionHeader.recipientKey, 0, 0);
+                    newStatesToSet.push(newEmptyRecipientState);
                 }
 
-                resolve(states);
+                await this.dataAccessLayer.setStatesAsync(newStatesToSet);
+                await this.dataAccessLayer.updateStatesAsync(statesToUpdate);
+
+                resolve();
             } catch (error) {
                 reject(error);
             }
         });
     }
     
-    private updateStateAmount(operator: Operator, amount: number, key: string, state?: State): State {
+    private calculateUpdatedState(operator: Operator, amount: number, key: string, state?: State): State {
         if (state) {
             operator === Operator.PLUS
                 ? state.amount += amount

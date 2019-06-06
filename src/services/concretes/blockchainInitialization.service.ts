@@ -56,7 +56,6 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
                 await this.saveBlockchainAsync(blockchain);
 
                 await this.dataAccessLayer.pruneStatesAsync();
-                // TODO: should this be set or update states, what is the difference?
                 await this.dataAccessLayer.setStatesAsync(states);
 
                 logger.info("[BlockchainInitializationService] Successfully synced blockchain.");
@@ -85,11 +84,9 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
                 logger.info("[BlockchainInitializationService] Initiating blockchain.");
 
                 const genesisBlock: Block = await this.genesisBlockGenerator.generateGenesisBlockAsync();
-                const states: State[] = await this.stateService
-                    .updateStatesForTransactionsAsync(Array.from(genesisBlock.transactions));
-
+                
                 await this.dataAccessLayer.addBlockAsync(genesisBlock);
-                await this.dataAccessLayer.setStatesAsync(states);
+                await this.stateService.updateStatesForTransactionsAsync(Array.from(genesisBlock.transactions));
 
                 logger.info("[BlockchainInitializationService] Successfully initiated blockchain.");
 
