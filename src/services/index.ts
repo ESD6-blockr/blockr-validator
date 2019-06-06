@@ -4,3 +4,4 @@ export * from "./concretes/lottery.service";
 export * from "./concretes/node.service";
 export * from "./concretes/state.service";
 export * from "./concretes/transaction.service";
+export * from "./concretes/block.service";

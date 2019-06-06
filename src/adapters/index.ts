@@ -2,6 +2,7 @@ export { BaseAdapter } from "./abstractions/base.adapter";
 export { BlockchainAdapter } from "./concretes/blockchain.adapter";
 export { KeyAdapter } from "./concretes/key.adapter";
 export { TransactionAdapter } from "./concretes/transaction.adapter";
+export { BlockAdapter } from "./concretes/block.adapter";
 export { MessageType } from "./enums/messageType.enum";
 export { IBaseServiceAdapter } from "./interfaces/baseService.adapter";
 export { IBlockchainServiceAdapter } from "./interfaces/blockchainService.adapter";
