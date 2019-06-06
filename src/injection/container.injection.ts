@@ -41,6 +41,7 @@ DI_CONTAINER.bind<QueueStore>(QueueStore).toSelf().inSingletonScope();
 DI_CONTAINER.bind<P2PCommunicationRepository>(P2PCommunicationRepository).toSelf().inSingletonScope();
 DI_CONTAINER.bind<RPCCommunicationRepository>(RPCCommunicationRepository).toSelf().inSingletonScope();
 DI_CONTAINER.bind<Peer>(Peer).toConstantValue(new Peer(PeerType.VALIDATOR));
+DI_CONTAINER.bind<StateService>(StateService).toSelf().inSingletonScope();
 
 // Requests
 DI_CONTAINER.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
@@ -64,7 +65,6 @@ DI_CONTAINER.bind<TransactionService>(TransactionService).toSelf().inTransientSc
 DI_CONTAINER.bind<AdminKeyService>(AdminKeyService).toSelf().inTransientScope();
 DI_CONTAINER.bind<BlockchainInitializationService>(BlockchainInitializationService).toSelf().inTransientScope();
 DI_CONTAINER.bind<NodeService>(NodeService).toSelf().inTransientScope();
-DI_CONTAINER.bind<StateService>(StateService).toSelf().inTransientScope();
 DI_CONTAINER.bind<ProposedBlockService>(ProposedBlockService).toSelf().inTransientScope();
 DI_CONTAINER.bind<VictoriousBlockService>(VictoriousBlockService).toSelf().inTransientScope();
 
