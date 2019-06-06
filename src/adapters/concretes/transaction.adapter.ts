@@ -13,7 +13,7 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
                 @inject(ValidatorBus) validatorBus: ValidatorBus) {
         super(communicationRepository);
 
-        this.setValidatorBus(validatorBus);
+        super.setValidatorBus(validatorBus);
     }
 
     protected initOnMessageHandlers(): void {
@@ -30,8 +30,8 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
             try {
                 const transaction: Transaction = serverUnaryCall.request;
     
-                this.getValidatorBus().validateAsync([transaction]);
-                this.getServiceAdapter().addPendingTransactionAsync(transaction);
+                super.getValidatorBus().validateAsync([transaction]);
+                super.getServiceAdapter().addPendingTransactionAsync(transaction);
                 
                 resolve();
             } catch (error) {

@@ -20,7 +20,7 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
                 @inject(ValidatorBus) validatorBus: ValidatorBus) {
         super(communicationRepository);
 
-        this.setValidatorBus(validatorBus);
+        super.setValidatorBus(validatorBus);
     }
 
     public async broadcastNewProposedBlock(proposedBlock: Block): Promise<void> {
@@ -56,9 +56,9 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
                 }
 
                 const proposedBlock: Block = JSON.parse(message.body);
-                this.getValidatorBus().validateAsync([proposedBlock]);
+                super.getValidatorBus().validateAsync([proposedBlock]);
 
-                resolve(this.getServiceAdapter().addProposedBlockAsync(proposedBlock));
+                resolve(super.getServiceAdapter().addProposedBlockAsync(proposedBlock));
             } catch (error) {
                 logger.error(error);
             }

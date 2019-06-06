@@ -20,7 +20,7 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
                 @inject(ValidatorBus) validatorBus: ValidatorBus) {
         super(communicationRepository);
 
-        this.setValidatorBus(validatorBus);
+        super.setValidatorBus(validatorBus);
     }
 
     public async broadcastNewVictoriousBlock(victoriousBlock: Block): Promise<void> {
@@ -56,9 +56,9 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
                 }
 
                 const victoriousBlock: Block = JSON.parse(message.body);
-                this.getValidatorBus().validateAsync([victoriousBlock]);
+                super.getValidatorBus().validateAsync([victoriousBlock]);
 
-                resolve(this.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock));
+                resolve(super.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock));
             } catch (error) {
                 logger.error(error);
             }

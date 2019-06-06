@@ -19,7 +19,7 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
                 @inject(ValidatorBus) validatorBus: ValidatorBus) {
         super(communicationRepository);
 
-        this.setValidatorBus(validatorBus);
+        super.setValidatorBus(validatorBus);
     }
 
     public shouldGenerateGenesisBlock(): boolean {
@@ -44,8 +44,8 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
                             logger.info("[BlockchainAdapter] Received blockchain and states.");
                             const blockchainAndStates: [Block[], State[]] = JSON.parse(responseMessage.body as string);
     
-                            this.getValidatorBus().validateAsync(blockchainAndStates[0]);
-                            this.getValidatorBus().validateAsync(blockchainAndStates[1]);
+                            super.getValidatorBus().validateAsync(blockchainAndStates[0]);
+                            super.getValidatorBus().validateAsync(blockchainAndStates[1]);
                             
                             resolve(blockchainAndStates);
                         } catch (error) {
@@ -76,8 +76,8 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     private handleBlockchainRequestAsync(response: RESPONSE_TYPE): Promise<void> {
         return new Promise(async (resolve) => {
             try {
-                const blockchain = await this.getServiceAdapter().getBlockchainAsync();
-                const states = await this.getServiceAdapter().getStatesAsync();
+                const blockchain = await super.getServiceAdapter().getBlockchainAsync();
+                const states = await super.getServiceAdapter().getStatesAsync();
                 const blockchainAndStates: [Block[], State[]] = [blockchain, states];
 
                 resolve(response(new Message(
