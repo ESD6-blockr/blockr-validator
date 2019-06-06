@@ -2,6 +2,7 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { logger } from "@blockr/blockr-logger";
 import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
+import { BlockAdapter } from "../../adapters/concretes/block.adapter";
 import { BlockJobException } from "../../exceptions/blockJob.exception";
 import { ProposedBlockGenerator } from "../../generators";
 import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
@@ -17,13 +18,15 @@ export class BlockJob extends SchedulableJob {
     private readonly transactionService: TransactionService;
     private readonly constantStore: ConstantStore;
     private readonly queueStore: QueueStore;
+    private readonly blockAdapter: BlockAdapter;
 
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator,
                 @inject(LotteryService) lotteryService: LotteryService,
                 @inject(TransactionService) transactionService: TransactionService,
                 @inject(ConstantStore) constantStore: ConstantStore,
-                @inject(QueueStore) queueStore: QueueStore) {
+                @inject(QueueStore) queueStore: QueueStore,
+                @inject(BlockAdapter) blockAdapter: BlockAdapter) {
         super();
         
         this.dataAccessLayer = dataAccessLayer;
@@ -32,6 +35,7 @@ export class BlockJob extends SchedulableJob {
         this.transactionService = transactionService;
         this.constantStore = constantStore;
         this.queueStore = queueStore;
+        this.blockAdapter = blockAdapter;
     }
 
     protected async onCycleAsync(): Promise<void> {
@@ -40,8 +44,7 @@ export class BlockJob extends SchedulableJob {
 
             try {
                 const proposedBlock: Block = await this.generateProposedBlockAsync();
-                // TODO: Shouldn't the peer methods be async?
-               // this.peer.broadcastMessage(MessageType.NEW_PROPOSED_BLOCK, JSON.stringify(proposedBlock));
+                this.blockAdapter.broadcastNewProposedBlock(proposedBlock);
 
                 const states: State[] = await this.dataAccessLayer.getStatesAsync();
                 const victoriousBlock: Block | undefined = await this.lotteryService
@@ -55,8 +58,7 @@ export class BlockJob extends SchedulableJob {
                 }
                 
                 await this.transactionService.updatePendingTransactions(victoriousBlock);
-                // TODO: Shouldn't the peer methods be async?
-                // this.peer.broadcastMessage(MessageType.NEW_VICTORIOUS_BLOCK, JSON.stringify(victoriousBlock));
+                this.blockAdapter.broadcastNewVictoriousBlock(victoriousBlock);
 
                 resolve();
             } catch (error) {

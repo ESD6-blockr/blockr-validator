@@ -14,4 +14,10 @@ export interface ICommunicationRepository {
      * @param messageSendingHandler The implementation of the messageSending handler.
      */
     sendMessageToRandomNodeAsync?(messageSendingHandler: IMessageSendingHandler): Promise<void>;
+
+    /**
+     * Asynchronously broadcasts a message for the given message sending handler implementation.
+     * @param messageSendingHandler The implementation of the messageSending handler.
+     */
+    broadcastMessageAsync?(messageSendingHandler: IMessageSendingHandler): Promise<void>;
 }
