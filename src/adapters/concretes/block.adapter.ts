@@ -1,11 +1,15 @@
 import { Block } from "@blockr/blockr-models";
 import { Message } from "@blockr/blockr-p2p-lib";
+import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
 import { inject, injectable } from "inversify";
 import { MessageType } from "..";
+import { AdapterException } from "../../exceptions/adapter.exception";
 import { ValidatorBus } from "../../validators";
 import { BaseAdapter } from "../abstractions/base.adapter";
 import { P2PMessageSendingHandler } from "../communication/handlers/concretes/p2pMessageSending.handler";
+import { P2POnMessageHandler } from "../communication/handlers/concretes/p2pOnMessage.handler";
 import { IMessageSendingHandler } from "../communication/handlers/interfaces/messageSending.handler";
+import { IOnMessageHandler } from "../communication/handlers/interfaces/onMessage.handler";
 import { P2PCommunicationRepository } from "../communication/repositories/concretes/p2pCommunication.repository";
 import { IBlockServiceAdapter } from "../interfaces/blockService.adapter";
 
@@ -38,7 +42,53 @@ export class BlockAdapter extends BaseAdapter<IBlockServiceAdapter> {
         });
     }
 
+    // TODO: Add logging
+
     protected initOnMessageHandlers(): void {
-        throw new Error("Method not implemented.");
+        const newProposedBlockHandler: IOnMessageHandler = new P2POnMessageHandler(
+            MessageType.NEW_PROPOSED_BLOCK,
+            async (message: Message, _senderGuid: string, _response: RESPONSE_TYPE) => {
+                this.handleNewProposedBlock(message);
+            },
+        );
+        const newVictoriousBlockHandler: IOnMessageHandler = new P2POnMessageHandler(
+            MessageType.NEW_VICTORIOUS_BLOCK,
+            async (message: Message, _senderGuid: string, _response: RESPONSE_TYPE) => {
+                this.handleNewVictoriousBlock(message);
+            },
+        );
+
+        this.communicationRepository.addOnMessageHandler(newProposedBlockHandler);
+        this.communicationRepository.addOnMessageHandler(newVictoriousBlockHandler);
+    }
+
+    private async handleNewProposedBlock(message: Message): Promise<void> {
+        return new Promise((resolve, reject) => {
+            try {
+                if (!message.body) {
+                    throw new AdapterException("The required body is missing in the new proposed block's message.");
+                }
+
+                const proposedBlock: Block = JSON.parse(message.body);
+                resolve(this.getServiceAdapter().addProposedBlockAsync(proposedBlock));
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    private async handleNewVictoriousBlock(message: Message): Promise<void> {
+        return new Promise((resolve, reject) => {
+            try {
+                if (!message.body) {
+                    throw new AdapterException("The required body is missing in the new victorious block's message.");
+                }
+
+                const victoriousBlock: Block = JSON.parse(message.body);
+                resolve(this.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock));
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
 }
