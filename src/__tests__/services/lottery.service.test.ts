@@ -24,13 +24,13 @@ describe("Lottery service", () => {
 
 describe("Drawing winning block", () => {
     it("Should fail with an empty queue", async () => {
-        const lotterService = new LotteryService(dataAccessLayerMock, queueStore);
+        const lotteryService = new LotteryService(dataAccessLayerMock, queueStore);
 
         const parentBlockHash = "EMPTY_TEST_HASH";
         const states = new Array<State>();
 
         try {
-            await lotterService.drawWinningBlock(parentBlockHash, states);
+            await lotteryService.drawWinningBlock(parentBlockHash, states);
         } catch (error) {
             expect(error).not.toBeNull();
             expect(error.message).toContain("The lottery does not yield any winner");
@@ -43,12 +43,12 @@ describe("Drawing winning block", () => {
 
         queueStore.pendingProposedBlockQueue.add(block);
 
-        const lotterService = new LotteryService(dataAccessLayerMock, queueStore);
+        const lotteryService = new LotteryService(dataAccessLayerMock, queueStore);
 
         const parentBlockHash = "6363fe744f74ee8f280958ab2f185dde";
         const states = [new State("TEST_PUBLIC_KEY", 10, 10)];
 
-        const winningBlock = await lotterService.drawWinningBlock(parentBlockHash, states);
+        const winningBlock = await lotteryService.drawWinningBlock(parentBlockHash, states);
         expect(winningBlock).not.toBeNull();
     });
 
@@ -58,13 +58,13 @@ describe("Drawing winning block", () => {
 
         queueStore.pendingProposedBlockQueue.add(block);
 
-        const lotterService = new LotteryService(dataAccessLayerMock, queueStore);
+        const lotteryService = new LotteryService(dataAccessLayerMock, queueStore);
 
         const parentBlockHash = "6363fe744f74ee8f280958ab2f185dde";
         const states = [new State("TEST_RANDOM_PUBLIC_KEY", 10, 10)];
 
         try {
-            await lotterService.drawWinningBlock(parentBlockHash, states);
+            await lotteryService.drawWinningBlock(parentBlockHash, states);
         } catch (error) {
             expect(error.message).toContain("The lottery does not yield any winner");
         }

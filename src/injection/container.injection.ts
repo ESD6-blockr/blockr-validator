@@ -7,12 +7,12 @@ import { Block, BlockHeader, Transaction, TransactionHeader } from "@blockr/bloc
 import { Peer } from "@blockr/blockr-p2p-lib";
 import { PeerType } from "@blockr/blockr-p2p-lib/dist/enums";
 import { Container } from "inversify";
-import { P2PCommunicationRepository, RPCCommunicationRepository } from "../adapters";
-import { BlockAdapter, BlockchainAdapter, KeyAdapter, TransactionAdapter } from "../adapters";
+import { P2PCommunicationRepository, RPCCommunicationRepository, VictoriousBlockAdapter } from "../adapters";
+import { BlockchainAdapter, KeyAdapter, ProposedBlockAdapter, TransactionAdapter } from "../adapters";
 import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
 import { BlockJob } from "../jobs";
-import { AdminKeyService, BlockchainInitializationService } from "../services";
-import { LotteryService, NodeService, StateService, TransactionService } from "../services";
+import { AdminKeyService, BlockchainInitializationService, ProposedBlockService } from "../services";
+import { LotteryService, NodeService, StateService, TransactionService, VictoriousBlockService } from "../services";
 import { ConstantStore, QueueStore } from "../stores";
 import { FileUtils } from "../utils";
 import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "../validators";
@@ -69,10 +69,13 @@ DI_CONTAINER.bind<AdminKeyService>(AdminKeyService).toSelf().inTransientScope();
 DI_CONTAINER.bind<BlockchainInitializationService>(BlockchainInitializationService).toSelf().inTransientScope();
 DI_CONTAINER.bind<NodeService>(NodeService).toSelf().inTransientScope();
 DI_CONTAINER.bind<StateService>(StateService).toSelf().inTransientScope();
+DI_CONTAINER.bind<ProposedBlockService>(ProposedBlockService).toSelf().inTransientScope();
+DI_CONTAINER.bind<VictoriousBlockService>(VictoriousBlockService).toSelf().inTransientScope();
 
 DI_CONTAINER.bind<BlockchainAdapter>(BlockchainAdapter).toSelf().inTransientScope();
 DI_CONTAINER.bind<KeyAdapter>(KeyAdapter).toSelf().inTransientScope();
 DI_CONTAINER.bind<TransactionAdapter>(TransactionAdapter).toSelf().inTransientScope();
-DI_CONTAINER.bind<BlockAdapter>(BlockAdapter).toSelf().inTransientScope();
+DI_CONTAINER.bind<ProposedBlockAdapter>(ProposedBlockAdapter).toSelf().inTransientScope();
+DI_CONTAINER.bind<VictoriousBlockAdapter>(VictoriousBlockAdapter).toSelf().inTransientScope();
 
 export default DI_CONTAINER;

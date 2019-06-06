@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
-import { BlockAdapter } from "../../adapters/concretes/block.adapter";
+import { VictoriousBlockAdapter } from "../../adapters";
+import { ProposedBlockAdapter } from "../../adapters/concretes/proposedBlock.adapter";
 import { ProposedBlockGenerator } from "../../generators";
 import { BlockJob } from "../../jobs";
 import { LotteryService } from "../../services/concretes/lottery.service";
@@ -16,7 +17,8 @@ let lotteryServiceMock: LotteryService;
 let transactionServiceMock: TransactionService;
 let constantStoreMock: ConstantStore;
 let queueStoreMock: QueueStore;
-let blockAdapterMock: BlockAdapter;
+let proposedBlockAdapterMock: ProposedBlockAdapter;
+let victoriousBlockAdapterMock: VictoriousBlockAdapter;
 
 beforeEach(() => {
     proposedBlockGeneratorMock = {} as ProposedBlockGenerator;
@@ -24,14 +26,15 @@ beforeEach(() => {
     transactionServiceMock = {} as TransactionService;
     constantStoreMock = {} as ConstantStore;
     queueStoreMock = {} as QueueStore;
-    blockAdapterMock = {} as BlockAdapter;
+    proposedBlockAdapterMock = {} as ProposedBlockAdapter;
+    victoriousBlockAdapterMock = {} as VictoriousBlockAdapter;
 });
 
 describe("Block job initialization", () => {
     it("Should succeed with an empty blockchain", async () => {
         const blockJob = new BlockJob(getDataAccessLayerWithoutBlockchain(),
             proposedBlockGeneratorMock, lotteryServiceMock, transactionServiceMock, constantStoreMock,
-            queueStoreMock, blockAdapterMock);
+            queueStoreMock, proposedBlockAdapterMock, victoriousBlockAdapterMock);
         
         expect(blockJob).not.toBeNull();
         expect(blockJob).toBeInstanceOf(BlockJob);
@@ -40,7 +43,7 @@ describe("Block job initialization", () => {
     it("Should succeed with a pre filled blockchain", async () => {
         const blockJob = new BlockJob(getDataAccessLayerWithBlockchain(),
             proposedBlockGeneratorMock, lotteryServiceMock, transactionServiceMock, constantStoreMock,
-            queueStoreMock, blockAdapterMock);
+            queueStoreMock, proposedBlockAdapterMock, victoriousBlockAdapterMock);
                 
         expect(blockJob).not.toBeNull();
         expect(blockJob).toBeInstanceOf(BlockJob);
