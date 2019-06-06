@@ -1,4 +1,4 @@
-j/**
+/**
  * Composition root
  */
 import { CryptoKeyUtil, ObjectHasher } from "@blockr/blockr-crypto";
@@ -7,7 +7,7 @@ import { BlockHeader, Transaction } from "@blockr/blockr-models";
 import { Peer } from "@blockr/blockr-p2p-lib";
 import { PeerType } from "@blockr/blockr-p2p-lib/dist/enums";
 import { Container } from "inversify";
-import { P2PCommunicationRepository } from "../adapters/communication/repositories/concretes/p2pCommunication.repository";
+import { P2PCommunicationRepository } from "../adapters";
 import { BlockchainAdapter } from "../adapters/concretes/blockchain.adapter";
 import { KeyAdapter } from "../adapters/concretes/key.adapter";
 import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
