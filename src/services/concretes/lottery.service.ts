@@ -69,6 +69,10 @@ export class LotteryService {
     return new Promise((resolve) => {
       const candidatesMap = new Map<string, number>();
 
+      if (!pendingProposedBlocks.size) {
+        resolve();
+      }
+
       for (const pendingProposedBlock of pendingProposedBlocks) {
         const validatorPublicKey = pendingProposedBlock.blockHeader.validator;
 
