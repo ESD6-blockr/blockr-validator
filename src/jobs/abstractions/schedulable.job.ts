@@ -12,8 +12,13 @@ export abstract class SchedulableJob {
      */
     public scheduleAsync(thresholdInMinutes: number): Promise<void> {
         return new Promise(async (resolve) => {
-            schedule(`*/${thresholdInMinutes} * * * *`,
-                            async () => this.onCycleAsync().catch((error) => logger.error(error)));
+            schedule(
+                `*/${thresholdInMinutes} * * * *`,
+                async () => this.onCycleAsync().catch((error) => logger.error(error)),
+                {
+                    timezone: "Europe/Amsterdam",
+                },
+            );
 
             resolve();
         });
