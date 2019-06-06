@@ -3,7 +3,7 @@ import "reflect-metadata";
 import { Transaction } from "@blockr/blockr-models";
 import { ConstantStore } from "../../stores";
 import { IValidator, TransactionValidator } from "../../validators";
-import { dataAccessLayerMock, objectHasherMock } from "../constants/model.constants";
+import { dataAccessLayerMock, objectHasherMock, transactionHeaderValidatorMock } from "../constants/model.constants";
 import { getTransaction } from "../constants/transaction.constants";
 import { VALID_TYPES } from "../constants/transaction.constants";
 import { VALID_RECIPIENT_KEYS } from "../constants/transaction.constants";
@@ -14,7 +14,8 @@ jest.mock("@blockr/blockr-logger");
 let validator: IValidator<Transaction>;
 
 beforeEach(() => {
-    validator = new TransactionValidator(dataAccessLayerMock, objectHasherMock, new ConstantStore());
+    validator = new TransactionValidator(dataAccessLayerMock, objectHasherMock,
+        new ConstantStore(), transactionHeaderValidatorMock);
 });
 
 describe("Transaction validator", () => {

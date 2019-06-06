@@ -3,7 +3,7 @@
  */
 import { CryptoKeyUtil, ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer, DataSource, IClientConfiguration, MongoDBConfiguration } from "@blockr/blockr-data-access";
-import { BlockHeader, Transaction } from "@blockr/blockr-models";
+import { Block, BlockHeader, Transaction, TransactionHeader } from "@blockr/blockr-models";
 import { Peer } from "@blockr/blockr-p2p-lib";
 import { PeerType } from "@blockr/blockr-p2p-lib/dist/enums";
 import { Container } from "inversify";
@@ -11,11 +11,13 @@ import { P2PCommunicationRepository, RPCCommunicationRepository } from "../adapt
 import { BlockAdapter, BlockchainAdapter, KeyAdapter, TransactionAdapter } from "../adapters";
 import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
 import { BlockJob } from "../jobs";
-import { AdminKeyService, BlockchainInitializationService, BlockService } from "../services";
+import { AdminKeyService, BlockchainInitializationService } from "../services";
 import { LotteryService, NodeService, StateService, TransactionService } from "../services";
 import { ConstantStore, QueueStore } from "../stores";
 import { FileUtils } from "../utils";
 import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "../validators";
+import { BlockValidator } from "../validators/concretes/block.validator";
+import { TransactionHeaderValidator } from "../validators/concretes/transactionHeader.validator";
 
 /**
  * Dependency container
@@ -50,8 +52,10 @@ DI_CONTAINER.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
 // Transients
 DI_CONTAINER.bind<DataAccessLayer>(DataAccessLayer).toSelf().inTransientScope();
 
+DI_CONTAINER.bind<IValidator<Block>>("Validators").to(BlockValidator).inTransientScope();
 DI_CONTAINER.bind<IValidator<BlockHeader>>("Validators").to(BlockHeaderValidator).inTransientScope();
 DI_CONTAINER.bind<IValidator<Transaction>>("Validators").to(TransactionValidator).inTransientScope();
+DI_CONTAINER.bind<IValidator<TransactionHeader>>("Validators").to(TransactionHeaderValidator).inTransientScope();
 DI_CONTAINER.bind<ValidatorBus>(ValidatorBus).toSelf().inTransientScope();
 
 DI_CONTAINER.bind<GenesisBlockGenerator>(GenesisBlockGenerator).toSelf().inTransientScope();
@@ -65,7 +69,6 @@ DI_CONTAINER.bind<AdminKeyService>(AdminKeyService).toSelf().inTransientScope();
 DI_CONTAINER.bind<BlockchainInitializationService>(BlockchainInitializationService).toSelf().inTransientScope();
 DI_CONTAINER.bind<NodeService>(NodeService).toSelf().inTransientScope();
 DI_CONTAINER.bind<StateService>(StateService).toSelf().inTransientScope();
-DI_CONTAINER.bind<BlockService>(BlockService).toSelf().inTransientScope();
 
 DI_CONTAINER.bind<BlockchainAdapter>(BlockchainAdapter).toSelf().inTransientScope();
 DI_CONTAINER.bind<KeyAdapter>(KeyAdapter).toSelf().inTransientScope();

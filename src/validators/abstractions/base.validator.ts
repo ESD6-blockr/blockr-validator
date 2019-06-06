@@ -34,7 +34,7 @@ export abstract class BaseValidator<T> implements IValidator<T> {
 
     protected abstract initConditions(): void;
 
-    private async everyConditionIsValidAsync(object: T, conditions: Array<ValidationCondition<T>>)
+    protected async everyConditionIsValidAsync(object: T, conditions: Array<ValidationCondition<T>>)
                                             : Promise<boolean> {
         return new Promise(async (resolve, reject) => {
             for (const validationCondition of conditions) {

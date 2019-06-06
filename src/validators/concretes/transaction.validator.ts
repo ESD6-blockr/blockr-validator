@@ -1,76 +1,63 @@
 import { ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer } from "@blockr/blockr-data-access";
-import { State, Transaction, TransactionType } from "@blockr/blockr-models";
+import { Transaction, TransactionHeader, TransactionType } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { BaseValidator } from "..";
+import { BaseValidator, IValidator } from "..";
 import { ConstantStore } from "../../stores";
+import { TransactionHeaderValidator } from "./transactionHeader.validator";
 import { ValidationCondition } from "./validation.condition";
 
 @injectable()
 export class TransactionValidator extends BaseValidator<Transaction> {
     private readonly constantStore: ConstantStore;
+    private readonly transactionHeaderValidator: IValidator<TransactionHeader>;
 
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ObjectHasher) objectHasher: ObjectHasher,
-                @inject(ConstantStore) constantStore: ConstantStore) {
+                @inject(ConstantStore) constantStore: ConstantStore,
+                @inject(TransactionHeaderValidator) transactionHeaderValidator: IValidator<TransactionHeader>) {
             
         super(dataAccessLayer, objectHasher);
 
         this.constantStore = constantStore;
+        this.transactionHeaderValidator = transactionHeaderValidator;
+    }
+
+    public async validateObjectAsync(transaction: Transaction): Promise<[Transaction, boolean]> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await super.everyConditionIsValidAsync(transaction, this.validationConditions);
+                
+                await this.transactionHeaderValidator.validateObjectAsync(transaction.transactionHeader);
+            
+                resolve([transaction, true]);
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
 
     protected initConditions(): void {
         this.validationConditions.push.apply(this.validationConditions, this.getModelConditions());
-        this.validationConditions.push.apply(this.validationConditions, this.getAmountConditions());
         this.validationConditions.push.apply(this.validationConditions, this.getMiscellaneousConditions());
     }
 
     private getModelConditions(): Array<ValidationCondition<Transaction>> {
         return [
             new ValidationCondition((transaction: Transaction): boolean => {
+                return ValidationCondition.isNotNullNorUndefined(transaction.type);
+            }, "The transaction type is null or undefined."),
+            new ValidationCondition((transaction: Transaction): boolean => {
                 return ValidationCondition.isNotNullNorUndefined(transaction);
             }, "The transaction is null or undefined."),
             new ValidationCondition((transaction: Transaction): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(transaction.transactionHeader.amount);
-            }, "The transaction amount is null or undefined."),
-            new ValidationCondition((transaction: Transaction): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(transaction.transactionHeader.recipientKey);
-            }, "The transaction recipientKey is null or undefined."),
-            new ValidationCondition((transaction: Transaction): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(transaction.transactionHeader.senderKey);
-            }, "The transaction senderKey is null or undefined."),
-            new ValidationCondition((transaction: Transaction): boolean => {
                 return ValidationCondition.isNotNullNorUndefined(transaction.signature);
             }, "The transaction signature is null or undefined."),
-            new ValidationCondition((transaction: Transaction): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(transaction);
-            }, "The transaction date is null or undefined."),
-            new ValidationCondition((transaction: Transaction): boolean => {
-                return ValidationCondition.isNotNullNorUndefined(transaction.type);
-            }, "The transaction type is null or undefined."),
-        ];
-    }
-
-    private getAmountConditions(): Array<ValidationCondition<Transaction>> {
-        return [
-            new ValidationCondition((transaction: Transaction): boolean => {
-                return (transaction.transactionHeader.amount > 0);
-            }, "The transaction amount cannot be a negative value."),
         ];
     }
 
     private getMiscellaneousConditions(): Array<ValidationCondition<Transaction>> {
         return [
-            new ValidationCondition(async (transaction: Transaction): Promise<boolean> => {
-                return new Promise(async (resolve) => {
-                    const senderCurrentState: State = (await this.dataAccessLayer
-                        .getStateAsync(transaction.transactionHeader.senderKey) as State);
-
-                    const senderCurrentCoinAmount = senderCurrentState.amount;
-
-                    resolve(senderCurrentCoinAmount >= transaction.transactionHeader.amount);
-                });
-            }, "The sender does not have sufficient funds."),
             new ValidationCondition((transaction: Transaction): boolean => {
                 if (transaction.type === TransactionType.STAKE) {
                     return transaction.transactionHeader.senderKey === this.constantStore.ADMIN_PUBLIC_KEY;

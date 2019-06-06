@@ -2,6 +2,7 @@ import { CryptoKeyUtil, ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { Block, BlockHeader, BlockType, State } from "@blockr/blockr-models";
 import { Transaction, TransactionHeader, TransactionType } from "@blockr/blockr-models";
+import { TransactionHeaderValidator } from "../../validators/concretes/transactionHeader.validator";
 
 export const getBlock = () => {
     return new Block(
@@ -53,6 +54,12 @@ export const getState = () => {
         10,
     );
 };
+
+export const transactionHeaderValidatorMock = {
+    async validateObjectAsync() {
+        return true;
+    },
+} as unknown as TransactionHeaderValidator;
 
 export const dataAccessLayerMock = {
     async getBlocksByQueryAsync() {
