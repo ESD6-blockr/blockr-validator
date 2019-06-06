@@ -36,7 +36,7 @@ export class RPCCommunicationRepository implements ICommunicationRepository {
             throw new AdapterException("The given onMessageHandler is not of the required type RPCOnMessageHandler.");
         }
 
-        this.server.addProtoService(this.transactionPrototype.TransactionRpcService.service,
+        this.server.addService(this.transactionPrototype.TransactionRpcService.service,
                                     onMessageHandler.implementation);
     }
 
