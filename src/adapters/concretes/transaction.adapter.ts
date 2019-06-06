@@ -13,15 +13,15 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
     }
 
     protected initOnMessageHandlers(): void {
-        const newTransactionHandler: IOnMessageHandler = new RPCOnMessageHandler({
-                addTransaction: this.handleNewTransaction,
+        const newTransactionReceivalHandler: IOnMessageHandler = new RPCOnMessageHandler({
+                addTransaction: this.handleNewTransactionReceival,
             },
         );
 
-        this.communicationRepository.addOnMessageHandler(newTransactionHandler);
+        this.communicationRepository.addOnMessageHandler(newTransactionReceivalHandler);
     }
 
-    private handleNewTransaction(serverUnaryCall: ServerUnaryCall<Transaction>): void {
+    private handleNewTransactionReceival(serverUnaryCall: ServerUnaryCall<Transaction>): void {
         try {
             const transaction: Transaction = serverUnaryCall.request;
             this.getServiceAdapter().addPendingTransactionAsync(transaction);
