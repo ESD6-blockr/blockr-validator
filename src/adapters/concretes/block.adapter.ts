@@ -47,8 +47,6 @@ export class BlockAdapter extends BaseAdapter<IBlockServiceAdapter> {
         });
     }
 
-    // TODO: Add logging
-
     protected initOnMessageHandlers(): void {
         const newProposedBlockHandler: IOnMessageHandler = new P2POnMessageHandler(
             MessageType.NEW_PROPOSED_BLOCK,
