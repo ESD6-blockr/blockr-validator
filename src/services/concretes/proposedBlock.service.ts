@@ -1,21 +1,21 @@
 import { logger } from "@blockr/blockr-logger";
 import { Block } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { BlockAdapter } from "../../adapters";
-import { IBlockServiceAdapter } from "../../adapters/interfaces/blockService.adapter";
+import { ProposedBlockAdapter } from "../../adapters";
+import { IProposedBlockServiceAdapter } from "../../adapters/interfaces/proposedBlockService.adapter";
 import { QueueStore } from "../../stores";
 
 @injectable()
-export class BlockService implements IBlockServiceAdapter {
+export class ProposedBlockService implements IProposedBlockServiceAdapter {
     private readonly queueStore: QueueStore;
-    private readonly blockAdapter: BlockAdapter;
+    private readonly proposedBlockAdapter: ProposedBlockAdapter;
 
     constructor(@inject(QueueStore) queueStore: QueueStore,
-                @inject(BlockAdapter) blockAdapter: BlockAdapter) {
+                @inject(ProposedBlockAdapter) proposedBlockAdapter: ProposedBlockAdapter) {
         this.queueStore = queueStore;
-        this.blockAdapter = blockAdapter;
+        this.proposedBlockAdapter = proposedBlockAdapter;
 
-        this.blockAdapter.setServiceAdapter(this);
+        this.proposedBlockAdapter.setServiceAdapter(this);
     }
 
     public async addProposedBlockAsync(proposedBlock: Block): Promise<void> {
@@ -25,9 +25,5 @@ export class BlockService implements IBlockServiceAdapter {
 
             resolve();
         });
-    }
-    
-    public async addVictoriousBlockAsync(victoriousBlock: Block): Promise<void> {
-        throw new Error("Method not implemented.");
     }
 }

@@ -2,7 +2,8 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { logger } from "@blockr/blockr-logger";
 import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
-import { BlockAdapter } from "../../adapters/concretes/block.adapter";
+import { VictoriousBlockAdapter } from "../../adapters";
+import { ProposedBlockAdapter } from "../../adapters/concretes/proposedBlock.adapter";
 import { BlockJobException } from "../../exceptions/blockJob.exception";
 import { ProposedBlockGenerator } from "../../generators";
 import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
@@ -18,7 +19,8 @@ export class BlockJob extends SchedulableJob {
     private readonly transactionService: TransactionService;
     private readonly constantStore: ConstantStore;
     private readonly queueStore: QueueStore;
-    private readonly blockAdapter: BlockAdapter;
+    private readonly proposedBlockAdapter: ProposedBlockAdapter;
+    private readonly victoriousBlockAdapter: VictoriousBlockAdapter;
 
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator,
@@ -26,7 +28,8 @@ export class BlockJob extends SchedulableJob {
                 @inject(TransactionService) transactionService: TransactionService,
                 @inject(ConstantStore) constantStore: ConstantStore,
                 @inject(QueueStore) queueStore: QueueStore,
-                @inject(BlockAdapter) blockAdapter: BlockAdapter) {
+                @inject(ProposedBlockAdapter) proposedBlockAdapter: ProposedBlockAdapter,
+                @inject(VictoriousBlockAdapter) victoriousBlockAdapter: VictoriousBlockAdapter) {
         super();
         
         this.dataAccessLayer = dataAccessLayer;
@@ -35,7 +38,8 @@ export class BlockJob extends SchedulableJob {
         this.transactionService = transactionService;
         this.constantStore = constantStore;
         this.queueStore = queueStore;
-        this.blockAdapter = blockAdapter;
+        this.proposedBlockAdapter = proposedBlockAdapter;
+        this.victoriousBlockAdapter = victoriousBlockAdapter;
     }
 
     protected async onCycleAsync(): Promise<void> {
@@ -44,7 +48,7 @@ export class BlockJob extends SchedulableJob {
 
             try {
                 const proposedBlock: Block = await this.generateProposedBlockAsync();
-                this.blockAdapter.broadcastNewProposedBlock(proposedBlock);
+                this.proposedBlockAdapter.broadcastNewProposedBlock(proposedBlock);
 
                 const states: State[] = await this.dataAccessLayer.getStatesAsync();
                 const victoriousBlock: Block | undefined = await this.lotteryService
@@ -58,7 +62,7 @@ export class BlockJob extends SchedulableJob {
                 }
                 
                 await this.transactionService.updatePendingTransactions(victoriousBlock);
-                this.blockAdapter.broadcastNewVictoriousBlock(victoriousBlock);
+                this.victoriousBlockAdapter.broadcastNewVictoriousBlock(victoriousBlock);
 
                 resolve();
             } catch (error) {
