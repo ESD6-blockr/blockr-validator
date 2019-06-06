@@ -67,13 +67,15 @@ export class BlockValidator extends BaseValidator<Block> {
     private getBlockConditions(): Array<ValidationCondition<Block>> {
         return [
             new ValidationCondition((block: Block): boolean => {
-                return block.blockHeader.validator === this.constantStore.ADMIN_PUBLIC_KEY &&
-                    block.blockType === BlockType.GENESIS
+                const isGenesisCondition = block.blockHeader.validator === this.constantStore.ADMIN_PUBLIC_KEY &&
+                    block.blockType === BlockType.GENESIS;
+
+                const isRegularCondition = block.blockHeader.validator !== this.constantStore.ADMIN_PUBLIC_KEY &&
+                    block.blockType === BlockType.REGULAR;
+
+                return isGenesisCondition
                     ? true
-                    : (block.blockHeader.validator  !== this.constantStore.ADMIN_PUBLIC_KEY &&
-                        block.blockType === BlockType.REGULAR
-                        ? true
-                        : false);
+                    : isRegularCondition;
             }, "The block type is incorrect."),
         ];
     }
