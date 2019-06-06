@@ -61,8 +61,8 @@ export class ConstantStore {
         this.DB_NAME = process.env.DB_NAME || "";
         this.INITIAL_PEER = process.env.INITIAL_PEER || "";
         this.DEFAULT_STAKE_AMOUNT = 1;
-        this.RPC_SERVER_HOST = "127.0.0.1";
-        this.RPC_SERVER_PORT = "5678";
+        this.RPC_SERVER_HOST = process.env.RPC_SERVER_HOST || "";
+        this.RPC_SERVER_PORT = process.env.RPC_SERVER_PORT || "";
         console.log(__dirname);
         this.RPC_PROTOCOL_FILE_PATH = `${join(__dirname, "../utils/")}transactions.proto`;
     }
