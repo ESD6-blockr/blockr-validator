@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 import { ConstantStore } from "../../stores";
 import { BlockHeaderValidator, TransactionValidator, ValidatorBus } from "../../validators";
-import { dataAccessLayerMock, objectHasherMock } from "../constants/model.constants";
+import { dataAccessLayerMock, objectHasherMock, transactionHeaderValidatorMock } from "../constants/model.constants";
 import { UNSUPORTED_OBJECTS, VALID_OBJECTS } from "../constants/validatorbus.constants";
 
 jest.mock("@blockr/blockr-logger");
@@ -12,7 +12,8 @@ let validatorBus: ValidatorBus;
 beforeEach(() => {
     const validators = [
         new BlockHeaderValidator(dataAccessLayerMock, objectHasherMock),
-        new TransactionValidator(dataAccessLayerMock, objectHasherMock, new ConstantStore()),
+        new TransactionValidator(dataAccessLayerMock, objectHasherMock,
+            new ConstantStore(), transactionHeaderValidatorMock),
     ];
 
     validatorBus = new ValidatorBus(validators);

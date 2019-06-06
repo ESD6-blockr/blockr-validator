@@ -3,7 +3,7 @@
  */
 import { CryptoKeyUtil, ObjectHasher } from "@blockr/blockr-crypto";
 import { DataAccessLayer, DataSource, IClientConfiguration, MongoDBConfiguration } from "@blockr/blockr-data-access";
-import { BlockHeader, Transaction } from "@blockr/blockr-models";
+import { Block, BlockHeader, Transaction, TransactionHeader } from "@blockr/blockr-models";
 import { Peer } from "@blockr/blockr-p2p-lib";
 import { PeerType } from "@blockr/blockr-p2p-lib/dist/enums";
 import { Container } from "inversify";
@@ -16,6 +16,8 @@ import { LotteryService, NodeService, StateService, TransactionService, Victorio
 import { ConstantStore, QueueStore } from "../stores";
 import { FileUtils } from "../utils";
 import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "../validators";
+import { BlockValidator } from "../validators/concretes/block.validator";
+import { TransactionHeaderValidator } from "../validators/concretes/transactionHeader.validator";
 
 /**
  * Dependency container
@@ -51,8 +53,10 @@ DI_CONTAINER.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
 // Transients
 DI_CONTAINER.bind<DataAccessLayer>(DataAccessLayer).toSelf().inTransientScope();
 
+DI_CONTAINER.bind<IValidator<Block>>("Validators").to(BlockValidator).inTransientScope();
 DI_CONTAINER.bind<IValidator<BlockHeader>>("Validators").to(BlockHeaderValidator).inTransientScope();
 DI_CONTAINER.bind<IValidator<Transaction>>("Validators").to(TransactionValidator).inTransientScope();
+DI_CONTAINER.bind<IValidator<TransactionHeader>>("Validators").to(TransactionHeaderValidator).inTransientScope();
 DI_CONTAINER.bind<ValidatorBus>(ValidatorBus).toSelf().inTransientScope();
 
 DI_CONTAINER.bind<GenesisBlockGenerator>(GenesisBlockGenerator).toSelf().inTransientScope();
