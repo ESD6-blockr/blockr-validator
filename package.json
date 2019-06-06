@@ -4,8 +4,9 @@
   "description": "Blockr validator package",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "build:docker": "tslint --project tsconfig.json && tsc -p tsconfig.json",
+    "copy-proto": "cp src/utils/transactions.proto dist/utils/transactions.proto",
+    "build": "tsc -p tsconfig.json && npm run copy-proto",
+    "build:docker": "tslint --project tsconfig.json && tsc -p tsconfig.json && npm run copy-proto",
     "build-watch": "tsc -w -p tsconfig.json",
     "test": "jest --collectCoverage || exit 0",
     "lint": "tslint --project tsconfig.json",
