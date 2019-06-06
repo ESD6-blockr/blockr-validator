@@ -26,14 +26,14 @@ export class StateService {
                         .getStateAsync(transaction.transactionHeader.recipientKey);
 
                     senderState = this.updateStateAmount(
-                        "-",
+                        Operator.MINUS,
                         transaction.transactionHeader.amount,
                         transaction.transactionHeader.senderKey,
                         senderState,
                     );
 
                     recipientState = this.updateStateAmount(
-                        "+",
+                        Operator.PLUS,
                         transaction.transactionHeader.amount,
                         transaction.transactionHeader.recipientKey,
                         recipientState,
@@ -50,7 +50,7 @@ export class StateService {
         });
     }
     
-    private updateStateAmount(operator: string, amount: number, key: string, state?: State): State {
+    private updateStateAmount(operator: Operator, amount: number, key: string, state?: State): State {
         if (state) {
             operator === "+"
                 ? state.amount += amount
@@ -69,4 +69,7 @@ export class StateService {
     }
 }
 
-
+enum Operator {
+    PLUS = "+",
+    MINUS = "-",
+}
