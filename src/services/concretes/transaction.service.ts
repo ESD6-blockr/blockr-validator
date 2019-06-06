@@ -2,6 +2,7 @@ import { Block, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { ITransactionServiceAdapter, TransactionAdapter } from "../../adapters";
 import { QueueStore } from "../../stores/queue.store";
+import { logger } from "@blockr/blockr-logger";
 
 @injectable()
 export class TransactionService implements ITransactionServiceAdapter {
@@ -18,6 +19,8 @@ export class TransactionService implements ITransactionServiceAdapter {
 
     public addPendingTransactionAsync(transaction: Transaction): Promise<void> {
         return new Promise((resolve) => {
+            logger.info("[TransactionService] Adding new transaction to PendingTransactionQueue.");
+
             this.queueStore.pendingTransactionQueue.add(transaction);
 
             resolve();
@@ -26,6 +29,8 @@ export class TransactionService implements ITransactionServiceAdapter {
 
     public async updatePendingTransactions(victoriousBlock: Block): Promise<void> {
         return new Promise((resolve) => {
+            logger.info("[TransactionService] Updating pending transactions in PendingTransactionQueue.");
+
             for (const transaction of victoriousBlock.transactions) {
                 // There is no need to check whether the transaction is present in the queue as the delete method
                 // will already perform this check and will simply return false if the element could not be found.
