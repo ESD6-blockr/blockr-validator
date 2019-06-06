@@ -45,8 +45,7 @@ export class BlockJob extends SchedulableJob {
 
                 const states: State[] = await this.dataAccessLayer.getStatesAsync();
                 const victoriousBlock: Block | undefined = await this.lotteryService
-                                                            .drawWinningBlock(proposedBlock.blockHeader.parentHash,
-                                                                              states);
+                    .drawWinningBlock(proposedBlock.blockHeader.parentHash, states);
 
                 if (!victoriousBlock) {
                     logger.warn("[BlockJob] Skipped current cycle because no victorious block could be chosen.");
@@ -83,12 +82,10 @@ export class BlockJob extends SchedulableJob {
             }
             
             const lastBlock: Block = blockChain[blockChain.length - 1];
+            
             const proposedBlock: Block = await this.proposedBlockGenerator
-                                                        .generateProposedBlockAsync(
-                                                            lastBlock,
-                                                            Array.from(this.queueStore.pendingTransactionQueue),
-                                                            this.constantStore.VALIDATOR_VERSION,
-                                                            this.constantStore.VALIDATOR_PUBLIC_KEY);
+                .generateProposedBlockAsync(lastBlock, Array.from(this.queueStore.pendingTransactionQueue),
+                    this.constantStore.VALIDATOR_VERSION, this.constantStore.VALIDATOR_PUBLIC_KEY);
             
             resolve(proposedBlock);
         });

@@ -31,7 +31,7 @@ describe("Proposed block generator", () => {
         const transactions: Transaction[] = proposedBlock.transactions;
 
         expect(transactions[0].type).toBe(TransactionType.COIN);
-        expect(transactions[0].amount).toBe(10);
-        expect(transactions[0].date.toDateString()).toBe(new Date().toDateString());
+        expect(transactions[0].transactionHeader.amount).toBe(10);
+        expect(transactions[0].transactionHeader.date.toDateString()).toBe(new Date().toDateString());
     });
 });

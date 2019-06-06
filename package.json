@@ -21,11 +21,11 @@
     "url": "https://github.com/ESD6-blockr/blockr-validator/issues"
   },
   "dependencies": {
-    "@blockr/blockr-crypto": "^1.0.0-build.3",
-    "@blockr/blockr-data-access": "^3.0.0-build.28",
+    "@blockr/blockr-crypto": "^1.0.0-build.4",
+    "@blockr/blockr-data-access": "^3.0.0-build.29",
     "@blockr/blockr-logger": "^1.3.0",
-    "@blockr/blockr-models": "^1.4.0-build.10",
-    "@blockr/blockr-p2p-lib": "^1.0.1-build.8",
+    "@blockr/blockr-models": "^1.4.0-build.13",
+    "@blockr/blockr-p2p-lib": "^1.0.1-build.9",
     "@grpc/proto-loader": "^0.5.1",
     "@sentry/node": "^4.6.6",
     "grpc": "^1.21.1",

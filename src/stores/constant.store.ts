@@ -35,6 +35,8 @@ export class ConstantStore {
     public DB_NAME: string;
     /* The initial peer */
     public INITIAL_PEER: string;
+    /* Default stake amount */
+    public DEFAULT_STAKE_AMOUNT: number;
     /* The host for the RPC server */
     public RPC_SERVER_HOST: string;
     /* The port for the RPC server */
@@ -58,6 +60,7 @@ export class ConstantStore {
         this.DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING || "";
         this.DB_NAME = process.env.DB_NAME || "";
         this.INITIAL_PEER = process.env.INITIAL_PEER || "";
+        this.DEFAULT_STAKE_AMOUNT = 1;
         this.RPC_SERVER_HOST = "127.0.0.1";
         this.RPC_SERVER_PORT = "5678";
         this.RPC_PROTOCOL_FILE_PATH = `${join(__dirname, "../utils/")}.transactions.proto`;

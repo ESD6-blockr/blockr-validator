@@ -26,21 +26,21 @@ describe("Transaction validator", () => {
 
     it.each(VALID_RECIPIENT_KEYS)("Should succeed with a valid recipient key", async (recipientKey) => {
         const transaction = getTransaction();
-        transaction.recipientKey = recipientKey;
+        transaction.transactionHeader.recipientKey = recipientKey;
 
         expect((await validator.validateObjectAsync(transaction))[1]).toBe(true);
     });
 
     it.each(VALID_AMOUNTS)("Should succeed with a valid transaction amount", async (amount) => {
         const transaction = getTransaction();
-        transaction.amount = amount;
+        transaction.transactionHeader.amount = amount;
 
         expect((await validator.validateObjectAsync(transaction))[1]).toBe(true);
     });
 
     it.each(INVALID_AMOUNTS)("Should fail with an invalid transaction amount", async (amount) => {
         const transaction = getTransaction();
-        transaction.amount = amount;
+        transaction.transactionHeader.amount = amount;
 
         try {
             await validator.validateObjectAsync(transaction);

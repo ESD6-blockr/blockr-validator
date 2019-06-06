@@ -1,12 +1,13 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { logger } from "@blockr/blockr-logger";
-import { Block, State, Transaction, TransactionType } from "@blockr/blockr-models";
+import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { BlockchainAdapter } from "../../adapters/concretes/blockchain.adapter";
 import { IBlockchainServiceAdapter } from "../../adapters/interfaces/blockchainService.adapter";
 import { NodeStartupException } from "../../exceptions";
 import { GenesisBlockGenerator } from "../../generators";
 import { AdminKeyService } from "./adminKey.service";
+import { StateService } from "./state.service";
 
 @injectable()
 export class BlockchainInitializationService implements IBlockchainServiceAdapter {
@@ -14,15 +15,18 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
     private readonly genesisBlockGenerator: GenesisBlockGenerator;
     private readonly adminKeyService: AdminKeyService;
     private readonly blockchainAdapter: BlockchainAdapter;
+    private readonly stateService: StateService;
 
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(GenesisBlockGenerator) genesisBlockGenerator: GenesisBlockGenerator,
                 @inject(AdminKeyService) adminKeyService: AdminKeyService,
-                @inject(BlockchainAdapter) blockchainAdapter: BlockchainAdapter) {
+                @inject(BlockchainAdapter) blockchainAdapter: BlockchainAdapter,
+                @inject(StateService) stateService: StateService) {
         this.dataAccessLayer = dataAccessLayer;
         this.genesisBlockGenerator = genesisBlockGenerator;
         this.adminKeyService = adminKeyService;
         this.blockchainAdapter = blockchainAdapter;
+        this.stateService = stateService;
 
         this.blockchainAdapter.setServiceAdapter(this);
     }
@@ -83,10 +87,11 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
                 logger.info("[BlockchainInitializationService] Initiating blockchain.");
 
                 const genesisBlock: Block = await this.genesisBlockGenerator.generateGenesisBlockAsync();
-                const genesisState: State = this.generateGenesisState(genesisBlock.transactions);
+                const states: State[] = await this.stateService
+                    .updateStatesForTransactionsAsync(Array.from(genesisBlock.transactions));
 
                 await this.dataAccessLayer.addBlockAsync(genesisBlock);
-                await this.dataAccessLayer.setStatesAsync([genesisState]);
+                await this.dataAccessLayer.setStatesAsync(states);
 
                 logger.info("[BlockchainInitializationService] Successfully initiated blockchain.");
 
@@ -97,12 +102,4 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
         });
     }
 
-    private generateGenesisState(transactions: Transaction[]): State {
-        const stakeTransaction: Transaction = transactions
-            .find((t) => t.type === TransactionType.STAKE) as Transaction;
-        const coinTransaction: Transaction = transactions
-            .find((t) => t.type === TransactionType.COIN) as Transaction;
-
-        return new State(stakeTransaction.senderKey, coinTransaction.amount, stakeTransaction.amount);
-    }
 }

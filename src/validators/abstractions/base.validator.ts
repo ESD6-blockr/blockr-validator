@@ -4,10 +4,10 @@ import { logger } from "@blockr/blockr-logger";
 import { ValidationCondition } from "../concretes/validation.condition";
 import { IValidator } from "../interfaces/validator";
 
-export abstract class BaseValidator<IModel> implements IValidator<IModel> {
-    protected readonly dataAccessLayer: DataAccessLayer;
-    protected readonly objectHasher: ObjectHasher;
-    protected readonly validationConditions: Array<ValidationCondition<IModel>> = [];
+export abstract class BaseValidator<T> implements IValidator<T> {
+    protected dataAccessLayer: DataAccessLayer;
+    protected objectHasher: ObjectHasher;
+    protected validationConditions: Array<ValidationCondition<T>> = [];
 
     constructor(dataAccessLayer: DataAccessLayer, objectHasher: ObjectHasher) {
         this.dataAccessLayer = dataAccessLayer;
@@ -16,7 +16,7 @@ export abstract class BaseValidator<IModel> implements IValidator<IModel> {
         this.initConditions();
     }
 
-    public async validateObjectAsync(object: IModel): Promise<[IModel, boolean]> {
+    public async validateObjectAsync(object: T): Promise<[T, boolean]> {
         return new Promise(async (resolve, reject) => {
             try {
                 logger.info(`Validating ${(object as unknown as object).constructor.name}`);
@@ -34,7 +34,7 @@ export abstract class BaseValidator<IModel> implements IValidator<IModel> {
 
     protected abstract initConditions(): void;
 
-    private async everyConditionIsValidAsync(object: IModel, conditions: Array<ValidationCondition<IModel>>)
+    private async everyConditionIsValidAsync(object: T, conditions: Array<ValidationCondition<T>>)
                                             : Promise<boolean> {
         return new Promise(async (resolve, reject) => {
             for (const validationCondition of conditions) {
