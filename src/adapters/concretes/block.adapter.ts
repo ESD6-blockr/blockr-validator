@@ -1,3 +1,4 @@
+import { logger } from "@blockr/blockr-logger";
 import { Block } from "@blockr/blockr-models";
 import { Message } from "@blockr/blockr-p2p-lib";
 import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
@@ -24,6 +25,8 @@ export class BlockAdapter extends BaseAdapter<IBlockServiceAdapter> {
 
     public async broadcastNewProposedBlock(proposedBlock: Block): Promise<void> {
         return new Promise((resolve) => {
+            logger.info("[BlockAdapter] Broadcasting new proposed block.");
+
             const messageSendingHandler: IMessageSendingHandler = new P2PMessageSendingHandler(
                 new Message(MessageType.NEW_PROPOSED_BLOCK, JSON.stringify(proposedBlock)),
             );
@@ -34,6 +37,8 @@ export class BlockAdapter extends BaseAdapter<IBlockServiceAdapter> {
 
     public async broadcastNewVictoriousBlock(victoriousBlock: Block): Promise<void> {
         return new Promise((resolve) => {
+            logger.info("[BlockAdapter] Broadcasting new victorious block.");
+
             const messageSendingHandler: IMessageSendingHandler = new P2PMessageSendingHandler(
                 new Message(MessageType.NEW_VICTORIOUS_BLOCK, JSON.stringify(victoriousBlock)),
             );
@@ -65,6 +70,8 @@ export class BlockAdapter extends BaseAdapter<IBlockServiceAdapter> {
     private async handleNewProposedBlock(message: Message): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
+                logger.info("[BlockAdapter] Received new proposed block.");
+
                 if (!message.body) {
                     throw new AdapterException("The required body is missing in the new proposed block's message.");
                 }
@@ -82,6 +89,8 @@ export class BlockAdapter extends BaseAdapter<IBlockServiceAdapter> {
     private async handleNewVictoriousBlock(message: Message): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
+                logger.info("[BlockAdapter] Received new victorious block.");
+
                 if (!message.body) {
                     throw new AdapterException("The required body is missing in the new victorious block's message.");
                 }
