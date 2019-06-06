@@ -44,6 +44,7 @@ export class BlockValidator extends BaseValidator<Block> {
     }
 
     protected initConditions(): void {
+        this.validationConditions.push.apply(this.validationConditions, this.getModelConditions());
         this.validationConditions.push.apply(this.validationConditions, this.getBlockConditions());
     }
 
@@ -73,9 +74,7 @@ export class BlockValidator extends BaseValidator<Block> {
                 const isRegularCondition = block.blockHeader.validator !== this.constantStore.ADMIN_PUBLIC_KEY &&
                     block.blockType === BlockType.REGULAR;
 
-                return isGenesisCondition
-                    ? true
-                    : isRegularCondition;
+                return isGenesisCondition || isRegularCondition;
             }, "The block type is incorrect."),
         ];
     }
