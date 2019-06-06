@@ -1,3 +1,4 @@
+import { logger } from "@blockr/blockr-logger";
 import { loadSync } from "@grpc/proto-loader";
 import { loadPackageDefinition, Server, ServerCredentials } from "grpc";
 import { inject, injectable } from "inversify";
@@ -28,6 +29,9 @@ export class RPCCommunicationRepository implements ICommunicationRepository {
 
         this.transactionPrototype = loadPackageDefinition(packageDefinition).transactions;
         this.server = this.initServer();
+
+        logger.info("[RPCCommunicationRepository] Starting RPC server.");
+        this.server.start();
     }
 
     public addOnMessageHandler(onMessageHandler: IOnMessageHandler): void {
@@ -40,10 +44,11 @@ export class RPCCommunicationRepository implements ICommunicationRepository {
     }
 
     private initServer(): Server {
+        logger.info("[RPCCommunicationRepository] Initializing RPC server.");
+
         const server = new Server();
         server.bind(`${this.constantStore.RPC_SERVER_HOST}:${this.constantStore.RPC_SERVER_PORT}`,
                     ServerCredentials.createInsecure());
-        server.start();
     
         return server;
       }

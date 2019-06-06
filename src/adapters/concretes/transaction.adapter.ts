@@ -1,5 +1,8 @@
+import { logger } from "@blockr/blockr-logger";
+import { Transaction } from "@blockr/blockr-models";
+import { ServerUnaryCall } from "grpc";
 import { inject, injectable } from "inversify";
-import { BaseAdapter } from "..";
+import { BaseAdapter, IOnMessageHandler, RPCOnMessageHandler } from "..";
 import { RPCCommunicationRepository } from "../communication/repositories/concretes/rpcCommunication.repository";
 import { ITransactionServiceAdapter } from "../interfaces/transactionService.adapter";
 
@@ -9,22 +12,21 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
         super(communicationRepository);
     }
 
-    // TODO: This class should be properly implemented.
-
     protected initOnMessageHandlers(): void {
-        // const newTransactionRequestHandler: IOnMessageHandler = new RPCOnMessageHandler({
-        //         addTransaction: this.handleNewTransaction,
-        //     },
-        // );
+        const newTransactionHandler: IOnMessageHandler = new RPCOnMessageHandler({
+                addTransaction: this.handleNewTransaction,
+            },
+        );
 
-        // this.communicationRepository.addOnMessageHandler(newTransactionRequestHandler);
+        this.communicationRepository.addOnMessageHandler(newTransactionHandler);
     }
 
-    private handleNewTransaction(): void {
-        // try {
-        //     this.getServiceAdapter().addPendingTransactionAsync(transaction);
-        // } catch (error) {
-        //     logger.error(error);
-        // }
+    private handleNewTransaction(serverUnaryCall: ServerUnaryCall<Transaction>): void {
+        try {
+            const transaction: Transaction = serverUnaryCall.request;
+            this.getServiceAdapter().addPendingTransactionAsync(transaction);
+        } catch (error) {
+            logger.error(error);
+        }
     }
 }

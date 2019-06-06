@@ -1,8 +1,8 @@
+import { logger } from "@blockr/blockr-logger";
 import { Block, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { ITransactionServiceAdapter, TransactionAdapter } from "../../adapters";
 import { QueueStore } from "../../stores/queue.store";
-import { logger } from "@blockr/blockr-logger";
 
 @injectable()
 export class TransactionService implements ITransactionServiceAdapter {
