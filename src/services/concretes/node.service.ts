@@ -1,6 +1,6 @@
 import { logger } from "@blockr/blockr-logger";
 import { inject, injectable } from "inversify";
-import { BlockJob } from "../../jobs/concretes/block.job";
+import { BlockJob } from "../../jobs";
 import { BlockchainInitializationService } from "./blockchainInitialization.service";
 
 @injectable()

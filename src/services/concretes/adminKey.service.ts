@@ -5,7 +5,7 @@ import { KeyAdapter } from "../../adapters/concretes/key.adapter";
 import { IKeyServiceAdapter } from "../../adapters/interfaces/keyService.adapter";
 import { AdapterException } from "../../exceptions/adapter.exception";
 import { ConstantStore } from "../../stores";
-import { FileUtils } from "../../utils/file.util";
+import { FileUtils } from "../../utils";
 
 @injectable()
 export class AdminKeyService implements IKeyServiceAdapter {

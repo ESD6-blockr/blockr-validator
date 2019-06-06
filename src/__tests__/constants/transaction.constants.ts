@@ -1,10 +1,16 @@
-import { Transaction, TransactionType } from "@blockr/blockr-models";
+import { Transaction, TransactionHeader, TransactionType } from "@blockr/blockr-models";
 
 export const getTransaction = (): Transaction => {
-    const transaction = new Transaction(TransactionType.COIN, "TEST_RECIPIENT_KEY", "TEST_SENDER_KEY", 1, new Date());
-    transaction.signature = "TEST_SIGNATURE";
-
-    return transaction;
+    return new Transaction(
+        TransactionType.COIN,
+        new TransactionHeader(
+            "TEST_RECIPIENT_KEY",
+            "TEST_SENDER_KEY",
+            1,
+            new Date(),
+        ),
+        "TEST_SIGNATURE",
+    );
 };
 
 export const VALID_TYPES = [

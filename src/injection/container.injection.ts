@@ -12,13 +12,10 @@ import { BlockchainAdapter } from "../adapters/concretes/blockchain.adapter";
 import { KeyAdapter } from "../adapters/concretes/key.adapter";
 import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
 import { BlockJob } from "../jobs";
-import { NodeService } from "../services";
-import { AdminKeyService } from "../services/concretes/adminKey.service";
-import { BlockchainInitializationService } from "../services/concretes/blockchainInitialization.service";
-import { LotteryService } from "../services/concretes/lottery.service";
-import { TransactionService } from "../services/concretes/transaction.service";
+import { AdminKeyService, BlockchainInitializationService } from "../services";
+import { LotteryService, NodeService, StateService, TransactionService } from "../services";
 import { ConstantStore, QueueStore } from "../stores";
-import { FileUtils } from "../utils/file.util";
+import { FileUtils } from "../utils";
 import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "../validators";
 
 /**
@@ -67,6 +64,7 @@ DI_CONTAINER.bind<TransactionService>(TransactionService).toSelf().inTransientSc
 DI_CONTAINER.bind<AdminKeyService>(AdminKeyService).toSelf().inTransientScope();
 DI_CONTAINER.bind<BlockchainInitializationService>(BlockchainInitializationService).toSelf().inTransientScope();
 DI_CONTAINER.bind<NodeService>(NodeService).toSelf().inTransientScope();
+DI_CONTAINER.bind<StateService>(StateService).toSelf().inTransientScope();
 
 DI_CONTAINER.bind<BlockchainAdapter>(BlockchainAdapter).toSelf().inTransientScope();
 DI_CONTAINER.bind<KeyAdapter>(KeyAdapter).toSelf().inTransientScope();

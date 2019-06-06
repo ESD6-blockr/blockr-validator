@@ -1,4 +1,4 @@
-import { Block, BlockHeader, Transaction } from "@blockr/blockr-models";
+import { Block, BlockHeader, BlockType, Transaction } from "@blockr/blockr-models";
 import { BlockGeneratorException } from "../../exceptions";
 
 export abstract class BlockGenerator {
@@ -7,11 +7,14 @@ export abstract class BlockGenerator {
                                        parentHash: string, validator: string): Promise<Block> {
         return new Promise(async (resolve, reject) => {
             try {
-                const blockheader = await this.generateBlockHeaderAsync(version, blockNumber,
-                                                                        date, blockReward, validator);
+                const blockheader = await this.generateBlockHeaderAsync(
+                    version, blockNumber,
+                    date, blockReward, validator,
+                );
+
                 blockheader.parentHash = parentHash;
 
-                resolve(new Block(blockheader, transactions));
+                resolve(new Block(BlockType.REGULAR, blockheader, transactions));
             } catch (error) {
                 reject(new BlockGeneratorException(error.message));
             }
