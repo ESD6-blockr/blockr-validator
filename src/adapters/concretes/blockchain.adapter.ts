@@ -59,14 +59,16 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
         const blockchainAndStatesRequestHandler: IOnMessageHandler = new P2POnMessageHandler(
             MessageType.BLOCKCHAIN_AND_STATES_REQUEST,
             async (message: Message, senderGuid: string, response: RESPONSE_TYPE) => {
-                await this.handleBlockchainRequest(message, senderGuid, response).catch((error) => logger.error(error));
+                await this.handleBlockchainRequestAsync(
+                    message, senderGuid, response).catch((error) => logger.error(error));
             },
         );
 
         this.communicationRepository.addOnMessageHandler(blockchainAndStatesRequestHandler);
     }
 
-    private handleBlockchainRequest(_message: Message, _senderGuid: string, response: RESPONSE_TYPE): Promise<void> {
+    private handleBlockchainRequestAsync(
+            _message: Message, _senderGuid: string, response: RESPONSE_TYPE): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
                 const blockchain = await this.getServiceAdapter().getBlockchainAsync();

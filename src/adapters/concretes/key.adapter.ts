@@ -45,14 +45,15 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
         const adminKeyRequestHandler: IOnMessageHandler = new P2POnMessageHandler(
             MessageType.ADMIN_KEY_REQUEST,
             async (message: Message, senderGuid: string, response: RESPONSE_TYPE) => {
-                await this.handleAdminKeyRequest(message, senderGuid, response).catch((error) => logger.error(error));
+                await this.handleAdminKeyRequestAsync(
+                    message, senderGuid, response).catch((error) => logger.error(error));
             },
         );
 
         this.communicationRepository.addOnMessageHandler(adminKeyRequestHandler);
     }
 
-    private handleAdminKeyRequest(_message: Message, _senderGuid: string, response: RESPONSE_TYPE): Promise<void> {
+    private handleAdminKeyRequestAsync(_message: Message, _senderGuid: string, response: RESPONSE_TYPE): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
                 const key: string = await this.getServiceAdapter().getAdminKeyFromFileAsync();
