@@ -52,7 +52,7 @@ export class StateService {
     
     private updateStateAmount(operator: Operator, amount: number, key: string, state?: State): State {
         if (state) {
-            operator === "+"
+            operator === Operator.PLUS
                 ? state.amount += amount
                 : state.amount -= amount;
 
@@ -61,9 +61,9 @@ export class StateService {
 
         return new State(
             key,
-            operator === "+"
-                ? 0 + amount
-                : 0 - amount,
+            operator === Operator.PLUS
+                ? (0 + amount)
+                : (0 - amount),
             this.constantStore.DEFAULT_STAKE_AMOUNT,
         );
     }
