@@ -7,9 +7,10 @@ import { BlockHeader, Transaction } from "@blockr/blockr-models";
 import { Peer } from "@blockr/blockr-p2p-lib";
 import { PeerType } from "@blockr/blockr-p2p-lib/dist/enums";
 import { Container } from "inversify";
-import { P2PCommunicationRepository } from "../adapters";
+import { P2PCommunicationRepository, RPCCommunicationRepository } from "../adapters";
 import { BlockchainAdapter } from "../adapters/concretes/blockchain.adapter";
 import { KeyAdapter } from "../adapters/concretes/key.adapter";
+import { TransactionAdapter } from "../adapters/concretes/transaction.adapter";
 import { GenesisBlockGenerator, ProposedBlockGenerator } from "../generators";
 import { BlockJob } from "../jobs";
 import { AdminKeyService, BlockchainInitializationService } from "../services";
@@ -40,6 +41,7 @@ DI_CONTAINER.bind<IClientConfiguration>("Configuration")
                                                               constantStore.DB_NAME));
 DI_CONTAINER.bind<QueueStore>(QueueStore).toSelf().inSingletonScope();
 DI_CONTAINER.bind<P2PCommunicationRepository>(P2PCommunicationRepository).toSelf().inSingletonScope();
+DI_CONTAINER.bind<RPCCommunicationRepository>(RPCCommunicationRepository).toSelf().inSingletonScope();
 DI_CONTAINER.bind<Peer>(Peer).toConstantValue(new Peer(PeerType.VALIDATOR));
 
 // Requests
@@ -68,5 +70,6 @@ DI_CONTAINER.bind<StateService>(StateService).toSelf().inTransientScope();
 
 DI_CONTAINER.bind<BlockchainAdapter>(BlockchainAdapter).toSelf().inTransientScope();
 DI_CONTAINER.bind<KeyAdapter>(KeyAdapter).toSelf().inTransientScope();
+DI_CONTAINER.bind<TransactionAdapter>(TransactionAdapter).toSelf().inTransientScope();
 
 export default DI_CONTAINER;

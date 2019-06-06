@@ -1,13 +1,27 @@
-import { Block } from "@blockr/blockr-models";
+import { Block, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
+import { ITransactionServiceAdapter, TransactionAdapter } from "../../adapters";
 import { QueueStore } from "../../stores/queue.store";
 
 @injectable()
-export class TransactionService {
+export class TransactionService implements ITransactionServiceAdapter {
     private readonly queueStore: QueueStore;
+    private readonly transactionAdapter: TransactionAdapter;
 
-    constructor(@inject(QueueStore) queueStore: QueueStore) {
+    constructor(@inject(QueueStore) queueStore: QueueStore,
+                @inject(TransactionAdapter) transactionAdapter: TransactionAdapter) {
         this.queueStore = queueStore;
+        this.transactionAdapter = transactionAdapter;
+
+        this.transactionAdapter.setServiceAdapter(this);
+    }
+
+    public addPendingTransactionAsync(transaction: Transaction): Promise<void> {
+        return new Promise((resolve) => {
+            this.queueStore.pendingTransactionQueue.add(transaction);
+
+            resolve();
+        });
     }
 
     public async updatePendingTransactions(victoriousBlock: Block): Promise<void> {
