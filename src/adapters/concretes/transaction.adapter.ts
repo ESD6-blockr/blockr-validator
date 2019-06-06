@@ -18,21 +18,27 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
 
     protected initOnMessageHandlers(): void {
         const newTransactionReceivalHandler: IOnMessageHandler = new RPCOnMessageHandler({
-                addTransaction: this.handleNewTransactionReceival,
+                addTransaction: this.handleNewTransactionAsync,
             },
         );
 
         this.communicationRepository.addOnMessageHandler(newTransactionReceivalHandler);
     }
 
-    private handleNewTransactionReceival(serverUnaryCall: ServerUnaryCall<Transaction>): void {
-        try {
-            const transaction: Transaction = serverUnaryCall.request;
-
-            this.getValidatorBus().validateAsync([transaction]);
-            this.getServiceAdapter().addPendingTransactionAsync(transaction);
-        } catch (error) {
-            logger.error(error);
-        }
+    private async handleNewTransactionAsync(serverUnaryCall: ServerUnaryCall<Transaction>): Promise<void> {
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction: Transaction = serverUnaryCall.request;
+    
+                this.getValidatorBus().validateAsync([transaction]);
+                this.getServiceAdapter().addPendingTransactionAsync(transaction);
+                
+                resolve();
+            } catch (error) {
+                logger.error(error);
+                
+                reject(error);
+            }
+        });
     }
 }
