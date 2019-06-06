@@ -17,8 +17,6 @@ export class NodeService {
 
     public async start(): Promise<void> {
         return new Promise(async (resolve, reject) => {
-            logger.info(`${this.constructor.name} is starting.`);
-
             try {
                 await this.blockchainInitializationService.initiateBlockchainIfInexistentAsync();
                 await this.scheduleBlockJobAsync();
