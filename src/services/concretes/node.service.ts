@@ -20,7 +20,6 @@ export class NodeService {
             logger.info(`${this.constructor.name} is starting.`);
 
             try {
-                // TODO: Somehow grab validator's public key and save in ConstantStore
                 await this.blockchainInitializationService.initiateBlockchainIfInexistentAsync();
                 await this.scheduleBlockJobAsync();
     
@@ -36,8 +35,6 @@ export class NodeService {
             logger.info("[NodeService] Scheduling Block Job.");
         
             // TODO: Implement & test new P2P
-
-            // TODO: Make sure the jobs on all nodes are exactly synced. Using UTC time could be a viable solution.
             
             await this.blockJob.scheduleAsync(1);
             
