@@ -67,5 +67,7 @@ export class ConstantStore {
         this.RPC_SERVER_PORT = process.env.RPC_SERVER_PORT || "";
         this.RPC_PROTOCOL_FILE_PATH = `${join(__dirname, "../utils/")}transactions.proto`;
         this.PEER_TO_PEER_NETWORK_PORT = process.env.PEER_TO_PEER_NETWORK_PORT || "8081";
+
+        console.log(this.PEER_TO_PEER_NETWORK_PORT);
     }
 }
