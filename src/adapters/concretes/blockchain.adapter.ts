@@ -23,6 +23,7 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     }
 
     public shouldGenerateGenesisBlock(): boolean {
+    // tslint:disable-next-line: no-console
         console.log("INITIAL_PEER", (this.communicationRepository as P2PCommunicationRepository)
         .getPeerOfType(PeerType.INITIAL_PEER));
         return (this.communicationRepository as P2PCommunicationRepository)
