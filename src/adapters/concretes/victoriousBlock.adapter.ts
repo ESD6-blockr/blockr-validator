@@ -60,7 +60,7 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
 
                 resolve(super.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock));
             } catch (error) {
-                logger.error(error);
+                logger.error(error, "G");
             }
         });
     }
