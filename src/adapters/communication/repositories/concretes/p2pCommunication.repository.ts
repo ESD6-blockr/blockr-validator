@@ -46,6 +46,8 @@ export class P2PCommunicationRepository implements ICommunicationRepository {
     }
 
     public getPeerOfType(peerType: PeerType): [string, string] | undefined {
+        // tslint:disable-next-line: no-console
+        console.log("getPeerOfType", this.peer);
         return this.peer.getPeerOfType(peerType);
     }
 
