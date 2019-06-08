@@ -36,7 +36,7 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
                 
                 resolve();
             } catch (error) {
-                logger.error("F" + error);
+                logger.error(error, "F");
             }
         });
     }

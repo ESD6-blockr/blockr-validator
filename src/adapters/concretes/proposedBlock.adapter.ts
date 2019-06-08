@@ -60,7 +60,7 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
 
                 resolve(super.getServiceAdapter().addProposedBlockAsync(proposedBlock));
             } catch (error) {
-                logger.error("E" + error);
+                logger.error(error, "E");
             }
         });
     }
