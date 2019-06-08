@@ -6,7 +6,7 @@
   "scripts": {
     "copy-proto": "cp src/utils/transactions.proto dist/utils/transactions.proto",
     "build": "tsc -p tsconfig.json && npm run copy-proto",
-    "build:docker": "tslint --project tsconfig.json && tsc -p tsconfig.json && npm run copy-proto",
+    "build:docker": "tsc -p tsconfig.json && npm run copy-proto",
     "build-watch": "tsc -w -p tsconfig.json",
     "test": "jest --collectCoverage || exit 0",
     "lint": "tslint --project tsconfig.json",
