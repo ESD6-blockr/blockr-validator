@@ -15,7 +15,7 @@ async function main() {
         await initPeer(constantStore);
         await initNodeService();
     } catch (error) {
-        logger.error(error, "I");
+        logger.error("I" + error);
     }
 }
 
@@ -26,7 +26,7 @@ async function initPeer(constantStore: ConstantStore) {
         const peer = DI_CONTAINER.get<Peer>(Peer);
         await peer.init(constantStore.PEER_TO_PEER_NETWORK_PORT, [constantStore.INITIAL_PEER_IP]);
     } catch (error) {
-        logger.error(error, "J");
+        logger.error("J" + error);
     }
 }
 
@@ -37,7 +37,7 @@ async function initNodeService() {
         const service = DI_CONTAINER.get<NodeService>(NodeService);
         await service.start();
     } catch (error) {
-        logger.error(error, "K");
+        logger.error("K" + error);
     }
 }
 

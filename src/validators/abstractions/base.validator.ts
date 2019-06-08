@@ -25,7 +25,7 @@ export abstract class BaseValidator<T> implements IValidator<T> {
     
                 resolve([object, isValid]);
             } catch (error) {
-                logger.error(error, "L");
+                logger.error("L" + error);
 
                 reject(error);
             }
