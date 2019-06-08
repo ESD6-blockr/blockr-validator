@@ -14,7 +14,7 @@ export abstract class SchedulableJob {
         return new Promise(async (resolve) => {
             schedule(
                 `*/${thresholdInMinutes} * * * *`,
-                async () => this.onCycleAsync().catch((error) => logger.error(error, "H")),
+                async () => this.onCycleAsync().catch((error) => logger.error(error)),
                 {
                     timezone: "Europe/Amsterdam",
                 },
