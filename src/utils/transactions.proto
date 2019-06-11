@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package transactions;
 
-message TransactionData {
+message TransactionHeader {
   string recipientKey = 1;
   string senderKey = 2;
   int64 amount = 3;
@@ -11,7 +11,7 @@ message TransactionData {
 
 message Transaction {
   string type = 1;
-  TransactionData transactionData = 2;
+  TransactionHeader transactionHeader = 2;
   string signature = 3;
 }
 
