@@ -25,7 +25,7 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
 
     public async broadcastNewVictoriousBlock(victoriousBlock: Block): Promise<void> {
         return new Promise((resolve) => {
-            logger.info("[BlockAdapter] Broadcasting new victorious block.");
+            logger.info("[VictoriousBlockAdapter] Broadcasting new victorious block.");
 
             const messageSendingHandler: IMessageSendingHandler = new P2PMessageSendingHandler(
                 new Message(MessageType.NEW_VICTORIOUS_BLOCK, JSON.stringify(victoriousBlock)),
@@ -49,7 +49,7 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
     private async handleNewVictoriousBlock(message: Message): Promise<void> {
         return new Promise((resolve) => {
             try {
-                logger.info("[BlockAdapter] Received new victorious block.");
+                logger.info("[VictoriousBlockAdapter] Received new victorious block.");
 
                 if (!message.body) {
                     throw new AdapterException("The required body is missing in the new victorious block's message.");
@@ -60,7 +60,7 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
 
                 resolve(super.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock));
             } catch (error) {
-                logger.error(error);
+                logger.error(`[${this.constructor.name}] ${error}`);
             }
         });
     }

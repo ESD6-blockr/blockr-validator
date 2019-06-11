@@ -25,7 +25,7 @@ export abstract class BaseValidator<T> implements IValidator<T> {
     
                 resolve([object, isValid]);
             } catch (error) {
-                logger.error(error);
+                logger.error(`[${this.constructor.name}] ${error}`);
 
                 reject(error);
             }

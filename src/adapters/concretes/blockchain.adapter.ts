@@ -86,7 +86,7 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
                     ),
                 ));
             } catch (error) {
-                logger.error(error);
+                logger.error(`[${this.constructor.name}] ${error}`);
             }
         });
     }

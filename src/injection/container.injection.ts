@@ -45,6 +45,12 @@ DI_CONTAINER.bind<RPCCommunicationRepository>(RPCCommunicationRepository).toSelf
 DI_CONTAINER.bind<Peer>(Peer).toConstantValue(new Peer(PeerType.VALIDATOR));
 DI_CONTAINER.bind<StateService>(StateService).toSelf().inSingletonScope();
 
+DI_CONTAINER.bind<BlockchainAdapter>(BlockchainAdapter).toSelf().inSingletonScope();
+DI_CONTAINER.bind<KeyAdapter>(KeyAdapter).toSelf().inSingletonScope();
+DI_CONTAINER.bind<TransactionAdapter>(TransactionAdapter).toSelf().inSingletonScope();
+DI_CONTAINER.bind<ProposedBlockAdapter>(ProposedBlockAdapter).toSelf().inSingletonScope();
+DI_CONTAINER.bind<VictoriousBlockAdapter>(VictoriousBlockAdapter).toSelf().inSingletonScope();
+
 // Requests
 DI_CONTAINER.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
 DI_CONTAINER.bind<CryptoKeyUtil>(CryptoKeyUtil).toSelf().inRequestScope();
@@ -77,11 +83,5 @@ DI_CONTAINER.bind<BlockchainInitializationService>(BlockchainInitializationServi
 DI_CONTAINER.bind<NodeService>(NodeService).toSelf().inTransientScope();
 DI_CONTAINER.bind<ProposedBlockService>(ProposedBlockService).toSelf().inTransientScope();
 DI_CONTAINER.bind<VictoriousBlockService>(VictoriousBlockService).toSelf().inTransientScope();
-
-DI_CONTAINER.bind<BlockchainAdapter>(BlockchainAdapter).toSelf().inTransientScope();
-DI_CONTAINER.bind<KeyAdapter>(KeyAdapter).toSelf().inTransientScope();
-DI_CONTAINER.bind<TransactionAdapter>(TransactionAdapter).toSelf().inTransientScope();
-DI_CONTAINER.bind<ProposedBlockAdapter>(ProposedBlockAdapter).toSelf().inTransientScope();
-DI_CONTAINER.bind<VictoriousBlockAdapter>(VictoriousBlockAdapter).toSelf().inTransientScope();
 
 export default DI_CONTAINER;
