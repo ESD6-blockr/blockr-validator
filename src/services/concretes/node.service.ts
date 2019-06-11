@@ -31,8 +31,6 @@ export class NodeService {
     private async scheduleBlockJobAsync(): Promise<void> {
         return new Promise(async (resolve) => {
             logger.info("[NodeService] Scheduling Block Job.");
-        
-            // TODO: Implement & test new P2P
             
             await this.blockJob.scheduleAsync(1);
             

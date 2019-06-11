@@ -20,7 +20,7 @@ export class ProposedBlockService implements IProposedBlockServiceAdapter {
 
     public async addProposedBlockAsync(proposedBlock: Block): Promise<void> {
         return new Promise((resolve) => {
-            logger.info("[BlockService] Adding new proposed block to PendingProposedBlockQueue.");
+            logger.info("[ProposedBlockService] Adding new proposed block to PendingProposedBlockQueue.");
             this.queueStore.pendingProposedBlockQueue.add(proposedBlock);
 
             resolve();

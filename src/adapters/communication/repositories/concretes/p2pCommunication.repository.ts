@@ -32,8 +32,6 @@ export class P2PCommunicationRepository implements ICommunicationRepository {
             throw new AdapterException("The MessageSendingHandler does not contain the required PeerType.");
         }
 
-        logger.info(`[P2PCommunicationRepository] Sending message to random node ${handler.message}`);
-
         return this.peer.sendMessageToRandomPeerAsync(
             handler.message,
             handler.peerType,
