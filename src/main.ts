@@ -1,12 +1,11 @@
 import "reflect-metadata";
 
 import { logger } from "@blockr/blockr-logger";
-import { Peer, Message } from "@blockr/blockr-p2p-lib";
+import { Peer } from "@blockr/blockr-p2p-lib";
 import * as Sentry from "@sentry/node";
 import DI_CONTAINER from "./injection/container.injection";
 import { NodeService, ProposedBlockService, VictoriousBlockService } from "./services";
 import { ConstantStore } from "./stores/constant.store";
-import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
 
 async function main() {
     try {

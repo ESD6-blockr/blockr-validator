@@ -3,7 +3,6 @@ import { logger } from "@blockr/blockr-logger";
 import { inject, injectable } from "inversify";
 import { KeyAdapter } from "../../adapters/concretes/key.adapter";
 import { IKeyServiceAdapter } from "../../adapters/interfaces/keyService.adapter";
-import { AdapterException } from "../../exceptions/adapter.exception";
 import { ConstantStore } from "../../stores";
 import { FileUtils } from "../../utils";
 
@@ -54,15 +53,8 @@ export class AdminKeyService implements IKeyServiceAdapter {
         });
     }
 
-    public async getAdminKeyFromFileAsync(): Promise<string> {
-        return new Promise(async (resolve, reject) => {
-            if (!await this.fileUtils.fileExistsAsync(this.constantStore.KEYS_FILE_PATH)) {
-                reject(new AdapterException("The admin's key file does not exist upon "
-                                            + "request of the key from a validator."));
-            }
-            
-            resolve(await this.fileUtils.readFileAsync(this.constantStore.KEYS_FILE_PATH));
-        });
+    public getAdminKey(): string {
+        return this.constantStore.ADMIN_PUBLIC_KEY;
     }
 
     private async generateAndSaveAdminKeyAsync(): Promise<void> {
