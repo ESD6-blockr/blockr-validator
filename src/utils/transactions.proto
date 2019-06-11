@@ -3,16 +3,16 @@ syntax = "proto3";
 package transactions;
 
 message TransactionData {
-  string type = 1;
-  string recipientKey = 2;
-  string senderKey = 3;
-  int64 amount = 4;
-  string date = 5;
+  string recipientKey = 1;
+  string senderKey = 2;
+  int64 amount = 3;
+  string date = 4;
 }
 
 message Transaction {
-  TransactionData transactionData = 1;
-  string signature = 2;
+  string type = 1;
+  TransactionData transactionData = 2;
+  string signature = 3;
 }
 
 message AddTransactionRequest {
