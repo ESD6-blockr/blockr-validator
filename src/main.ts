@@ -4,7 +4,7 @@ import { logger } from "@blockr/blockr-logger";
 import { Peer } from "@blockr/blockr-p2p-lib";
 import * as Sentry from "@sentry/node";
 import DI_CONTAINER from "./injection/container.injection";
-import { NodeService } from "./services";
+import { NodeService, ProposedBlockService, VictoriousBlockService } from "./services";
 import { ConstantStore } from "./stores/constant.store";
 
 async function main() {
@@ -13,6 +13,7 @@ async function main() {
 
         initSentry(constantStore);
         await initPeer(constantStore);
+        await initStandaloneServices();
         await initNodeService();
     } catch (error) {
         logger.error(`[Main] ${error}`);
@@ -28,6 +29,15 @@ async function initPeer(constantStore: ConstantStore) {
     } catch (error) {
         logger.error(`[Main] ${error}`);
     }
+}
+
+/**
+ * This function initializes all the services that are not called from any 
+ * class particularly but should be initialized to start their respective adapters.
+ */
+async function initStandaloneServices() {
+    DI_CONTAINER.get<ProposedBlockService>(ProposedBlockService);
+    DI_CONTAINER.get<VictoriousBlockService>(VictoriousBlockService);
 }
 
 async function initNodeService() {

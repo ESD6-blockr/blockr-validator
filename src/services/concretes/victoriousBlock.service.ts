@@ -1,6 +1,6 @@
 import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { logger } from "@blockr/blockr-logger";
-import { Block, State } from "@blockr/blockr-models";
+import { Block } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { VictoriousBlockAdapter } from "../../adapters/concretes/victoriousBlock.adapter";
 import { IVictoriousBlockServiceAdapter } from "../../adapters/interfaces/victoriousBlockService.adapter";
