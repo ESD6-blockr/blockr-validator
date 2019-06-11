@@ -56,6 +56,7 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
     private handleAdminKeyRequestAsync(response: RESPONSE_TYPE): Promise<void> {
         return new Promise(async (resolve) => {
             try {
+                logger.info("[KeyAdapter] Sending admin key to Node as per request.");
                 const key: string = await super.getServiceAdapter().getAdminKeyFromFileAsync();
 
                 resolve(response(new Message(

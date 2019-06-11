@@ -1,3 +1,4 @@
+import { logger } from "@blockr/blockr-logger";
 import { Message, Peer, PeerType } from "@blockr/blockr-p2p-lib";
 import { inject, injectable } from "inversify";
 import { AdapterException } from "../../../../exceptions/adapter.exception";
@@ -30,6 +31,8 @@ export class P2PCommunicationRepository implements ICommunicationRepository {
         if (!handler.peerType) {
             throw new AdapterException("The MessageSendingHandler does not contain the required PeerType.");
         }
+
+        logger.info(`[P2PCommunicationRepository] Sending message to random node ${handler.message}`);
 
         return this.peer.sendMessageToRandomPeerAsync(
             handler.message,
