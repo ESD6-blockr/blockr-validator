@@ -29,6 +29,7 @@
     "@blockr/blockr-p2p-lib": "^1.0.1-build.10",
     "@grpc/proto-loader": "^0.5.1",
     "@sentry/node": "^4.6.6",
+    "class-transformer": "^0.2.3",
     "grpc": "^1.21.1",
     "inversify": "^5.0.1",
     "node-cron": "^2.0.3",

@@ -2,6 +2,7 @@ import { logger } from "@blockr/blockr-logger";
 import { Block } from "@blockr/blockr-models";
 import { Message } from "@blockr/blockr-p2p-lib";
 import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
+import { plainToClass } from "class-transformer";
 import { inject, injectable } from "inversify";
 import { MessageType } from "..";
 import { AdapterException } from "../../exceptions/adapter.exception";
@@ -55,8 +56,7 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
                     throw new AdapterException("The required body is missing in the new proposed block's message.");
                 }
 
-                // TODO: proposedBlock is now somehow of instance object
-                const proposedBlock: Block = JSON.parse(message.body) as Block;
+                const proposedBlock: Block = plainToClass<Block, any>(Block, message.body);
                 super.getValidatorBus().validateAsync([proposedBlock]);
 
                 resolve(super.getServiceAdapter().addProposedBlockAsync(proposedBlock));
