@@ -69,7 +69,6 @@ export class AdminKeyService implements IKeyServiceAdapter {
 
             resolve();
         });
-        // TODO: alleen pubkey in .keys
         // TODO: TSDocs toevoegen
     }
 
