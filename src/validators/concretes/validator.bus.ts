@@ -38,6 +38,7 @@ export class ValidatorBus {
             }
         }
 
-        throw new ValidatorBusException(`${model.constructor.name} does not have a validator`);
+        throw new ValidatorBusException(`[${this.constructor.name}] ` +
+            `${model.constructor.name} does not have a validator`);
     }
  }

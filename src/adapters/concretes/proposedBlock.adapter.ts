@@ -25,7 +25,7 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
 
     public async broadcastNewProposedBlock(proposedBlock: Block): Promise<void> {
         return new Promise((resolve) => {
-            logger.info("[BlockAdapter] Broadcasting new proposed block.");
+            logger.info("[ProposedBlockAdapter] Broadcasting new proposed block.");
 
             const messageSendingHandler: IMessageSendingHandler = new P2PMessageSendingHandler(
                 new Message(MessageType.NEW_PROPOSED_BLOCK, JSON.stringify(proposedBlock)),
@@ -49,18 +49,19 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
     private async handleNewProposedBlock(message: Message): Promise<void> {
         return new Promise((resolve) => {
             try {
-                logger.info("[BlockAdapter] Received new proposed block.");
+                logger.info("[ProposedBlockAdapter] Received new proposed block.");
 
                 if (!message.body) {
                     throw new AdapterException("The required body is missing in the new proposed block's message.");
                 }
 
-                const proposedBlock: Block = JSON.parse(message.body);
+                // TODO: proposedBlock is now somehow of instance object
+                const proposedBlock: Block = JSON.parse(message.body) as Block;
                 super.getValidatorBus().validateAsync([proposedBlock]);
 
                 resolve(super.getServiceAdapter().addProposedBlockAsync(proposedBlock));
             } catch (error) {
-                logger.error(error);
+                logger.error(`[${this.constructor.name}] ${error}`);
             }
         });
     }

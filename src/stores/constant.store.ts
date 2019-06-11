@@ -61,7 +61,7 @@ export class ConstantStore {
         this.SENTRY_ENVIRONMENT = process.env.SENTRY_ENVIRONMENT || "";
         this.DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING || "";
         this.DB_NAME = process.env.DB_NAME || "";
-        this.INITIAL_PEER_IP = process.env.INITIAL_PEER || "";
+        this.INITIAL_PEER_IP = process.env.INITIAL_PEER_IP || "";
         this.DEFAULT_STAKE_AMOUNT = 1;
         this.RPC_SERVER_HOST = process.env.RPC_SERVER_HOST || "";
         this.RPC_SERVER_PORT = process.env.RPC_SERVER_PORT || "";

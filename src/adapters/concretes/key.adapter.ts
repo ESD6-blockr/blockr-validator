@@ -45,7 +45,8 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
         const adminKeyRequestHandler: IOnMessageHandler = new P2POnMessageHandler(
             MessageType.ADMIN_KEY_REQUEST,
             async (_message: Message, _senderGuid: string, response: RESPONSE_TYPE) => {
-                await this.handleAdminKeyRequestAsync(response).catch((error) => logger.error(error));
+                await this.handleAdminKeyRequestAsync(response).catch((error) =>
+                    logger.error(`[${this.constructor.name}] ${error}`));
             },
         );
 
@@ -63,7 +64,7 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
                     ),
                 ));
             } catch (error) {
-                logger.error(error);
+                logger.error(`[${this.constructor.name}] ${error}`);
             }
         });
     }

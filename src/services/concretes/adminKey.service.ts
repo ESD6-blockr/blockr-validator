@@ -77,6 +77,9 @@ export class AdminKeyService implements IKeyServiceAdapter {
 
             resolve();
         });
+        // TODO: fix error class name showing
+        // TODO: alleen pubkey in .keys
+        // TODO: TSDocs toevoegen
     }
 
     private saveAdminKeyInFile(): Promise<void> {
