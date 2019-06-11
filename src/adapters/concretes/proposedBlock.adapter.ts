@@ -48,7 +48,7 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
     }
 
     private async handleNewProposedBlock(message: Message): Promise<void> {
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
             try {
                 logger.info("[ProposedBlockAdapter] Received new proposed block.");
 
@@ -57,7 +57,7 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
                 }
 
                 const proposedBlock: Block = plainToClass<Block, any>(Block, message.body);
-                super.getValidatorBus().validateAsync([proposedBlock]);
+                await super.getValidatorBus().validateAsync([proposedBlock]);
 
                 resolve(super.getServiceAdapter().addProposedBlockAsync(proposedBlock));
             } catch (error) {
