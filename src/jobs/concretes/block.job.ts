@@ -58,6 +58,8 @@ export class BlockJob extends SchedulableJob {
                 if (!victoriousBlock) {
                     logger.warn("[BlockJob] Skipped current cycle because no victorious block could be chosen.");
 
+                    this.queueStore.pendingProposedBlockQueue.clear();
+
                     resolve();
                     return;
                 }

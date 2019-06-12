@@ -2,6 +2,7 @@ import { DataAccessLayer } from "@blockr/blockr-data-access";
 import { State, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { ConstantStore } from "../../stores";
+import { stat } from "fs";
 
 @injectable()
 export class StateService {
@@ -17,46 +18,44 @@ export class StateService {
     public async updateStatesForTransactionsAsync(transactions: Transaction[]): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
-                const statesToUpdate: State[] = [];
-                const newStatesToSet: State[] = [];
-
                 for (const transaction of transactions) {
-                    let senderState: State | undefined = await this.dataAccessLayer
+                    const statesToUpdate: Set<State> = new Set();
+                    const newStatesToSet: Set<State> = new Set();
+
+                    const senderState: State | undefined = await this.dataAccessLayer
                         .getStateAsync(transaction.transactionHeader.senderKey);
-                    let recipientState: State | undefined = await this.dataAccessLayer
+                    const recipientState: State | undefined = await this.dataAccessLayer
                         .getStateAsync(transaction.transactionHeader.recipientKey);
 
-                    if (senderState) {
-                        senderState = this.calculateUpdatedState(
+                    senderState !== undefined
+                        ? statesToUpdate.add(this.calculateUpdatedState(
                             Operator.MINUS,
                             transaction.transactionHeader.amount,
                             transaction.transactionHeader.senderKey,
                             senderState,
-                        );
+                        ))
+                        : newStatesToSet.add(new State(transaction.transactionHeader.senderKey, 0, 0));
 
-                        statesToUpdate.push(senderState);
-                    }
-
-                    const newEmptySenderState = new State(transaction.transactionHeader.senderKey, 0, 0);
-                    newStatesToSet.push(newEmptySenderState);
-
-                    if (recipientState) {
-                        recipientState = this.calculateUpdatedState(
+                    recipientState !== undefined
+                        ? statesToUpdate.add(this.calculateUpdatedState(
                             Operator.PLUS,
                             transaction.transactionHeader.amount,
                             transaction.transactionHeader.recipientKey,
                             recipientState,
-                        );
+                        ))
+                        : newStatesToSet.add(new State(transaction.transactionHeader.recipientKey, 0, 0));
 
-                        statesToUpdate.push(recipientState);
+                    if (newStatesToSet.size > 0) {
+                        await this.dataAccessLayer.setStatesAsync(Array.from(newStatesToSet));
                     }
 
-                    const newEmptyRecipientState = new State(transaction.transactionHeader.recipientKey, 0, 0);
-                    newStatesToSet.push(newEmptyRecipientState);
-                }
+                    if (statesToUpdate.size > 0) {
+                        await this.dataAccessLayer.updateStatesAsync(Array.from(statesToUpdate));
+                    }
 
-                await this.dataAccessLayer.setStatesAsync(newStatesToSet);
-                await this.dataAccessLayer.updateStatesAsync(statesToUpdate);
+                    newStatesToSet.clear();
+                    statesToUpdate.clear();
+                }
 
                 resolve();
             } catch (error) {

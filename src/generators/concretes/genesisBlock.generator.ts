@@ -57,7 +57,7 @@ export class GenesisBlockGenerator extends BlockGenerator {
     private async createAndSignTransactionAsync(type: TransactionType,
                                                 amount: number, date: Date): Promise<Transaction> {
         const transactionHeader = new TransactionHeader(
-            "",
+            this.constantStore.ADMIN_PUBLIC_KEY,
             this.constantStore.ADMIN_PUBLIC_KEY,
             amount,
             date,
