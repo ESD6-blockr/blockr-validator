@@ -56,7 +56,7 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
                     throw new AdapterException("The required body is missing in the new proposed block's message.");
                 }
 
-                const proposedBlock: Block = plainToClass<Block, any>(Block, message.body);
+                const proposedBlock: Block = plainToClass<Block, any>(Block, JSON.parse(message.body) as object);
                 await super.getValidatorBus().validateAsync([proposedBlock]);
 
                 resolve(super.getServiceAdapter().addProposedBlockAsync(proposedBlock));

@@ -48,6 +48,7 @@ export class BlockJob extends SchedulableJob {
 
             try {
                 const proposedBlock: Block = await this.generateProposedBlockAsync();
+                this.queueStore.pendingProposedBlockQueue.add(proposedBlock);
                 this.proposedBlockAdapter.broadcastNewProposedBlock(proposedBlock);
 
                 const states: State[] = await this.dataAccessLayer.getStatesAsync();

@@ -2,6 +2,7 @@ import { logger } from "@blockr/blockr-logger";
 import { Block } from "@blockr/blockr-models";
 import { Message } from "@blockr/blockr-p2p-lib";
 import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
+import { plainToClass } from "class-transformer";
 import { inject, injectable } from "inversify";
 import { MessageType } from "..";
 import { AdapterException } from "../../exceptions/adapter.exception";
@@ -55,7 +56,8 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
                     throw new AdapterException("The required body is missing in the new victorious block's message.");
                 }
 
-                const victoriousBlock: Block = JSON.parse(message.body);
+                const victoriousBlock: Block = plainToClass<Block, any>(Block, JSON.parse(message.body) as object);
+                
                 super.getValidatorBus().validateAsync([victoriousBlock]);
 
                 resolve(super.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock));
