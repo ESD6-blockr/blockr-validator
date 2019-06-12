@@ -17,6 +17,7 @@ async function main() {
         await initNodeService();
     } catch (error) {
         logger.error(`[Main] ${error}`);
+        // TODO: Fix SonarQube smells
     }
 }
 
