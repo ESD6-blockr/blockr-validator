@@ -8,8 +8,9 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
     private serviceAdapter?: T;
     private validatorBus?: ValidatorBus;
 
-    public constructor(communicationRepository: ICommunicationRepository) {
+    public constructor(communicationRepository: ICommunicationRepository, validatorBus?: ValidatorBus) {
         this.communicationRepository = communicationRepository;
+        this.validatorBus = validatorBus;
 
         this.initOnMessageHandlers();
     }
@@ -20,10 +21,6 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
      */
     public setServiceAdapter(serviceAdapter: T): void {
         this.serviceAdapter = serviceAdapter;
-    }
-
-    protected setValidatorBus(validatorBus: ValidatorBus): void {
-        this.validatorBus = validatorBus;
     }
 
     protected getServiceAdapter(): T {

@@ -17,9 +17,7 @@ import { IBlockchainServiceAdapter } from "../interfaces/blockchainService.adapt
 export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     constructor(@inject(P2PCommunicationRepository) communicationRepository: P2PCommunicationRepository,
                 @inject(ValidatorBus) validatorBus: ValidatorBus) {
-        super(communicationRepository);
-
-        super.setValidatorBus(validatorBus);
+        super(communicationRepository, validatorBus);
     }
 
     public shouldGenerateGenesisBlock(): boolean {

@@ -19,9 +19,7 @@ import { IProposedBlockServiceAdapter } from "../interfaces/proposedBlockService
 export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapter> {
     constructor(@inject(P2PCommunicationRepository) communicationRepository: P2PCommunicationRepository,
                 @inject(ValidatorBus) validatorBus: ValidatorBus) {
-        super(communicationRepository);
-
-        super.setValidatorBus(validatorBus);
+        super(communicationRepository, validatorBus);
     }
 
     public async broadcastNewProposedBlock(proposedBlock: Block): Promise<void> {

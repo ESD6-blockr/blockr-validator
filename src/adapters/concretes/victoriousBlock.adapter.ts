@@ -19,9 +19,7 @@ import { IVictoriousBlockServiceAdapter } from "../interfaces/victoriousBlockSer
 export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceAdapter> {
     constructor(@inject(P2PCommunicationRepository) communicationRepository: P2PCommunicationRepository,
                 @inject(ValidatorBus) validatorBus: ValidatorBus) {
-        super(communicationRepository);
-
-        super.setValidatorBus(validatorBus);
+        super(communicationRepository, validatorBus);
     }
 
     public async broadcastNewVictoriousBlock(victoriousBlock: Block): Promise<void> {

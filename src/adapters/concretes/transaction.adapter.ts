@@ -11,9 +11,7 @@ import { ITransactionServiceAdapter } from "../interfaces/transactionService.ada
 export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> {
     constructor(@inject(RPCCommunicationRepository) communicationRepository: RPCCommunicationRepository,
                 @inject(ValidatorBus) validatorBus: ValidatorBus) {
-        super(communicationRepository);
-
-        super.setValidatorBus(validatorBus);
+        super(communicationRepository, validatorBus);
         (communicationRepository as RPCCommunicationRepository).startServer();
     }
 
