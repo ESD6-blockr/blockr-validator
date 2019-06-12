@@ -3,11 +3,13 @@ import "reflect-metadata";
 import { Block, State } from "@blockr/blockr-models";
 import { LotteryService } from "../../services/concretes/lottery.service";
 import { QueueStore } from "../../stores";
+import { SetUtils } from "../../utils/set.util";
 import { dataAccessLayerMock, getBlock } from "../constants/model.constants";
 
 jest.mock("@blockr/blockr-logger");
 
 let queueStore: QueueStore;
+const setUtils: SetUtils = new SetUtils();
 
 beforeEach(() => {
     queueStore = new QueueStore();
@@ -15,7 +17,7 @@ beforeEach(() => {
 
 describe("Lottery service", () => {
     it("Should initialize", () => {
-        const lotteryService = new LotteryService(dataAccessLayerMock, queueStore);
+        const lotteryService = new LotteryService(dataAccessLayerMock, queueStore, setUtils);
 
         expect(lotteryService).not.toBeNull();
         expect(lotteryService).toBeInstanceOf(LotteryService);
@@ -24,7 +26,7 @@ describe("Lottery service", () => {
 
 describe("Drawing winning block", () => {
     it("Should fail with an empty queue", async () => {
-        const lotteryService = new LotteryService(dataAccessLayerMock, queueStore);
+        const lotteryService = new LotteryService(dataAccessLayerMock, queueStore, setUtils);
 
         const parentBlockHash = "EMPTY_TEST_HASH";
         const states = new Array<State>();
@@ -43,7 +45,7 @@ describe("Drawing winning block", () => {
 
         queueStore.pendingProposedBlockQueue.add(block);
 
-        const lotteryService = new LotteryService(dataAccessLayerMock, queueStore);
+        const lotteryService = new LotteryService(dataAccessLayerMock, queueStore, setUtils);
 
         const parentBlockHash = "6363fe744f74ee8f280958ab2f185dde";
         const states = [new State("TEST_PUBLIC_KEY", 10, 10)];
@@ -58,7 +60,7 @@ describe("Drawing winning block", () => {
 
         queueStore.pendingProposedBlockQueue.add(block);
 
-        const lotteryService = new LotteryService(dataAccessLayerMock, queueStore);
+        const lotteryService = new LotteryService(dataAccessLayerMock, queueStore, setUtils);
 
         const parentBlockHash = "6363fe744f74ee8f280958ab2f185dde";
         const states = [new State("TEST_RANDOM_PUBLIC_KEY", 10, 10)];
