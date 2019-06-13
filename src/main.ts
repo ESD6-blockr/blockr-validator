@@ -26,7 +26,7 @@ async function initPeer(constantStore: ConstantStore) {
         logger.info("[Main] Initializing Peer.");
         
         const peer = DI_CONTAINER.get<Peer>(Peer);
-        await peer.init(constantStore.PEER_TO_PEER_NETWORK_PORT, [constantStore.INITIAL_PEER_IP]);
+        await peer.init([constantStore.INITIAL_PEER_IP], constantStore.PEER_TO_PEER_NETWORK_PORT);
     } catch (error) {
         logger.error(`[Main] ${error}`);
     }
