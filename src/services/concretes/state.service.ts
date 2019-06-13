@@ -30,7 +30,7 @@ export class StateService {
                         Operator.PLUS,
                     );
                 }
-                
+
                 resolve();
             } catch (error) {
                 reject(error);
@@ -49,7 +49,7 @@ export class StateService {
             return;
         }
 
-        state = new State(key, 0, 0);
+        state = new State(key, 0, this.constantStore.DEFAULT_STAKE_AMOUNT);
         state.amount = this.calculateAmount(operator, state.amount, transactionAmount);
 
         await this.dataAccessLayer.setStatesAsync([state]);
