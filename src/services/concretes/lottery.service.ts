@@ -29,6 +29,7 @@ export class LotteryService {
         // asynchronous adapter implementations while drawing the winning block.
         const pendingProposedBlocks: Set<Block> = this.setUtils.cloneSet(this.queueStore.pendingProposedBlockQueue);
         const stakeMap = await this.convertStatesToStakeMap(walletStates);
+        this.ticketCount = 0;
 
         try {
           const candidatesMap = await this.calculateCandidates(stakeMap, pendingProposedBlocks);
@@ -83,7 +84,7 @@ export class LotteryService {
         if (!stakeMap.get(validatorPublicKey)) {
           logger.info(`[LotteryService] Inexistent state for validator ${validatorPublicKey}`);
           // TODO: Should we actually insert this empty state?
-          const state = new State(validatorPublicKey, 0, 0);
+          const state = new State(validatorPublicKey, 0, 1);
           this.dataAccessLayer.updateStateAsync(validatorPublicKey, state);
           continue;
         }
