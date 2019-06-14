@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { logger } from "@blockr/blockr-logger";
 import { Peer } from "@blockr/blockr-p2p-lib";
 import * as Sentry from "@sentry/node";
+import { exitHandler } from "./handlers";
 import DI_CONTAINER from "./injection/container.injection";
 import { NodeService, ProposedBlockService, VictoriousBlockService } from "./services";
 import { ConstantStore } from "./stores/constant.store";
@@ -61,4 +62,24 @@ function initSentry(constantStore: ConstantStore) {
     });
 }
 
+/**
+ * This function binds the needed process events e.g. when ctrl+c is used.
+ * These bindings are needed to leave the p2p network on exit of the application for example.
+ */
+function bindProcessEvents() {
+    process.stdin.resume();
+
+    process.on("exit", exitHandler.bind(null));
+    // Catch ctrl+c
+    process.on("SIGINT", exitHandler.bind(null));
+    
+    // Catch kill pid
+    process.on("SIGUSR1", exitHandler.bind(null));
+    process.on("SIGUSR2", exitHandler.bind(null));
+    
+    // Catch uncaught exceptions
+    process.on("uncaughtException", exitHandler.bind(null));
+}
+
+bindProcessEvents();
 main();
