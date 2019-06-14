@@ -59,6 +59,7 @@ export class LotteryService {
 
           if ((bottomMargin <= randomNumber) && (upperMargin >= randomNumber)) {
             resolve(Array.from(pendingProposedBlocks).find((block) => block.blockHeader.validator === publicKey));
+            return;
           }
           bottomMargin += stake;
           candidateIndex += 1;
