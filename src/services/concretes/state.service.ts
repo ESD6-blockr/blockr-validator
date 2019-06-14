@@ -41,7 +41,7 @@ export class StateService {
     private async updateStateByKey(key: string, transactionAmount: number, operator: Operator): Promise<void> {
         let state: State | undefined = await this.dataAccessLayer.getStateAsync(key);
 
-        if (state !== undefined) {
+        if (state) {
             state.amount = this.calculateAmount(operator, state.amount, transactionAmount);
 
             await this.dataAccessLayer.updateStateAsync(key, state);
