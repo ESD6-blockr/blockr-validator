@@ -62,17 +62,24 @@ function initSentry(constantStore: ConstantStore) {
     });
 }
 
-process.stdin.resume();
+/**
+ * This function binds the needed process events e.g. when ctrl+c is used.
+ * These bindings are needed to leave the p2p network on exit of the application for example.
+ */
+function bindProcessEvents() {
+    process.stdin.resume();
 
-process.on("exit", exitHandler.bind(null));
-// catch ctrl+c
-process.on("SIGINT", exitHandler.bind(null));
+    process.on("exit", exitHandler.bind(null));
+    // Catch ctrl+c
+    process.on("SIGINT", exitHandler.bind(null));
+    
+    // Catch kill pid
+    process.on("SIGUSR1", exitHandler.bind(null));
+    process.on("SIGUSR2", exitHandler.bind(null));
+    
+    // Catch uncaught exceptions
+    process.on("uncaughtException", exitHandler.bind(null));
+}
 
-// catch kill pid
-process.on("SIGUSR1", exitHandler.bind(null));
-process.on("SIGUSR2", exitHandler.bind(null));
-
-// catch uncaught exceptions
-process.on("uncaughtException", exitHandler.bind(null));
-
+bindProcessEvents();
 main();
