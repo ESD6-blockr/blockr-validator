@@ -83,6 +83,7 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
             try {
                 logger.info("[BlockchainInitializationService] Initiating blockchain.");
 
+                await this.stateService.initializeGenesisState();
                 const genesisBlock: Block = await this.genesisBlockGenerator.generateGenesisBlockAsync();
                 
                 await this.dataAccessLayer.addBlockAsync(genesisBlock);

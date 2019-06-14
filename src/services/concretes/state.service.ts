@@ -13,6 +13,14 @@ export class StateService {
         this.constantStore = constantStore;
         this.dataAccessLayer = dataAccessLayer;
     }
+
+    public async initializeGenesisState(): Promise<void> {
+        await this.dataAccessLayer.setStatesAsync([new State(
+            this.constantStore.ADMIN_PUBLIC_KEY,
+            this.constantStore.GENESIS_COIN_AMOUNT,
+            this.constantStore.GENESIS_STAKE_AMOUNT)],
+        );
+    }
     
     public async updateStatesForTransactionsAsync(transactions: Transaction[]): Promise<void> {
         return new Promise(async (resolve, reject) => {
@@ -48,7 +56,7 @@ export class StateService {
 
             return;
         }
-
+        
         state = new State(key, 0, this.constantStore.DEFAULT_STAKE_AMOUNT);
         state.amount = this.calculateAmount(operator, state.amount, transactionAmount);
 
