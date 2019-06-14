@@ -10,6 +10,7 @@ import { SchedulableJob } from "../../jobs/abstractions/schedulable.job";
 import { LotteryService } from "../../services/concretes/lottery.service";
 import { TransactionService } from "../../services/concretes/transaction.service";
 import { ConstantStore, QueueStore } from "../../stores";
+import { createAwaitableTimeout } from "../../utils/timeout.util";
 
 @injectable()
 export class BlockJob extends SchedulableJob {
@@ -52,8 +53,16 @@ export class BlockJob extends SchedulableJob {
                 this.proposedBlockAdapter.broadcastNewProposedBlock(proposedBlock);
 
                 const states: State[] = await this.dataAccessLayer.getStatesAsync();
-                const victoriousBlock: Block | undefined = await this.lotteryService
-                    .drawWinningBlock(proposedBlock.blockHeader.parentHash, states);
+
+                // To ensure that a faster machine will not execute its lottery task 
+                // before others do, the AwaitableTimeout is being used.
+                // The used timeout should be shorter than the time between cycles of the BlockJob. 
+                // i.e. 10_000 ms => 10 seconds => 10 seconds is shorter than the 1 minute cycle.
+                const victoriousBlock: Block | undefined = await createAwaitableTimeout<Block | undefined>(
+                    async (): Promise<Block | undefined> => {
+                        return await this.lotteryService.drawWinningBlock(proposedBlock.blockHeader.parentHash, states);
+                    }, 10_000,
+                );
 
                 if (!victoriousBlock) {
                     logger.warn("[BlockJob] Skipped current cycle because no victorious block could be chosen.");
