@@ -8,7 +8,7 @@ export function exitHandler() {
     if (!disposing) {
         disposing = true;
 
-        logger.info("[ExitHandler] perform gracefull shutdown");
+        logger.info("[ExitHandler] perform graceful shutdown");
         
         logger.info("[ExitHandler] leaving peer network");
         const peer = DI_CONTAINER.get<Peer>(Peer);
