@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { logger } from "@blockr/blockr-logger";
 import { Peer } from "@blockr/blockr-p2p-lib";
 import * as Sentry from "@sentry/node";
+import { exitHandler } from "./handlers";
 import DI_CONTAINER from "./injection/container.injection";
 import { NodeService, ProposedBlockService, VictoriousBlockService } from "./services";
 import { ConstantStore } from "./stores/constant.store";
@@ -60,5 +61,18 @@ function initSentry(constantStore: ConstantStore) {
         environment: constantStore.SENTRY_ENVIRONMENT,
     });
 }
+
+process.stdin.resume();
+
+process.on("exit", exitHandler.bind(null));
+// catch ctrl+c
+process.on("SIGINT", exitHandler.bind(null));
+
+// catch kill pid
+process.on("SIGUSR1", exitHandler.bind(null));
+process.on("SIGUSR2", exitHandler.bind(null));
+
+// catch uncaught excpetions
+process.on("uncaughtException", exitHandler.bind(null));
 
 main();
