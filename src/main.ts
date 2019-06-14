@@ -72,7 +72,7 @@ process.on("SIGINT", exitHandler.bind(null));
 process.on("SIGUSR1", exitHandler.bind(null));
 process.on("SIGUSR2", exitHandler.bind(null));
 
-// catch uncaught excpetions
+// catch uncaught exceptions
 process.on("uncaughtException", exitHandler.bind(null));
 
 main();
