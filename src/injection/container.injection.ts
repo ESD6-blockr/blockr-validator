@@ -15,7 +15,6 @@ import { AdminKeyService, BlockchainInitializationService, ProposedBlockService 
 import { LotteryService, NodeService, StateService, TransactionService, VictoriousBlockService } from "../services";
 import { ConstantStore, QueueStore } from "../stores";
 import { FileUtils } from "../utils";
-import { SetUtils } from "../utils/set.util";
 import { BlockHeaderValidator, IValidator, TransactionValidator, ValidatorBus } from "../validators";
 import { BlockValidator } from "../validators/concretes/block.validator";
 import { TransactionHeaderValidator } from "../validators/concretes/transactionHeader.validator";
@@ -56,7 +55,6 @@ DI_CONTAINER.bind<VictoriousBlockAdapter>(VictoriousBlockAdapter).toSelf().inSin
 DI_CONTAINER.bind<ObjectHasher>(ObjectHasher).toSelf().inRequestScope();
 DI_CONTAINER.bind<CryptoKeyUtil>(CryptoKeyUtil).toSelf().inRequestScope();
 DI_CONTAINER.bind<FileUtils>(FileUtils).toSelf().inRequestScope();
-DI_CONTAINER.bind<SetUtils>(SetUtils).toSelf().inRequestScope();
 
 // Transients
 DI_CONTAINER.bind<DataAccessLayer>(DataAccessLayer).toSelf().inTransientScope();

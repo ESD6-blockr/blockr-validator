@@ -4,21 +4,18 @@ import { Block, State } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import * as seedRandom from "seedrandom";
 import { QueueStore } from "../../stores/queue.store";
-import { SetUtils } from "../../utils/set.util";
+import { cloneSet } from "../../utils/set.util";
 
 @injectable()
 export class LotteryService {
   private readonly dataAccessLayer: DataAccessLayer;
   private readonly queueStore: QueueStore;
-  private readonly setUtils: SetUtils;
   private ticketCount: number;
 
   constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
-              @inject(QueueStore) queueStore: QueueStore,
-              @inject(SetUtils) setUtils: SetUtils) {
+              @inject(QueueStore) queueStore: QueueStore) {
     this.dataAccessLayer = dataAccessLayer;
     this.queueStore = queueStore;
-    this.setUtils = setUtils;
     this.ticketCount = 0;
   }
 
@@ -27,7 +24,7 @@ export class LotteryService {
       return new Promise(async (resolve, reject) => {
         // A copy of the queue is used to ensure that the queue will not be modified by 
         // asynchronous adapter implementations while drawing the winning block.
-        const pendingProposedBlocks: Set<Block> = this.setUtils.cloneSet(this.queueStore.pendingProposedBlockQueue);
+        const pendingProposedBlocks: Set<Block> = cloneSet(this.queueStore.pendingProposedBlockQueue);
         const stakeMap = await this.convertStatesToStakeMap(walletStates);
         this.ticketCount = 0;
 
