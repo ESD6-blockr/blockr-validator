@@ -1,5 +1,5 @@
 import { logger } from "@blockr/blockr-logger";
-import { Block, State } from "@blockr/blockr-models";
+import { Block, IModel, State } from "@blockr/blockr-models";
 import { Message, PeerType } from "@blockr/blockr-p2p-lib";
 import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
 import { plainToClass } from "class-transformer";
@@ -44,13 +44,12 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
 
                             const deserializedObject = JSON.parse(responseMessage.body as string);
 
-                            const blockchain: Block[] = plainToClass<Block, any>(Block, deserializedObject.blockchain);
-                            const states: State[] = plainToClass<State, any>(State, deserializedObject.states);
-    
-                            super.getValidatorBus().validateAsync(blockchain);
-                            super.getValidatorBus().validateAsync(states);
+                            const blockchain: IModel[] = plainToClass<Block, any>(Block, deserializedObject.blockchain);
+                            const states: IModel[] = plainToClass<State, any>(State, deserializedObject.states);
 
-                            resolve([blockchain, states]);
+                            super.getValidatorBus().validateAsync(blockchain.concat(states));
+
+                            resolve([blockchain as Block[], states as State[]]);
                         } catch (error) {
                             reject(error);
                         }
