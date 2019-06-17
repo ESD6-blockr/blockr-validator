@@ -25,12 +25,12 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
     }
 
     private async handleNewTransactionAsync(serverUnaryCall: ServerUnaryCall<Transaction>): Promise<void> {
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
             try {
                 const transaction: Transaction = serverUnaryCall.request;
     
-                super.getValidatorBus().validateAsync([transaction]);
-                super.getServiceAdapter().addPendingTransactionAsync(transaction);
+                await super.getValidatorBus().validateAsync([transaction]);
+                await super.getServiceAdapter().addPendingTransactionAsync(transaction);
                 
                 resolve();
             } catch (error) {
