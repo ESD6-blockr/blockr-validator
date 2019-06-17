@@ -26,7 +26,7 @@
     "@blockr/blockr-data-access": "^3.0.0-build.29",
     "@blockr/blockr-logger": "^1.3.0",
     "@blockr/blockr-models": "^1.4.0-build.16",
-    "@blockr/blockr-p2p-lib": "^1.2.2-build.20",
+    "@blockr/blockr-p2p-lib": "^1.2.7-build.28",
     "@grpc/proto-loader": "^0.5.1",
     "@sentry/node": "^4.6.6",
     "class-transformer": "^0.2.3",
