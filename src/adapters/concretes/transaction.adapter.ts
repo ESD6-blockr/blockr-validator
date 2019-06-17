@@ -9,10 +9,14 @@ import { ITransactionServiceAdapter } from "../interfaces/transactionService.ada
 
 @injectable()
 export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> {
+    private static staticBus: ValidatorBus;
+
     constructor(@inject(RPCCommunicationRepository) communicationRepository: RPCCommunicationRepository,
                 @inject(ValidatorBus) validatorBus: ValidatorBus) {
         super(communicationRepository, validatorBus);
         (communicationRepository as RPCCommunicationRepository).startServer();
+
+        TransactionAdapter.staticBus = super.getValidatorBus();
     }
 
     protected initOnMessageHandlers(): void {
@@ -25,13 +29,21 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
     }
 
     private async handleNewTransactionAsync(serverUnaryCall: ServerUnaryCall<Transaction>): Promise<void> {
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
             try {
-                const transaction: Transaction = serverUnaryCall.request;
-    
-                super.getValidatorBus().validateAsync([transaction]);
-                super.getServiceAdapter().addPendingTransactionAsync(transaction);
+                serverUnaryCall = serverUnaryCall;
+                // const transaction: Transaction = serverUnaryCall.request;
                 
+                // console.log(this);
+
+                // const kutbus = DI_CONTAINER.get<ValidatorBus>(ValidatorBus);
+                // await kutbus.validateAsync([transaction]);
+
+                // // await super.getValidatorBus().validateAsync([transaction]);
+                // await super.getServiceAdapter().addPendingTransactionAsync(transaction);
+
+                console.log("static", TransactionAdapter.staticBus);
+
                 resolve();
             } catch (error) {
                 logger.error(`[${this.constructor.name}] ${error}`);
