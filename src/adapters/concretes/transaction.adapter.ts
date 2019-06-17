@@ -2,13 +2,14 @@ import { logger } from "@blockr/blockr-logger";
 import { Transaction } from "@blockr/blockr-models";
 import { ServerUnaryCall } from "grpc";
 import { inject, injectable } from "inversify";
-import { BaseAdapter, IOnMessageHandler, RPCOnMessageHandler } from "..";
+import { BaseAdapter, IBaseServiceAdapter, IOnMessageHandler, RPCOnMessageHandler } from "..";
 import { ValidatorBus } from "../../validators";
 import { RPCCommunicationRepository } from "../communication/repositories/concretes/rpcCommunication.repository";
 import { ITransactionServiceAdapter } from "../interfaces/transactionService.adapter";
 
 @injectable()
 export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> {
+    public static serviceAdapter: IBaseServiceAdapter | undefined;
     private static staticBus: ValidatorBus;
 
     constructor(@inject(RPCCommunicationRepository) communicationRepository: RPCCommunicationRepository,
@@ -32,17 +33,16 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
         return new Promise(async (resolve) => {
             try {
                 serverUnaryCall = serverUnaryCall;
-                // const transaction: Transaction = serverUnaryCall.request;
+                const transaction: Transaction = serverUnaryCall.request;
                 
                 // console.log(this);
 
                 // const kutbus = DI_CONTAINER.get<ValidatorBus>(ValidatorBus);
                 // await kutbus.validateAsync([transaction]);
 
-                // // await super.getValidatorBus().validateAsync([transaction]);
-                // await super.getServiceAdapter().addPendingTransactionAsync(transaction);
-
-                console.log("static", TransactionAdapter.staticBus);
+                await TransactionAdapter.staticBus.validateAsync([transaction]);
+                await (TransactionAdapter.serviceAdapter as ITransactionServiceAdapter)
+                    .addPendingTransactionAsync(transaction);
 
                 resolve();
             } catch (error) {

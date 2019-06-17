@@ -1,3 +1,4 @@
+import { ITransactionServiceAdapter, TransactionAdapter } from "..";
 import { AdapterException } from "../../exceptions/adapter.exception";
 import { ValidatorBus } from "../../validators";
 import { ICommunicationRepository } from "../communication/repositories/interfaces/communication.repository";
@@ -21,6 +22,8 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
      */
     public setServiceAdapter(serviceAdapter: T): void {
         this.serviceAdapter = serviceAdapter;
+
+        TransactionAdapter.serviceAdapter = serviceAdapter;
     }
 
     protected getServiceAdapter(): T {
