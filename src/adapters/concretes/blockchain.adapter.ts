@@ -2,6 +2,7 @@ import { logger } from "@blockr/blockr-logger";
 import { Block, State } from "@blockr/blockr-models";
 import { Message, PeerType } from "@blockr/blockr-p2p-lib";
 import { RESPONSE_TYPE } from "@blockr/blockr-p2p-lib/dist/interfaces/peer";
+import { plainToClass } from "class-transformer";
 import { inject, injectable } from "inversify";
 import { ValidatorBus } from "../../validators";
 import { BaseAdapter } from "../abstractions/base.adapter";
@@ -40,12 +41,16 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
                     (responseMessage: Message) => {
                         try {
                             logger.info("[BlockchainAdapter] Received blockchain and states.");
-                            const blockchainAndStates: [Block[], State[]] = JSON.parse(responseMessage.body as string);
+
+                            const deserializedObject = JSON.parse(responseMessage.body as string);
+
+                            const blockchain: Block[] = plainToClass<Block, any>(Block, deserializedObject.blockchain);
+                            const states: State[] = plainToClass<State, any>(State, deserializedObject.states);
     
-                            super.getValidatorBus().validateAsync(blockchainAndStates[0]);
-                            super.getValidatorBus().validateAsync(blockchainAndStates[1]);
-                            
-                            resolve(blockchainAndStates);
+                            super.getValidatorBus().validateAsync(blockchain);
+                            super.getValidatorBus().validateAsync(states);
+
+                            resolve([blockchain, states]);
                         } catch (error) {
                             reject(error);
                         }
@@ -76,11 +81,15 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
             try {
                 const blockchain = await super.getServiceAdapter().getBlockchainAsync();
                 const states = await super.getServiceAdapter().getStatesAsync();
-                const blockchainAndStates: [Block[], State[]] = [blockchain, states];
+               
+                const serializableObject: object = {
+                    blockchain,
+                    states,
+                };
 
                 resolve(response(new Message(
                         MessageType.BLOCKCHAIN_AND_STATES_REQUEST_RESPONSE,
-                        JSON.stringify(blockchainAndStates),
+                        JSON.stringify(serializableObject),
                     ),
                 ));
             } catch (error) {
