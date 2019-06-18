@@ -50,7 +50,8 @@ export class BlockJob extends SchedulableJob {
             try {
                 const proposedBlock: Block = await this.generateProposedBlockAsync();
                 this.queueStore.pendingProposedBlockQueue.add(proposedBlock);
-                this.proposedBlockAdapter.broadcastNewProposedBlock(proposedBlock);
+
+                await this.proposedBlockAdapter.broadcastNewProposedBlockAsync(proposedBlock);
 
                 const states: State[] = await this.dataAccessLayer.getStatesAsync();
 
@@ -73,8 +74,8 @@ export class BlockJob extends SchedulableJob {
                     return;
                 }
                 
-                await this.transactionService.updatePendingTransactions(victoriousBlock);
-                this.victoriousBlockAdapter.broadcastNewVictoriousBlock(victoriousBlock);
+                await this.transactionService.updatePendingTransactionsAsync(victoriousBlock);
+                await this.victoriousBlockAdapter.broadcastNewVictoriousBlockAsync(victoriousBlock);
 
                 resolve();
             } catch (error) {

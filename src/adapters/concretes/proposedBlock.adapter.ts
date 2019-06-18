@@ -22,30 +22,31 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
         super(communicationRepository, validatorBus);
     }
 
-    public async broadcastNewProposedBlock(proposedBlock: Block): Promise<void> {
-        return new Promise((resolve) => {
+    public async broadcastNewProposedBlockAsync(proposedBlock: Block): Promise<void> {
+        return new Promise(async (resolve) => {
             logger.info("[ProposedBlockAdapter] Broadcasting new proposed block.");
 
             const messageSendingHandler: IMessageSendingHandler = new P2PMessageSendingHandler(
                 new Message(MessageType.NEW_PROPOSED_BLOCK, JSON.stringify(proposedBlock)),
             );
 
-            resolve(this.communicationRepository.broadcastMessageAsync!(messageSendingHandler));
+            await this.communicationRepository.broadcastMessageAsync!(messageSendingHandler);
+
+            resolve();
         });
     }
 
     protected initOnMessageHandlers(): void {
-        const newProposedBlockHandler: IOnMessageHandler = new P2POnMessageHandler(
-            MessageType.NEW_PROPOSED_BLOCK,
-            async (message: Message, _senderGuid: string, _response: RESPONSE_TYPE) => {
-                this.handleNewProposedBlock(message);
-            },
+        const newProposedBlockHandler: IOnMessageHandler = new P2POnMessageHandler(MessageType.NEW_PROPOSED_BLOCK,
+                async (message: Message, _senderGuid: string, _response: RESPONSE_TYPE) => {
+                    await this.handleNewProposedBlockAsync(message);
+                },
         );
 
         this.communicationRepository.addOnMessageHandler(newProposedBlockHandler);
     }
 
-    private async handleNewProposedBlock(message: Message): Promise<void> {
+    private async handleNewProposedBlockAsync(message: Message): Promise<void> {
         return new Promise(async (resolve) => {
             try {
                 logger.info("[ProposedBlockAdapter] Received new proposed block.");
@@ -57,7 +58,9 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
                 const proposedBlock: Block = plainToClass<Block, any>(Block, JSON.parse(message.body) as object);
                 await super.getValidatorBus().validateAsync([proposedBlock]);
 
-                resolve(super.getServiceAdapter().addProposedBlockAsync(proposedBlock));
+                await super.getServiceAdapter().addProposedBlockAsync(proposedBlock);
+
+                resolve();
             } catch (error) {
                 logger.error(`[${this.constructor.name}] ${error}`);
             }

@@ -33,7 +33,7 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
                     },
                 );
             
-                this.communicationRepository.sendMessageToRandomNodeAsync!(handler);
+                await this.communicationRepository.sendMessageToRandomNodeAsync!(handler);
                 await (this.communicationRepository as P2PCommunicationRepository).getPromiseForResponse(message);
             } catch (error) {
                 reject(error);
@@ -58,12 +58,13 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
             try {
                 logger.info("[KeyAdapter] Sending admin key to node as per request.");
                 const key: string = await super.getServiceAdapter().getAdminKey();
-
-                resolve(response(new Message(
-                        MessageType.ADMIN_KEY_REQUEST_RESPONSE,
-                        key,
-                    ),
+                
+                response(new Message(
+                    MessageType.ADMIN_KEY_REQUEST_RESPONSE,
+                    key,
                 ));
+                
+                resolve();
             } catch (error) {
                 logger.error(`[${this.constructor.name}] ${error}`);
             }

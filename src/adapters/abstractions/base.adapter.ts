@@ -1,3 +1,4 @@
+import { ITransactionServiceAdapter, TransactionAdapter } from "..";
 import { AdapterException } from "../../exceptions/adapter.exception";
 import { ValidatorBus } from "../../validators";
 import { ICommunicationRepository } from "../communication/repositories/interfaces/communication.repository";
