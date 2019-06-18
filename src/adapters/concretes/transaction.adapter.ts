@@ -32,6 +32,7 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
     private async handleNewTransactionAsync(serverUnaryCall: ServerUnaryCall<Transaction>): Promise<void> {
         return new Promise(async (resolve) => {
             try {
+                logger.info("[TransactionAdapter] Received new transaction.");
                 serverUnaryCall = serverUnaryCall;
                 const transaction: Transaction = serverUnaryCall.request;
                 
