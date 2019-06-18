@@ -22,8 +22,6 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
      */
     public setServiceAdapter(serviceAdapter: T): void {
         this.serviceAdapter = serviceAdapter;
-
-        TransactionAdapter.serviceAdapter = serviceAdapter;
     }
 
     protected getServiceAdapter(): T {

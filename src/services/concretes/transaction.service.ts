@@ -14,7 +14,7 @@ export class TransactionService implements ITransactionServiceAdapter {
         this.queueStore = queueStore;
         this.transactionAdapter = transactionAdapter;
 
-        this.transactionAdapter.setServiceAdapter(this);
+        TransactionAdapter.serviceAdapter = this;
     }
 
     public addPendingTransactionAsync(transaction: Transaction): Promise<void> {
