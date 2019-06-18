@@ -1,19 +1,27 @@
-FROM node:8
-WORKDIR /app
-COPY package.json ./package.json
-COPY package-lock.json ./package-lock.json
+FROM node:alpine as BUILD
+ARG REGISTRY='@blockr:registry=https://registry.npmjs.org'
+WORKDIR /
+RUN echo ${REGISTRY} > ./.npmrc
+COPY package*.json ./
 RUN npm i
+COPY tslint.json tsconfig.json ./
+COPY src/ ./src
+RUN npm run build:docker
 
-COPY src/lib ./lib
-COPY src/logic ./logic
-COPY public ./public
-COPY src/services ./services
-COPY src/tasks ./tasks
-COPY src/util ./util
-COPY src/validator-mongodb ./validator-mongodb
-COPY database_volume ./database
+FROM node:alpine as TEST
+ARG WORKDIR=/
+WORKDIR ${WORKDIR}
+COPY package.json jest.config.js tsconfig.json ./
+COPY src/ ./src
+COPY --from=BUILD /node_modules ./node_modules
+ENTRYPOINT [ "npm", "run", "test" ]
 
-COPY src/.env ./.env
-COPY src/server.js ./server.js
-
-ENTRYPOINT ["node", "server.js"]
+FROM node:alpine as FINAL
+WORKDIR /dist
+COPY --from=BUILD /dist .
+WORKDIR /
+COPY --from=BUILD /.npmrc ./
+COPY --from=BUILD /package*.json ./
+ENV NODE_ENV=production
+RUN npm i
+ENTRYPOINT [ "node", "dist/main" ]
