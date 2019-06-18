@@ -19,7 +19,7 @@ export abstract class BaseValidator<T> implements IValidator<T> {
     public async validateObjectAsync(object: T): Promise<[T, boolean]> {
         return new Promise(async (resolve, reject) => {
             try {
-                logger.info(`Validating ${(object as unknown as object).constructor.name}`);
+                logger.info(`[${this.constructor.name}] Validating ${(object as unknown as object).constructor.name}`);
 
                 const isValid = await this.everyConditionIsValidAsync(object, this.validationConditions);
     

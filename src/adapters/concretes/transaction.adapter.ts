@@ -29,12 +29,12 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
         this.communicationRepository.addOnMessageHandler(newTransactionReceivalHandler);
     }
 
-    private async handleNewTransactionAsync(serverUnaryCall: ServerUnaryCall<Transaction>): Promise<void> {
+    private async handleNewTransactionAsync(serverUnaryCall: ServerUnaryCall<any>): Promise<void> {
         return new Promise(async (resolve) => {
             try {
                 logger.info("[TransactionAdapter] Received new transaction.");
                 serverUnaryCall = serverUnaryCall;
-                const transaction: Transaction = serverUnaryCall.request;
+                const transaction: Transaction = serverUnaryCall.request.Transaction;
                 
                 // Hotfix
                 await TransactionAdapter.staticBus.validateAsync([transaction]);
