@@ -5,7 +5,7 @@ import { Peer } from "@blockr/blockr-p2p-lib";
 import * as Sentry from "@sentry/node";
 import { exitHandler } from "./handlers";
 import DI_CONTAINER from "./injection/container.injection";
-import { NodeService, ProposedBlockService, VictoriousBlockService } from "./services";
+import { NodeService, ProposedBlockService, VictoriousBlockService, TransactionService } from "./services";
 import { ConstantStore } from "./stores/constant.store";
 
 async function main() {
