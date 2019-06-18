@@ -15,6 +15,9 @@ import { IOnMessageHandler } from "../communication/handlers/interfaces/onMessag
 import { P2PCommunicationRepository } from "../communication/repositories/concretes/p2pCommunication.repository";
 import { IVictoriousBlockServiceAdapter } from "../interfaces/victoriousBlockService.adapter";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceAdapter> {
     constructor(@inject(P2PCommunicationRepository) communicationRepository: P2PCommunicationRepository,
@@ -22,6 +25,11 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
         super(communicationRepository, validatorBus);
     }
 
+    /**
+     * Broadcasts new victorious block async
+     * @param victoriousBlock 
+     * @returns new victorious block async 
+     */
     public async broadcastNewVictoriousBlockAsync(victoriousBlock: Block): Promise<void> {
         return new Promise(async (resolve) => {
             logger.info("[VictoriousBlockAdapter] Broadcasting new victorious block.");
@@ -36,6 +44,9 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
         });
     }
 
+    /**
+     * Inits on message handlers
+     */
     protected initOnMessageHandlers(): void {
         const newVictoriousBlockHandler: IOnMessageHandler = new P2POnMessageHandler(MessageType.NEW_VICTORIOUS_BLOCK,
             async (message: Message, _senderGuid: string, _response: RESPONSE_TYPE) => {
@@ -46,6 +57,11 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
         this.communicationRepository.addOnMessageHandler(newVictoriousBlockHandler);
     }
 
+    /**
+     * Handles new victorious block async
+     * @param message 
+     * @returns new victorious block async 
+     */
     private async handleNewVictoriousBlockAsync(message: Message): Promise<void> {
         return new Promise(async (resolve) => {
             try {

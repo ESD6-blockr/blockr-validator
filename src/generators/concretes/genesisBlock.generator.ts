@@ -5,12 +5,21 @@ import { BlockGeneratorException } from "../../exceptions";
 import { ConstantStore } from "../../stores";
 import { BlockGenerator } from "../abstractions/block.generator";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class GenesisBlockGenerator extends BlockGenerator {
     private readonly constantStore: ConstantStore;
     private readonly objectHasher: ObjectHasher;
     private readonly cryptoKeyUtil: CryptoKeyUtil;
 
+    /**
+     * Creates an instance of genesis block generator.
+     * @param constantStore 
+     * @param objectHasher 
+     * @param cryptoKeyUtil 
+     */
     constructor(@inject(ConstantStore) constantStore: ConstantStore,
                 @inject(ObjectHasher) objectHasher: ObjectHasher,
                 @inject(CryptoKeyUtil) cryptoKeyUtil: CryptoKeyUtil) {
@@ -21,6 +30,10 @@ export class GenesisBlockGenerator extends BlockGenerator {
         this.cryptoKeyUtil = cryptoKeyUtil;
     }
 
+    /**
+     * Generates genesis block async
+     * @returns genesis block async 
+     */
     public async generateGenesisBlockAsync(): Promise<Block> {
         return new Promise(async (resolve, reject) => {
             if (this.constantStore.ADMIN_PUBLIC_KEY === "") {
@@ -35,6 +48,10 @@ export class GenesisBlockGenerator extends BlockGenerator {
         });
     }
 
+    /**
+     * Generates transactions async
+     * @returns transactions async 
+     */
     private async generateTransactionsAsync(): Promise<Transaction[]> {
         return new Promise(async (resolve) => {
             const currentDate = new Date();
@@ -54,6 +71,13 @@ export class GenesisBlockGenerator extends BlockGenerator {
         });
     }
 
+    /**
+     * Creates and sign transaction async
+     * @param type 
+     * @param amount 
+     * @param date 
+     * @returns and sign transaction async 
+     */
     private async createAndSignTransactionAsync(type: TransactionType,
                                                 amount: number, date: Date): Promise<Transaction> {
         const transactionHeader = new TransactionHeader(

@@ -12,6 +12,9 @@ import { TransactionService } from "../../services/concretes/transaction.service
 import { ConstantStore, QueueStore } from "../../stores";
 import { createAwaitableTimeout } from "../../utils/timeout.util";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class BlockJob extends SchedulableJob {
     private readonly dataAccessLayer: DataAccessLayer;
@@ -23,6 +26,17 @@ export class BlockJob extends SchedulableJob {
     private readonly proposedBlockAdapter: ProposedBlockAdapter;
     private readonly victoriousBlockAdapter: VictoriousBlockAdapter;
 
+    /**
+     * Creates an instance of block job.
+     * @param dataAccessLayer 
+     * @param proposedBlockGenerator 
+     * @param lotteryService 
+     * @param transactionService 
+     * @param constantStore 
+     * @param queueStore 
+     * @param proposedBlockAdapter 
+     * @param victoriousBlockAdapter 
+     */
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ProposedBlockGenerator) proposedBlockGenerator: ProposedBlockGenerator,
                 @inject(LotteryService) lotteryService: LotteryService,
@@ -43,6 +57,10 @@ export class BlockJob extends SchedulableJob {
         this.victoriousBlockAdapter = victoriousBlockAdapter;
     }
 
+    /**
+     * Determines whether cycle async on
+     * @returns cycle async 
+     */
     protected async onCycleAsync(): Promise<void> {
         return new Promise(async (resolve, reject) => {
             logger.info("[BlockJob] Starting cycle.");
@@ -85,6 +103,10 @@ export class BlockJob extends SchedulableJob {
         });
     }
 
+    /**
+     * Generates proposed block async
+     * @returns proposed block async 
+     */
     private async generateProposedBlockAsync(): Promise<Block> {
         return new Promise(async (resolve, reject) => {
             const blockChain: Block[] = await this.dataAccessLayer.getBlocksByQueryAsync({});

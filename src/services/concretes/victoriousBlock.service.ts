@@ -6,6 +6,9 @@ import { VictoriousBlockAdapter } from "../../adapters/concretes/victoriousBlock
 import { IVictoriousBlockServiceAdapter } from "../../adapters/interfaces/victoriousBlockService.adapter";
 import { StateService } from "./state.service";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class VictoriousBlockService implements IVictoriousBlockServiceAdapter {
     private readonly dataAccessLayer: DataAccessLayer;
@@ -13,6 +16,12 @@ export class VictoriousBlockService implements IVictoriousBlockServiceAdapter {
     private readonly victoriousBlockAdapter: VictoriousBlockAdapter;
     private lastProccesedBlockNummer: number = -1;
 
+    /**
+     * Creates an instance of victorious block service.
+     * @param dataAccessLayer 
+     * @param stateService 
+     * @param victoriousBlockAdapter 
+     */
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(StateService) stateService: StateService,
                 @inject(VictoriousBlockAdapter) victoriousBlockAdapter: VictoriousBlockAdapter) {
@@ -23,6 +32,11 @@ export class VictoriousBlockService implements IVictoriousBlockServiceAdapter {
         this.victoriousBlockAdapter.setServiceAdapter(this);
     }
     
+    /**
+     * Adds victorious block async
+     * @param victoriousBlock 
+     * @returns victorious block async 
+     */
     public async addVictoriousBlockAsync(victoriousBlock: Block): Promise<void> {
         return new Promise(async (resolve, reject) => {
             // Since the BlockJob's cycle execution is synced for every Node, all victorious blocks that will 

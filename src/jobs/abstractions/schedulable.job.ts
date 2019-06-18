@@ -8,7 +8,9 @@ import { schedule } from "node-cron";
 export abstract class SchedulableJob {
     /**
      * Schedules the job, and thus onCycleAsync method, for a given threshold in minutes.
-     * Prior to scheduling the onCycleAsync method, the onInitAsync method will be executed once.
+     * Prior to scheduling the onCycleAsync method, the onInitAsync method will be executed once.     
+     * @param thresholdInMinutes 
+     * @returns async 
      */
     public scheduleAsync(thresholdInMinutes: number): Promise<void> {
         return new Promise(async (resolve) => {

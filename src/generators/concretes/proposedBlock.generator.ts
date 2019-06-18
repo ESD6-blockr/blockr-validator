@@ -4,11 +4,19 @@ import { inject, injectable } from "inversify";
 import { ConstantStore } from "../../stores";
 import { BlockGenerator } from "../abstractions/block.generator";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class ProposedBlockGenerator extends BlockGenerator {
     private readonly objectHasher: ObjectHasher;
     private readonly constantStore: ConstantStore;
 
+    /**
+     * Creates an instance of proposed block generator.
+     * @param objectHasher 
+     * @param constantStore 
+     */
     constructor(@inject(ObjectHasher) objectHasher: ObjectHasher,
                 @inject(ConstantStore) constantStore: ConstantStore) {
         super();
@@ -17,6 +25,14 @@ export class ProposedBlockGenerator extends BlockGenerator {
         this.constantStore = constantStore;
     }
 
+    /**
+     * Generates proposed block async
+     * @param parentBlock 
+     * @param pendingTransactions 
+     * @param validatorVersion 
+     * @param validatorPublicKey 
+     * @returns proposed block async 
+     */
     public async generateProposedBlockAsync(parentBlock: Block,
                                             pendingTransactions: Transaction[],
                                             validatorVersion: string, validatorPublicKey: string): Promise<Block> {

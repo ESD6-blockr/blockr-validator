@@ -8,12 +8,23 @@ import { BaseValidator } from "../abstractions/base.validator";
 import { TransactionValidator } from "./transaction.validator";
 import { ValidationCondition } from "./validation.condition";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class BlockValidator extends BaseValidator<Block> {
     private readonly constantStore: ConstantStore;
     private readonly blockHeaderValidator: IValidator<BlockHeader>;
     private readonly transactionValidator: IValidator<Transaction>;
     
+    /**
+     * Creates an instance of block validator.
+     * @param dataAccessLayer 
+     * @param objectHasher 
+     * @param constantStore 
+     * @param blockHeaderValidator 
+     * @param transactionValidator 
+     */
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ObjectHasher) objectHasher: ObjectHasher,
                 @inject(ConstantStore) constantStore: ConstantStore,
@@ -26,6 +37,11 @@ export class BlockValidator extends BaseValidator<Block> {
         this.transactionValidator = transactionValidator;
     }
 
+    /**
+     * Validates object async
+     * @param block 
+     * @returns object async 
+     */
     public async validateObjectAsync(block: Block): Promise<[Block, boolean]> {
         return new Promise(async (resolve, reject) => {
             try {
@@ -44,11 +60,18 @@ export class BlockValidator extends BaseValidator<Block> {
         });
     }
 
+    /**
+     * Inits conditions
+     */
     protected initConditions(): void {
         this.validationConditions.push.apply(this.validationConditions, this.getModelConditions());
         this.validationConditions.push.apply(this.validationConditions, this.getBlockConditions());
     }
 
+    /**
+     * Gets model conditions
+     * @returns model conditions 
+     */
     private getModelConditions(): Array<ValidationCondition<Block>> {
         return [
             new ValidationCondition((block: Block): boolean => {
@@ -66,6 +89,10 @@ export class BlockValidator extends BaseValidator<Block> {
         ];
     }
 
+    /**
+     * Gets block conditions
+     * @returns block conditions 
+     */
     private getBlockConditions(): Array<ValidationCondition<Block>> {
         return [
             new ValidationCondition((block: Block): boolean => {

@@ -4,11 +4,20 @@ import { ValidatorBus } from "../../validators";
 import { ICommunicationRepository } from "../communication/repositories/interfaces/communication.repository";
 import { IBaseServiceAdapter } from "../interfaces/baseService.adapter";
 
+/**
+ * Base adapter
+ * @template T 
+ */
 export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
     protected readonly communicationRepository: ICommunicationRepository;
     private serviceAdapter?: T;
     private validatorBus?: ValidatorBus;
 
+    /**
+     * Creates an instance of base adapter.
+     * @param communicationRepository 
+     * @param [validatorBus] 
+     */
     public constructor(communicationRepository: ICommunicationRepository, validatorBus?: ValidatorBus) {
         this.communicationRepository = communicationRepository;
         this.validatorBus = validatorBus;
@@ -24,6 +33,10 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
         this.serviceAdapter = serviceAdapter;
     }
 
+    /**
+     * Gets service adapter
+     * @returns service adapter 
+     */
     protected getServiceAdapter(): T {
         if (this.serviceAdapter) {
             return this.serviceAdapter;
@@ -32,6 +45,10 @@ export abstract class BaseAdapter<T extends IBaseServiceAdapter> {
         throw new AdapterException("The service adapter is undefined.");
     }
 
+    /**
+     * Gets validator bus
+     * @returns validator bus 
+     */
     protected getValidatorBus(): ValidatorBus {
         if (this.validatorBus) {
             return this.validatorBus;

@@ -8,6 +8,9 @@ export class QueueStore {
     public pendingTransactionQueue: Set<Transaction>;
     public pendingProposedBlockQueue: Set<Block>;
 
+    /**
+     * Creates an instance of queue store.
+     */
     public constructor() {
         this.pendingTransactionQueue = new Set<Transaction>();
         this.pendingProposedBlockQueue = new Set<Block>();

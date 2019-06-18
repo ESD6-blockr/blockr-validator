@@ -1,7 +1,21 @@
 import { Block, BlockHeader, BlockType, Transaction } from "@blockr/blockr-models";
 import { BlockGeneratorException } from "../../exceptions";
 
+/**
+ * Block generator
+ */
 export abstract class BlockGenerator {
+    /**
+     * Generates block async
+     * @param transactions 
+     * @param version 
+     * @param blockNumber 
+     * @param date 
+     * @param blockReward 
+     * @param parentHash 
+     * @param validator 
+     * @returns block async 
+     */
     protected async generateBlockAsync(transactions: Transaction[], version: string, blockNumber: number,
                                        date: Date, blockReward: number,
                                        parentHash: string, validator: string): Promise<Block> {
@@ -21,6 +35,15 @@ export abstract class BlockGenerator {
         });
     }
 
+    /**
+     * Generates block header async
+     * @param version 
+     * @param blockNumber 
+     * @param date 
+     * @param blockReward 
+     * @param validator 
+     * @returns block header async 
+     */
     private async generateBlockHeaderAsync(version: string, blockNumber: number, date: Date,
                                            blockReward: number, validator: string): Promise<BlockHeader> {
         return new Promise((resolve) => {

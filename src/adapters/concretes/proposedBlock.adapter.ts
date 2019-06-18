@@ -15,6 +15,9 @@ import { IOnMessageHandler } from "../communication/handlers/interfaces/onMessag
 import { P2PCommunicationRepository } from "../communication/repositories/concretes/p2pCommunication.repository";
 import { IProposedBlockServiceAdapter } from "../interfaces/proposedBlockService.adapter";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapter> {
     constructor(@inject(P2PCommunicationRepository) communicationRepository: P2PCommunicationRepository,
@@ -22,6 +25,11 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
         super(communicationRepository, validatorBus);
     }
 
+    /**
+     * Broadcasts new proposed block async
+     * @param proposedBlock 
+     * @returns new proposed block async 
+     */
     public async broadcastNewProposedBlockAsync(proposedBlock: Block): Promise<void> {
         return new Promise(async (resolve) => {
             logger.info("[ProposedBlockAdapter] Broadcasting new proposed block.");
@@ -36,6 +44,9 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
         });
     }
 
+    /**
+     * Inits on message handlers
+     */
     protected initOnMessageHandlers(): void {
         const newProposedBlockHandler: IOnMessageHandler = new P2POnMessageHandler(MessageType.NEW_PROPOSED_BLOCK,
                 async (message: Message, _senderGuid: string, _response: RESPONSE_TYPE) => {
@@ -46,6 +57,11 @@ export class ProposedBlockAdapter extends BaseAdapter<IProposedBlockServiceAdapt
         this.communicationRepository.addOnMessageHandler(newProposedBlockHandler);
     }
 
+    /**
+     * Handles new proposed block async
+     * @param message 
+     * @returns new proposed block async 
+     */
     private async handleNewProposedBlockAsync(message: Message): Promise<void> {
         return new Promise(async (resolve) => {
             try {

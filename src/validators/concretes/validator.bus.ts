@@ -4,14 +4,26 @@ import { injectable, multiInject } from "inversify";
 import { ValidatorBusException } from "../../exceptions/validatorBus.exception";
 import { IValidator } from "../interfaces/validator";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class ValidatorBus {
     private readonly validators: Array<IValidator<IModel>>;
 
+    /**
+     * Creates an instance of validator bus.
+     * @param validators 
+     */
     constructor(@multiInject("Validators") validators: Array<IValidator<IModel>>) {
         this.validators = validators;
     }
 
+    /**
+     * Validates async
+     * @param models 
+     * @returns async 
+     */
     public async validateAsync(models: IModel[]): Promise<Array<[IModel, boolean]>> {
         const promises: Array<Promise<[IModel, boolean]>> = [];
 
@@ -31,6 +43,11 @@ export class ValidatorBus {
         return Promise.all(promises);
     }
 
+    /**
+     * Validators for model
+     * @param model 
+     * @returns for model 
+     */
     private validatorForModel(model: IModel): IValidator<IModel> {
         for (const validator of this.validators) {
             if (validator.constructor.name === `${model.constructor.name}Validator`) {

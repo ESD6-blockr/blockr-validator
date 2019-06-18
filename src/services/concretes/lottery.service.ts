@@ -6,12 +6,20 @@ import * as seedRandom from "seedrandom";
 import { QueueStore } from "../../stores/queue.store";
 import { cloneSet } from "../../utils/set.util";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class LotteryService {
   private readonly dataAccessLayer: DataAccessLayer;
   private readonly queueStore: QueueStore;
   private ticketCount: number;
 
+  /**
+   * Creates an instance of lottery service.
+   * @param dataAccessLayer 
+   * @param queueStore 
+   */
   constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
               @inject(QueueStore) queueStore: QueueStore) {
     this.dataAccessLayer = dataAccessLayer;
@@ -19,6 +27,12 @@ export class LotteryService {
     this.ticketCount = 0;
   }
 
+  /**
+   * Draws winning block
+   * @param parentBlockHash 
+   * @param walletStates 
+   * @returns winning block 
+   */
   public async drawWinningBlock(parentBlockHash: string,
                                 walletStates: State[]): Promise<Block | undefined> {
       return new Promise(async (resolve, reject) => {
@@ -38,6 +52,13 @@ export class LotteryService {
       });
   }
 
+  /**
+   * Chooses winning block
+   * @param parentBlockHash 
+   * @param candidatesMap 
+   * @param pendingProposedBlocks 
+   * @returns winning block 
+   */
   private async chooseWinningBlock(parentBlockHash: string, candidatesMap: Map<string, number>,
                                    pendingProposedBlocks: Set<Block>): Promise<Block | undefined> {
     return new Promise((resolve) => {
@@ -67,6 +88,12 @@ export class LotteryService {
     });
   }
 
+  /**
+   * Calculates candidates
+   * @param stakeMap 
+   * @param pendingProposedBlocks 
+   * @returns candidates 
+   */
   private async calculateCandidates(stakeMap: Map<string, number>,
                                     pendingProposedBlocks: Set<Block>): Promise<Map<string, number>> {
     return new Promise((resolve) => {
@@ -96,6 +123,11 @@ export class LotteryService {
     });
   }
 
+  /**
+   * Converts states to stake map
+   * @param states 
+   * @returns states to stake map 
+   */
   private async convertStatesToStakeMap(states: State[]): Promise<Map<string, number>> {
     return new Promise((resolve) => {
       const stakeMap = new Map<string, number>();

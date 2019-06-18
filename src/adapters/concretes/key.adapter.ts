@@ -10,6 +10,9 @@ import { IOnMessageHandler } from "../communication/handlers/interfaces/onMessag
 import { P2PCommunicationRepository } from "../communication/repositories/concretes/p2pCommunication.repository";
 import { IKeyServiceAdapter } from "../interfaces/keyService.adapter";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
     constructor(@inject(P2PCommunicationRepository) communicationRepository: P2PCommunicationRepository) {
@@ -41,6 +44,9 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
         });
     }
 
+    /**
+     * Inits on message handlers
+     */
     protected initOnMessageHandlers(): void {
         const adminKeyRequestHandler: IOnMessageHandler = new P2POnMessageHandler(
             MessageType.ADMIN_KEY_REQUEST,
@@ -53,6 +59,11 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
         this.communicationRepository.addOnMessageHandler(adminKeyRequestHandler);
     }
 
+    /**
+     * Handles admin key request async
+     * @param response 
+     * @returns admin key request async 
+     */
     private handleAdminKeyRequestAsync(response: RESPONSE_TYPE): Promise<void> {
         return new Promise(async (resolve) => {
             try {

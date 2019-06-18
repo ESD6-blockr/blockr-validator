@@ -4,6 +4,9 @@ import DI_CONTAINER from "../injection/container.injection";
 
 let disposing: boolean = false;
 
+/**
+ * Exits handler
+ */
 export function exitHandler() {
     if (!disposing) {
         disposing = true;

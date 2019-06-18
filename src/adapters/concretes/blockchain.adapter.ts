@@ -14,6 +14,9 @@ import { P2PCommunicationRepository } from "../communication/repositories/concre
 import { MessageType } from "../enums/messageType.enum";
 import { IBlockchainServiceAdapter } from "../interfaces/blockchainService.adapter";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
     constructor(@inject(P2PCommunicationRepository) communicationRepository: P2PCommunicationRepository,
@@ -21,6 +24,10 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
         super(communicationRepository, validatorBus);
     }
 
+    /**
+     * Should generate genesis block
+     * @returns true if generate genesis block 
+     */
     public shouldGenerateGenesisBlock(): boolean {
         return (this.communicationRepository as P2PCommunicationRepository)
                     .getPeerOfType(PeerType.VALIDATOR) === undefined;
@@ -64,6 +71,9 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
         });
     }
 
+    /**
+     * Inits on message handlers
+     */
     protected initOnMessageHandlers(): void {
         const blockchainAndStatesRequestHandler: IOnMessageHandler = new P2POnMessageHandler(
             MessageType.BLOCKCHAIN_AND_STATES_REQUEST,
@@ -75,6 +85,11 @@ export class BlockchainAdapter extends BaseAdapter<IBlockchainServiceAdapter> {
         this.communicationRepository.addOnMessageHandler(blockchainAndStatesRequestHandler);
     }
 
+    /**
+     * Handles blockchain request async
+     * @param response 
+     * @returns blockchain request async 
+     */
     private handleBlockchainRequestAsync(response: RESPONSE_TYPE): Promise<void> {
         return new Promise(async (resolve) => {
             try {

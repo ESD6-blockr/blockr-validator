@@ -3,8 +3,16 @@ import { injectable } from "inversify";
 
 const ENCODING = "utf8";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class FileUtils {
+    /**
+     * Files exists async
+     * @param filePath 
+     * @returns exists async 
+     */
     public fileExistsAsync(filePath: string): Promise<boolean> {
         return new Promise((resolve) => {
             access(filePath, constants.F_OK, (error) => {

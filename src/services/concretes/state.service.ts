@@ -3,17 +3,29 @@ import { State, Transaction } from "@blockr/blockr-models";
 import { inject, injectable } from "inversify";
 import { ConstantStore } from "../../stores";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class StateService {
     private readonly constantStore: ConstantStore;
     private readonly dataAccessLayer: DataAccessLayer;
 
+    /**
+     * Creates an instance of state service.
+     * @param constantStore 
+     * @param dataAccessLayer 
+     */
     constructor(@inject(ConstantStore) constantStore: ConstantStore,
                 @inject(DataAccessLayer) dataAccessLayer: DataAccessLayer) {
         this.constantStore = constantStore;
         this.dataAccessLayer = dataAccessLayer;
     }
 
+    /**
+     * Initializes genesis state
+     * @returns genesis state 
+     */
     public async initializeGenesisState(): Promise<void> {
         await this.dataAccessLayer.setStatesAsync([new State(
             this.constantStore.ADMIN_PUBLIC_KEY,
@@ -22,6 +34,11 @@ export class StateService {
         );
     }
     
+    /**
+     * Updates states for transactions async
+     * @param transactions 
+     * @returns states for transactions async 
+     */
     public async updateStatesForTransactionsAsync(transactions: Transaction[]): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
@@ -46,6 +63,13 @@ export class StateService {
         });
     }
 
+    /**
+     * Updates state by key
+     * @param key 
+     * @param transactionAmount 
+     * @param operator 
+     * @returns state by key 
+     */
     private async updateStateByKey(key: string, transactionAmount: number, operator: Operator): Promise<void> {
         let state: State | undefined = await this.dataAccessLayer.getStateAsync(key);
 
@@ -63,6 +87,13 @@ export class StateService {
         await this.dataAccessLayer.setStatesAsync([state]);
     }
     
+    /**
+     * Calculates amount
+     * @param operator 
+     * @param currentAmount 
+     * @param transactionAmount 
+     * @returns amount 
+     */
     private calculateAmount(operator: Operator, currentAmount: number, transactionAmount: number): number {
         return operator === Operator.PLUS
         ? currentAmount += transactionAmount
@@ -70,6 +101,9 @@ export class StateService {
     }
 }
 
+/**
+ * Mathematical Operator
+ */
 enum Operator {
     PLUS = "+",
     MINUS = "-",

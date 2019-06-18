@@ -7,11 +7,21 @@ import { ConstantStore } from "../../stores";
 import { TransactionHeaderValidator } from "./transactionHeader.validator";
 import { ValidationCondition } from "./validation.condition";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class TransactionValidator extends BaseValidator<Transaction> {
     private readonly constantStore: ConstantStore;
     private readonly transactionHeaderValidator: IValidator<TransactionHeader>;
 
+    /**
+     * Creates an instance of transaction validator.
+     * @param dataAccessLayer 
+     * @param objectHasher 
+     * @param constantStore 
+     * @param transactionHeaderValidator 
+     */
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ObjectHasher) objectHasher: ObjectHasher,
                 @inject(ConstantStore) constantStore: ConstantStore,
@@ -23,6 +33,11 @@ export class TransactionValidator extends BaseValidator<Transaction> {
         this.transactionHeaderValidator = transactionHeaderValidator;
     }
 
+    /**
+     * Validates object async
+     * @param transaction 
+     * @returns object async 
+     */
     public async validateObjectAsync(transaction: Transaction): Promise<[Transaction, boolean]> {
         return new Promise(async (resolve, reject) => {
             try {
@@ -37,11 +52,18 @@ export class TransactionValidator extends BaseValidator<Transaction> {
         });
     }
 
+    /**
+     * Inits conditions
+     */
     protected initConditions(): void {
         this.validationConditions.push.apply(this.validationConditions, this.getModelConditions());
         this.validationConditions.push.apply(this.validationConditions, this.getMiscellaneousConditions());
     }
 
+    /**
+     * Gets model conditions
+     * @returns model conditions 
+     */
     private getModelConditions(): Array<ValidationCondition<Transaction>> {
         return [
             new ValidationCondition((transaction: Transaction): boolean => {
@@ -56,6 +78,10 @@ export class TransactionValidator extends BaseValidator<Transaction> {
         ];
     }
 
+    /**
+     * Gets miscellaneous conditions
+     * @returns miscellaneous conditions 
+     */
     private getMiscellaneousConditions(): Array<ValidationCondition<Transaction>> {
         return [
             new ValidationCondition((transaction: Transaction): boolean => {

@@ -5,19 +5,34 @@ import { inject, injectable } from "inversify";
 import { BaseValidator } from "../abstractions/base.validator";
 import { ValidationCondition } from "./validation.condition";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class TransactionHeaderValidator extends BaseValidator<TransactionHeader> {
+    /**
+     * Creates an instance of transaction header validator.
+     * @param dataAccessLayer 
+     * @param objectHasher 
+     */
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ObjectHasher) objectHasher: ObjectHasher) {
         super(dataAccessLayer, objectHasher);
     }
 
+    /**
+     * Inits conditions
+     */
     protected initConditions(): void {
         this.validationConditions.push.apply(this.validationConditions, this.getModelConditions());
         this.validationConditions.push.apply(this.validationConditions, this.getAmountConditions());
         this.validationConditions.push.apply(this.validationConditions, this.getMiscellaneousConditions());
     }
 
+    /**
+     * Gets model conditions
+     * @returns model conditions 
+     */
     private getModelConditions(): Array<ValidationCondition<TransactionHeader>> {
         return [
             new ValidationCondition((transactionHeader: TransactionHeader): boolean => {
@@ -35,6 +50,10 @@ export class TransactionHeaderValidator extends BaseValidator<TransactionHeader>
         ];
     }
 
+    /**
+     * Gets amount conditions
+     * @returns amount conditions 
+     */
     private getAmountConditions(): Array<ValidationCondition<TransactionHeader>> {
         return [
             new ValidationCondition((transactionHeader: TransactionHeader): boolean => {
@@ -43,6 +62,10 @@ export class TransactionHeaderValidator extends BaseValidator<TransactionHeader>
         ];
     }
 
+    /**
+     * Gets miscellaneous conditions
+     * @returns miscellaneous conditions 
+     */
     private getMiscellaneousConditions(): Array<ValidationCondition<TransactionHeader>> {
         return [
             new ValidationCondition(async (transactionHeader: TransactionHeader): Promise<boolean> => {

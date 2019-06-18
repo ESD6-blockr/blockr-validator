@@ -9,6 +9,9 @@ import { GenesisBlockGenerator } from "../../generators";
 import { AdminKeyService } from "./adminKey.service";
 import { StateService } from "./state.service";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class BlockchainInitializationService implements IBlockchainServiceAdapter {
     private readonly dataAccessLayer: DataAccessLayer;
@@ -17,6 +20,14 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
     private readonly blockchainAdapter: BlockchainAdapter;
     private readonly stateService: StateService;
 
+    /**
+     * Creates an instance of blockchain initialization service.
+     * @param dataAccessLayer 
+     * @param genesisBlockGenerator 
+     * @param adminKeyService 
+     * @param blockchainAdapter 
+     * @param stateService 
+     */
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(GenesisBlockGenerator) genesisBlockGenerator: GenesisBlockGenerator,
                 @inject(AdminKeyService) adminKeyService: AdminKeyService,
@@ -31,6 +42,10 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
         this.blockchainAdapter.setServiceAdapter(this);
     }
 
+    /**
+     * Initiates blockchain if inexistent async
+     * @returns blockchain if inexistent async 
+     */
     public async initiateBlockchainIfInexistentAsync(): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
@@ -66,18 +81,35 @@ export class BlockchainInitializationService implements IBlockchainServiceAdapte
         });
     }
 
+    /**
+     * Gets states async
+     * @returns states async 
+     */
     public async getStatesAsync(): Promise<State[]> {
         return this.dataAccessLayer.getStatesAsync();
     }
 
+    /**
+     * Gets blockchain async
+     * @returns blockchain async 
+     */
     public async getBlockchainAsync(): Promise<Block[]> {
         return this.dataAccessLayer.getBlocksByQueryAsync();
     }
 
+    /**
+     * Saves blockchain async
+     * @param blockchain 
+     * @returns blockchain async 
+     */
     private async saveBlockchainAsync(blockchain: Block[]): Promise<void> {
         return this.dataAccessLayer.addBlocksAsync(blockchain);
     }
 
+    /**
+     * Initiates blockchain async
+     * @returns blockchain async 
+     */
     private async initiateBlockchainAsync(): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {

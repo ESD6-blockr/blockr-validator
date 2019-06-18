@@ -5,7 +5,7 @@ import { Peer } from "@blockr/blockr-p2p-lib";
 import * as Sentry from "@sentry/node";
 import { exitHandler } from "./handlers";
 import DI_CONTAINER from "./injection/container.injection";
-import { NodeService, ProposedBlockService, VictoriousBlockService, TransactionService } from "./services";
+import { NodeService, ProposedBlockService, VictoriousBlockService } from "./services";
 import { ConstantStore } from "./stores/constant.store";
 
 async function main() {
@@ -22,6 +22,10 @@ async function main() {
     }
 }
 
+/**
+ * Inits peer
+ * @param constantStore 
+ */
 async function initPeer(constantStore: ConstantStore) {
     try {
         logger.info("[Main] Initializing Peer.");
@@ -42,6 +46,9 @@ async function initStandaloneServices() {
     DI_CONTAINER.get<VictoriousBlockService>(VictoriousBlockService);
 }
 
+/**
+ * Inits node service
+ */
 async function initNodeService() {
     try {
         logger.info("[Main] Initializing NodeService.");
@@ -53,6 +60,10 @@ async function initNodeService() {
     }
 }
 
+/**
+ * Inits sentry
+ * @param constantStore 
+ */
 function initSentry(constantStore: ConstantStore) {
     logger.info("[Main] Initializing Sentry.");
     

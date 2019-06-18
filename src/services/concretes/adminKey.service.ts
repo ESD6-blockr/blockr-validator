@@ -6,6 +6,9 @@ import { IKeyServiceAdapter } from "../../adapters/interfaces/keyService.adapter
 import { ConstantStore } from "../../stores";
 import { FileUtils } from "../../utils";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class AdminKeyService implements IKeyServiceAdapter {
     private readonly cryptoKeyUtil: CryptoKeyUtil;
@@ -13,6 +16,13 @@ export class AdminKeyService implements IKeyServiceAdapter {
     private readonly constantStore: ConstantStore;
     private readonly keyAdapter: KeyAdapter;
 
+    /**
+     * Creates an instance of admin key service.
+     * @param cryptoKeyUtil 
+     * @param fileUtils 
+     * @param constantStore 
+     * @param keyAdapter 
+     */
     constructor(@inject(CryptoKeyUtil) cryptoKeyUtil: CryptoKeyUtil,
                 @inject(FileUtils) fileUtils: FileUtils,
                 @inject(ConstantStore) constantStore: ConstantStore,
@@ -26,6 +36,11 @@ export class AdminKeyService implements IKeyServiceAdapter {
         this.keyAdapter.setServiceAdapter(this);
     }
 
+    /**
+     * Initiates or request admin key if inexistent async
+     * @param shouldGenerateKeyIfFileInexistent 
+     * @returns or request admin key if inexistent async 
+     */
     public async initiateOrRequestAdminKeyIfInexistentAsync(shouldGenerateKeyIfFileInexistent: boolean): Promise<void> {
         return new Promise(async (resolve) => {
             if (await this.fileUtils.fileExistsAsync(this.constantStore.KEYS_FILE_PATH)) {
@@ -53,10 +68,18 @@ export class AdminKeyService implements IKeyServiceAdapter {
         });
     }
 
+    /**
+     * Gets admin key
+     * @returns admin key 
+     */
     public getAdminKey(): string {
         return this.constantStore.ADMIN_PUBLIC_KEY;
     }
 
+    /**
+     * Generates and save admin key async
+     * @returns and save admin key async 
+     */
     private async generateAndSaveAdminKeyAsync(): Promise<void> {
         return new Promise(async (resolve) => {
             logger.info("[AdminKeyService] Generating admin key pair.");
@@ -72,6 +95,10 @@ export class AdminKeyService implements IKeyServiceAdapter {
         // TODO: TSDocs toevoegen
     }
 
+    /**
+     * Saves admin key in file
+     * @returns admin key in file 
+     */
     private saveAdminKeyInFile(): Promise<void> {
         return this.fileUtils.appendStringInFileAsync(this.constantStore.KEYS_FILE_PATH,
             JSON.stringify({

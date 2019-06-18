@@ -4,11 +4,19 @@ import { inject, injectable } from "inversify";
 import { ITransactionServiceAdapter, TransactionAdapter } from "../../adapters";
 import { QueueStore } from "../../stores/queue.store";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class TransactionService implements ITransactionServiceAdapter {
     private readonly queueStore: QueueStore;
     private readonly transactionAdapter: TransactionAdapter;
 
+    /**
+     * Creates an instance of transaction service.
+     * @param queueStore 
+     * @param transactionAdapter 
+     */
     constructor(@inject(QueueStore) queueStore: QueueStore,
                 @inject(TransactionAdapter) transactionAdapter: TransactionAdapter) {
         this.queueStore = queueStore;
@@ -17,6 +25,11 @@ export class TransactionService implements ITransactionServiceAdapter {
         TransactionAdapter.serviceAdapter = this;
     }
 
+    /**
+     * Adds pending transaction async
+     * @param transaction 
+     * @returns pending transaction async 
+     */
     public addPendingTransactionAsync(transaction: Transaction): Promise<void> {
         return new Promise((resolve) => {
             logger.info("[TransactionService] Adding new transaction to PendingTransactionQueue.");
@@ -27,6 +40,11 @@ export class TransactionService implements ITransactionServiceAdapter {
         });
     }
 
+    /**
+     * Updates pending transactions async
+     * @param victoriousBlock 
+     * @returns pending transactions async 
+     */
     public async updatePendingTransactionsAsync(victoriousBlock: Block): Promise<void> {
         return new Promise((resolve) => {
             logger.info("[TransactionService] Updating pending transactions in PendingTransactionQueue.");

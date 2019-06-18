@@ -5,14 +5,25 @@ import { inject, injectable } from "inversify";
 import { BaseValidator } from "../abstractions/base.validator";
 import { ValidationCondition } from "./validation.condition";
 
+/**
+ * Injectable
+ */
 @injectable()
 export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
+    /**
+     * Creates an instance of block header validator.
+     * @param dataAccessLayer 
+     * @param objectHasher 
+     */
     constructor(@inject(DataAccessLayer) dataAccessLayer: DataAccessLayer,
                 @inject(ObjectHasher) objectHasher: ObjectHasher) {
                         
         super(dataAccessLayer, objectHasher);
     }
 
+    /**
+     * Inits conditions
+     */
     protected initConditions(): void {
         this.validationConditions.push.apply(this.validationConditions, this.getModelConditions());
         this.validationConditions.push.apply(this.validationConditions, this.getValidatorVersionConditions());
@@ -22,6 +33,10 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         this.validationConditions.push.apply(this.validationConditions, this.getHashConditions());
     }
 
+    /**
+     * Gets model conditions
+     * @returns model conditions 
+     */
     private getModelConditions(): Array<ValidationCondition<BlockHeader>> {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
@@ -48,6 +63,10 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         ];
     }
 
+    /**
+     * Gets validator version conditions
+     * @returns  
+     */
     private getValidatorVersionConditions() {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
@@ -64,6 +83,10 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         ];
     }
 
+    /**
+     * Gets block number conditions
+     * @returns  
+     */
     private getBlockNumberConditions() {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
@@ -75,6 +98,10 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         ];
     }
 
+    /**
+     * Gets date conditions
+     * @returns  
+     */
     private getDateConditions() {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
@@ -83,6 +110,10 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         ];
     }
 
+    /**
+     * Gets block reward conditions
+     * @returns  
+     */
     private getBlockRewardConditions() {
         return [
             new ValidationCondition((blockHeader: BlockHeader): boolean => {
@@ -91,6 +122,10 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         ];
     }
 
+    /**
+     * Gets hash conditions
+     * @returns  
+     */
     private getHashConditions() {
         return [
             new ValidationCondition(async (blockHeader: BlockHeader): Promise<boolean> => {
@@ -106,6 +141,11 @@ export class BlockHeaderValidator extends BaseValidator<BlockHeader> {
         ];
     }
 
+    /**
+     * Gets hashable block
+     * @param block 
+     * @returns hashable block 
+     */
     private getHashableBlock(block: Block): object {
         return {
             header: block.blockHeader,
