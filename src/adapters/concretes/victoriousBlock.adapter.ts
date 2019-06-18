@@ -22,31 +22,32 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
         super(communicationRepository, validatorBus);
     }
 
-    public async broadcastNewVictoriousBlock(victoriousBlock: Block): Promise<void> {
-        return new Promise((resolve) => {
+    public async broadcastNewVictoriousBlockAsync(victoriousBlock: Block): Promise<void> {
+        return new Promise(async (resolve) => {
             logger.info("[VictoriousBlockAdapter] Broadcasting new victorious block.");
 
             const messageSendingHandler: IMessageSendingHandler = new P2PMessageSendingHandler(
                 new Message(MessageType.NEW_VICTORIOUS_BLOCK, JSON.stringify(victoriousBlock)),
             );
 
-            resolve(this.communicationRepository.broadcastMessageAsync!(messageSendingHandler));
+            await this.communicationRepository.broadcastMessageAsync!(messageSendingHandler);
+
+            resolve();
         });
     }
 
     protected initOnMessageHandlers(): void {
-        const newVictoriousBlockHandler: IOnMessageHandler = new P2POnMessageHandler(
-            MessageType.NEW_VICTORIOUS_BLOCK,
+        const newVictoriousBlockHandler: IOnMessageHandler = new P2POnMessageHandler(MessageType.NEW_VICTORIOUS_BLOCK,
             async (message: Message, _senderGuid: string, _response: RESPONSE_TYPE) => {
-                this.handleNewVictoriousBlock(message);
+                await this.handleNewVictoriousBlockAsync(message);
             },
         );
 
         this.communicationRepository.addOnMessageHandler(newVictoriousBlockHandler);
     }
 
-    private async handleNewVictoriousBlock(message: Message): Promise<void> {
-        return new Promise((resolve) => {
+    private async handleNewVictoriousBlockAsync(message: Message): Promise<void> {
+        return new Promise(async (resolve) => {
             try {
                 logger.info("[VictoriousBlockAdapter] Received new victorious block.");
 
@@ -56,9 +57,11 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
 
                 const victoriousBlock: Block = plainToClass<Block, any>(Block, JSON.parse(message.body) as object);
                 
-                super.getValidatorBus().validateAsync([victoriousBlock]);
+                await super.getValidatorBus().validateAsync([victoriousBlock]);
 
-                resolve(super.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock));
+                await super.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock)
+
+                resolve();
             } catch (error) {
                 logger.error(`[${this.constructor.name}] ${error}`);
             }

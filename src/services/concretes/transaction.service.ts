@@ -27,7 +27,7 @@ export class TransactionService implements ITransactionServiceAdapter {
         });
     }
 
-    public async updatePendingTransactions(victoriousBlock: Block): Promise<void> {
+    public async updatePendingTransactionsAsync(victoriousBlock: Block): Promise<void> {
         return new Promise((resolve) => {
             logger.info("[TransactionService] Updating pending transactions in PendingTransactionQueue.");
 

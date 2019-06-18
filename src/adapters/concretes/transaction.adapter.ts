@@ -34,6 +34,9 @@ export class TransactionAdapter extends BaseAdapter<ITransactionServiceAdapter> 
             try {
                 serverUnaryCall = serverUnaryCall;
                 const transaction: Transaction = serverUnaryCall.request;
+              
+                await super.getValidatorBus().validateAsync([transaction]);
+                await super.getServiceAdapter().addPendingTransactionAsync(transaction);
                 
                 // console.log(this);
 
