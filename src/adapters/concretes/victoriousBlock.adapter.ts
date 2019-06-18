@@ -75,7 +75,7 @@ export class VictoriousBlockAdapter extends BaseAdapter<IVictoriousBlockServiceA
                 
                 await super.getValidatorBus().validateAsync([victoriousBlock]);
 
-                await super.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock)
+                await super.getServiceAdapter().addVictoriousBlockAsync(victoriousBlock);
 
                 resolve();
             } catch (error) {
