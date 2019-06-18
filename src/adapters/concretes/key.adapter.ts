@@ -35,9 +35,6 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
             
                 await this.communicationRepository.sendMessageToRandomNodeAsync!(handler);
                 await (this.communicationRepository as P2PCommunicationRepository).getPromiseForResponse(message);
-
-                // TODO: Not sure what should happen hear I just resolve @Timo?
-                resolve();
             } catch (error) {
                 reject(error);
             }
@@ -61,13 +58,13 @@ export class KeyAdapter extends BaseAdapter<IKeyServiceAdapter> {
             try {
                 logger.info("[KeyAdapter] Sending admin key to node as per request.");
                 const key: string = await super.getServiceAdapter().getAdminKey();
-
-                // TODO: Same here, this method retuens a Promise<void> but is resolving with a new message??? @Timo
-                resolve(response(new Message(
-                        MessageType.ADMIN_KEY_REQUEST_RESPONSE,
-                        key,
-                    ),
+                
+                response(new Message(
+                    MessageType.ADMIN_KEY_REQUEST_RESPONSE,
+                    key,
                 ));
+                
+                resolve();
             } catch (error) {
                 logger.error(`[${this.constructor.name}] ${error}`);
             }
